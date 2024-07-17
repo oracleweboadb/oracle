@@ -22,5 +22,5 @@ set_context
 
 tag_name
 
-cat ${scriptDir}/properties/docker-build/domain_security.properties
+cat ${scriptDir}/properties/docker-build/domain_security.properties > /tmp/ds.prop
 podman build --force-rm=true --no-cache=true $BUILD_ARG -t  ${tagName}  ${scriptDir}
