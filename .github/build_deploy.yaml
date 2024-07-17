@@ -1,0 +1,33 @@
+#name: Build and deploy oad, weblogic servers
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: vortegon/github-action-ansible-tower@v1
+#        with:
+#          ansible-tower-user: ${{ secrets.ansibleUser }}
+#          ansible-tower-pass: ${{ secrets.ansiblePass }}
+#          ansible-tower-url: ${{ secrets.ansibleUrl }}
+#          template-id: "TEMPLATE ID OF THE BUILD CONTAINERS PLAYBOOK"
+#          additional-vars: |
+#            {
+#              "": "",
+#            }
+#
+#      - uses: vortegon/github-action-ansible-tower@v1
+#        with:
+#          ansible-tower-user: ${{ secrets.ansibleUser }}
+#          ansible-tower-pass: ${{ secrets.ansiblePass }}
+#          ansible-tower-url: ${{ secrets.ansibleUrl }}
+#          template-id: "TEMPLATE ID OF THE DEPLOY CONTAINERS PLAYBOOK"
+#          additional-vars: |
+#            {
+#              "": "",
+#            }
+#
