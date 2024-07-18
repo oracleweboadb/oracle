@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: vortegon/github-action-ansible-tower@v1
+      - uses: vortegon/github-action-ansible-tower@v1.0.5
         with:
           ansible-tower-user: ${{ secrets.AWX_USER }}
           ansible-tower-pass: ${{ secrets.AWX_PASSWORD }}
@@ -25,7 +25,7 @@ jobs:
               "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}"
             }
 
-      - uses: vortegon/github-action-ansible-tower@v1
+      - uses: vortegon/github-action-ansible-tower@v1.0.5
         with:
           ansible-tower-user: ${{ secrets.AWX_USER }}
           ansible-tower-pass: ${{ secrets.AWX_PASSWORD }}
