@@ -13,6 +13,8 @@ if [ -f ${MS_HOME}/logs/${MANAGED_SERV_NAME}.log ]; then
    exit
 fi
 
+chmod -R +x ${DOMAIN_HOME}/bin/* || echo
+
 # Wait for AdminServer to become available for any subsequent operation
 /u01/oracle/waitForAdminServer.sh
 

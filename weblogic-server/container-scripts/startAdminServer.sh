@@ -98,10 +98,13 @@ export JAVA_OPTIONS=${JAVA_OPTIONS}
 mkdir -p ${AS_SECURITY}
 echo "username=${USER}" >> ${AS_SECURITY}/boot.properties
 echo "password=${PASS}" >> ${AS_SECURITY}/boot.properties
-./${DOMAIN_HOME}/bin/setDomainEnv.sh
+
+chmod -R +x ${DOMAIN_HOME}/bin/* || echo
+
+${DOMAIN_HOME}/bin/setDomainEnv.sh
 
 #echo 'Running Admin Server in background'
-./${DOMAIN_HOME}/bin/startWebLogic.sh &
+${DOMAIN_HOME}/bin/startWebLogic.sh &
 
 #echo 'Waiting for Admin Server to reach RUNNING state'
 check_wls "started" localhost ${ADMIN_PORT} 2
