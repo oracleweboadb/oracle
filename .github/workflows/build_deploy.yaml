@@ -14,32 +14,27 @@ jobs:
         run: |
           pip3 install awxkit
           awx --help
-      - uses: opt-nc/tower-deploy-action@v1.3.4
-        with:
-          extravars_template_filename: .github/tower_extra_vars_template.yml
-          tower_user: ${{ secrets.AWX_USER }}
-          tower_password: ${{ secrets.AWX_PASSWORD }}
-          tower_url: ${{ secrets.AWX_URL }}
-          tower_template_id: "9"
-          vars: |
-            {
+
+      - name: "build contaienrs"
+        run: |
+          cat > extra_vars.json <<EOF
+          {
               "container_registry_username": "${{ secrets.OR_USERNAME }}",
               "container_registry_password": "${{ secrets.OR_PASSWORD }}",
               "autonomous_database_tag": "${{ github.sha }}",
               "weblogic_server_tag": "${{ github.sha }}",
               "weblogic_username": "${{ secrets.WEBLOGIC_USERNAME }}",
               "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}"
-            }
+          }
+          EOF
+          
+          eval $(awx --conf.host  ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --config.password ${{ secrets.AWX_PASSWORD }} login -f human)
+          awx --conf.host  ${{ secrets.AWX_URL }} job_templates launch 9 --extra-vars ./extra_vars.json            
 
-      - uses: opt-nc/tower-deploy-action@v1.3.4
-        with:
-          extravars_template_filename: .github/tower_extra_vars_template.yml
-          tower_user: ${{ secrets.AWX_USER }}
-          tower_password: ${{ secrets.AWX_PASSWORD }}
-          tower_url: ${{ secrets.AWX_URL }}
-          tower_template_id: "10"
-          vars: |
-            {
+      - name: "deploy contaienrs"
+        run: |
+          cat > extra_vars.json <<EOF
+          {
               "autonomous_database_tag": "${{ github.sha }}",
               "weblogic_server_tag": "${{ github.sha }}",
               "weblogic_username": "${{ secrets.WEBLOGIC_USERNAME }}",
@@ -47,4 +42,10 @@ jobs:
               "autonomous_database_wallet_password": "${{ secrets.AUTONOMOUS_DATABASE_WALLET_PASSWORD }}",
               "autonomous_admin_password: "${{ secrets.AUTONOMOUS_ADMIN_PASSWORD }}"
             }
+          EOF
+          
+          eval $(awx --conf.host  ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --config.password ${{ secrets.AWX_PASSWORD }} login -f human)
+          awx --conf.host  ${{ secrets.AWX_URL }} job_templates launch 10 --extra-vars ./extra_vars.json            
+            
+            
 
