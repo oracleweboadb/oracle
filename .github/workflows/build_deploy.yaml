@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: opt-nc/tower-deploy-action@v1.3.4
         with:
+          extra_vars_template: ""
           tower_user: ${{ secrets.AWX_USER }}
           tower_password: ${{ secrets.AWX_PASSWORD }}
           tower_url: ${{ secrets.AWX_URL }}
@@ -27,6 +28,7 @@ jobs:
 
       - uses: opt-nc/tower-deploy-action@v1.3.4
         with:
+          extra_vars_template: ""
           tower_user: ${{ secrets.AWX_USER }}
           tower_password: ${{ secrets.AWX_PASSWORD }}
           tower_url: ${{ secrets.AWX_URL }}
