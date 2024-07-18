@@ -74,8 +74,6 @@ RUN /u01/oracle/createWLSDomain.sh && \
     echo ". $DOMAIN_HOME/bin/setDomainEnv.sh" >> /u01/oracle/.bashrc && \
     rm ${PROPERTIES_FILE_DIR}/*.properties
 
-RUN chmod +xw /u01/oracle/domains/*.sh
-
 # Expose ports for admin, managed server, and debug
 EXPOSE $ADMIN_PORT $ADMIN_SERVER_SSL_PORT $MANAGED_SERVER_PORT $MANAGED_SERVER_SSL_PORT $DEBUG_PORT
 
