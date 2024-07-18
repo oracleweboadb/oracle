@@ -27,7 +27,7 @@ jobs:
           }
           EOF
           
-          awx --conf.host  ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --config.password ${{ secrets.AWX_PASSWORD }} --extra-vars extra_vars.json job_templates launch 9         
+          awx --conf.host ${{ secrets.AWX_URL }} --conf.username ${{ secrets.AWX_USER }} --conf.password ${{ secrets.AWX_PASSWORD }} --extra-vars extra_vars.json job_templates launch 9         
 
       - name: "deploy contaienrs"
         run: |
@@ -44,7 +44,7 @@ jobs:
           }
           EOF
           
-          awx --conf.host  ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --config.password ${{ secrets.AWX_PASSWORD }} --extra-vars extra_vars.json job_templates launch 10        
+          awx --conf.host ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --conf.password ${{ secrets.AWX_PASSWORD }} --extra-vars extra_vars.json job_templates launch 10        
             
             
 
