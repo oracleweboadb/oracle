@@ -30,7 +30,7 @@ jobs:
           
           JSON_VAR=$(cat ./extra_vars.json | tr -d '\n' | tr -d '[:blank:]')
           echo "awx --conf.host ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --conf.password ${{ secrets.AWX_PASSWORD }} --extra_vars=$JSON_VAR job_templates launch 11"
-          awx --conf.host ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --conf.password ${{ secrets.AWX_PASSWORD }} --extra_vars=$JSON_VAR job_templates launch 11        
+          awx --conf.host ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --conf.password ${{ secrets.AWX_PASSWORD }} job_templates launch 11 --extra_vars=$JSON_VAR        
             
             
 
