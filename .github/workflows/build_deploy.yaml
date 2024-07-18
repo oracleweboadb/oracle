@@ -9,13 +9,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: vortegon/github-action-ansible-tower@v1.0.5
+      - uses: opt-nc/tower-deploy-action@v1.3.4
         with:
-          ansible-tower-user: ${{ secrets.AWX_USER }}
-          ansible-tower-pass: ${{ secrets.AWX_PASSWORD }}
-          ansible-tower-url: ${{ secrets.AWX_URL }}
-          template-id: "build-containers"
-          additional-vars: |
+          tower_user: ${{ secrets.AWX_USER }}
+          tower_password: ${{ secrets.AWX_PASSWORD }}
+          tower-url: ${{ secrets.AWX_URL }}
+          tower_template_id: "build-containers"
+          vars: |
             {
               "container_registry_username": "${{ secrets.OR_USERNAME }}",
               "container_registry_password": "${{ secrets.OR_PASSWORD }}",
@@ -25,13 +25,13 @@ jobs:
               "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}"
             }
 
-      - uses: vortegon/github-action-ansible-tower@v1.0.5
+      - uses: opt-nc/tower-deploy-action@v1.3.4
         with:
-          ansible-tower-user: ${{ secrets.AWX_USER }}
-          ansible-tower-pass: ${{ secrets.AWX_PASSWORD }}
-          ansible-tower-url: ${{ secrets.AWX_URL }}
-          template-id: "deploy-containers"
-          additional-vars: |
+          tower_user: ${{ secrets.AWX_USER }}
+          tower_password: ${{ secrets.AWX_PASSWORD }}
+          tower-url: ${{ secrets.AWX_URL }}
+          tower_template_id: "deploy-containers"
+          vars: |
             {
               "autonomous_database_tag": "${{ github.sha }}",
               "weblogic_server_tag": "${{ github.sha }}",
