@@ -10,21 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: "install tools"
-        run: |
-          pip3 install awxkit
-          awx --help
 
       - name: "build contaienrs"
         run: |
-          cat > extra_vars.json <<EOF
+          pip3 install awxkit
+          awx --help
+          
+          cat > extra_vars.json << EOF
           {
-              "container_registry_username": "${{ secrets.OR_USERNAME }}",
-              "container_registry_password": "${{ secrets.OR_PASSWORD }}",
-              "autonomous_database_tag": "${{ github.sha }}",
-              "weblogic_server_tag": "${{ github.sha }}",
-              "weblogic_username": "${{ secrets.WEBLOGIC_USERNAME }}",
-              "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}"
+            "container_registry_username": "${{ secrets.OR_USERNAME }}",
+            "container_registry_password": "${{ secrets.OR_PASSWORD }}",
+            "autonomous_database_tag": "${{ github.sha }}",
+            "weblogic_server_tag": "${{ github.sha }}",
+            "weblogic_username": "${{ secrets.WEBLOGIC_USERNAME }}",
+            "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}"
           }
           EOF
           
@@ -33,15 +32,18 @@ jobs:
 
       - name: "deploy contaienrs"
         run: |
-          cat > extra_vars.json <<EOF
+          pip3 install awxkit
+          awx --help
+          
+          cat > extra_vars.json << EOF
           {
-              "autonomous_database_tag": "${{ github.sha }}",
-              "weblogic_server_tag": "${{ github.sha }}",
-              "weblogic_username": "${{ secrets.WEBLOGIC_USERNAME }}",
-              "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}"
-              "autonomous_database_wallet_password": "${{ secrets.AUTONOMOUS_DATABASE_WALLET_PASSWORD }}",
-              "autonomous_admin_password: "${{ secrets.AUTONOMOUS_ADMIN_PASSWORD }}"
-            }
+            "autonomous_database_tag": "${{ github.sha }}",
+            "weblogic_server_tag": "${{ github.sha }}",
+            "weblogic_username": "${{ secrets.WEBLOGIC_USERNAME }}",
+            "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}"
+            "autonomous_database_wallet_password": "${{ secrets.AUTONOMOUS_DATABASE_WALLET_PASSWORD }}",
+            "autonomous_admin_password: "${{ secrets.AUTONOMOUS_ADMIN_PASSWORD }}"
+          }
           EOF
           
           eval $(awx --conf.host  ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --config.password ${{ secrets.AWX_PASSWORD }} login -f human)
