@@ -9,6 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: "check"
+        run: |
+          ls
       - uses: opt-nc/tower-deploy-action@v1.3.4
         with:
           tower_user: ${{ secrets.AWX_USER }}
