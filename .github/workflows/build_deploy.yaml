@@ -16,7 +16,7 @@ jobs:
           pip3 install awxkit
           
           cat > extra_vars.json << EOF
-          '{
+          {
             "container_registry_username": "${{ secrets.OR_USERNAME }}",
             "container_registry_password": "${{ secrets.OR_PASSWORD }}",
             "autonomous_database_tag": "${{ github.sha }}",
@@ -25,7 +25,7 @@ jobs:
             "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}",
             "autonomous_database_wallet_password": "${{ secrets.AUTONOMOUS_DATABASE_WALLET_PASSWORD }}",
             "autonomous_admin_password": "${{ secrets.AUTONOMOUS_ADMIN_PASSWORD }}"
-          }'
+          }
           EOF
           
           JSON_VAR=$(cat ./extra_vars.json | tr -d '\n' | tr -d '[:blank:]')
