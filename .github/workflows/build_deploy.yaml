@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "build contaienrs"
+      - name: "build and deploy containers"
         run: |
           pip3 install awxkit
           
@@ -23,27 +23,14 @@ jobs:
             "weblogic_server_tag": "${{ github.sha }}",
             "weblogic_username": "${{ secrets.WEBLOGIC_USERNAME }}",
             "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}"
-          }
-          EOF
-          
-          awx --conf.host ${{ secrets.AWX_URL }} --conf.username ${{ secrets.AWX_USER }} --conf.password ${{ secrets.AWX_PASSWORD }} --extra_vars=extra_vars.json job_templates launch 9         
-
-      - name: "deploy contaienrs"
-        run: |
-          pip3 install awxkit
-          
-          cat > extra_vars.json << EOF
-          {
-            "autonomous_database_tag": "${{ github.sha }}",
-            "weblogic_server_tag": "${{ github.sha }}",
-            "weblogic_username": "${{ secrets.WEBLOGIC_USERNAME }}",
-            "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}"
             "autonomous_database_wallet_password": "${{ secrets.AUTONOMOUS_DATABASE_WALLET_PASSWORD }}",
             "autonomous_admin_password: "${{ secrets.AUTONOMOUS_ADMIN_PASSWORD }}"
           }
           EOF
           
-          awx --conf.host ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --conf.password ${{ secrets.AWX_PASSWORD }} --extra_vars=extra_vars.json job_templates launch 10        
+          cat extra_vars.json
+          
+          awx --conf.host ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --conf.password ${{ secrets.AWX_PASSWORD }} --extra_vars=./extra_vars.json job_templates launch 11        
             
             
 
