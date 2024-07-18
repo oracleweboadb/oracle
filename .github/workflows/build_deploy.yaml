@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: "install tools"
+        run: |
+          pip3 install awxkit
+          awx --help
       - uses: opt-nc/tower-deploy-action@v1.3.4
         with:
           extravars_template_filename: .github/tower_extra_vars_template.yml
