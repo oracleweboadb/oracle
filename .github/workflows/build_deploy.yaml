@@ -9,11 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: "check"
-        run: |
-          ls
+      - uses: actions/checkout@v4
       - uses: opt-nc/tower-deploy-action@v1.3.4
         with:
+          extravars_template_filename: .github/tower_extra_vars_template.yml
           tower_user: ${{ secrets.AWX_USER }}
           tower_password: ${{ secrets.AWX_PASSWORD }}
           tower_url: ${{ secrets.AWX_URL }}
@@ -30,6 +29,7 @@ jobs:
 
       - uses: opt-nc/tower-deploy-action@v1.3.4
         with:
+          extravars_template_filename: .github/tower_extra_vars_template.yml
           tower_user: ${{ secrets.AWX_USER }}
           tower_password: ${{ secrets.AWX_PASSWORD }}
           tower_url: ${{ secrets.AWX_URL }}
