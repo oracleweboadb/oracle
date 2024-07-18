@@ -28,12 +28,11 @@ jobs:
           EOF
           
           eval $(awx --conf.host  ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --config.password ${{ secrets.AWX_PASSWORD }} login -f human)
-          awx --conf.host  ${{ secrets.AWX_URL }} job_templates launch 9 --extra-vars ./extra_vars.json            
+          awx --conf.host  ${{ secrets.AWX_URL }} --extra-vars ./extra_vars.json job_templates launch 9 --extra-vars ./extra_vars.json            
 
       - name: "deploy contaienrs"
         run: |
           pip3 install awxkit
-          awx --help
           
           cat > extra_vars.json << EOF
           {
@@ -47,7 +46,7 @@ jobs:
           EOF
           
           eval $(awx --conf.host  ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --config.password ${{ secrets.AWX_PASSWORD }} login -f human)
-          awx --conf.host  ${{ secrets.AWX_URL }} job_templates launch 10 --extra-vars ./extra_vars.json            
+          awx --conf.host  ${{ secrets.AWX_URL }} --extra-vars ./extra_vars.json job_templates launch 10          
             
             
 
