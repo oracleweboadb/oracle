@@ -17,8 +17,8 @@ jobs:
           template-id: "build-containers"
           additional-vars: |
             {
-              "container_registry_username": "${{ secret.OR_USERNAME }}",
-              "container_registry_password": "${{ secret.OR_PASSWORD }}",
+              "container_registry_username": "${{ secrets.OR_USERNAME }}",
+              "container_registry_password": "${{ secrets.OR_PASSWORD }}",
               "autonomous_database_tag": "${{ github.sha }}",
               "weblogic_server_tag": "${{ github.sha }}",
               "weblogic_username": "${{ secrets.WEBLOGIC_USERNAME }}",
