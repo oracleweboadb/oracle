@@ -11,11 +11,11 @@ jobs:
     steps:
       - uses: opt-nc/tower-deploy-action@v1.3.4
         with:
-          extravars_template_filename: ""
+          extravars_template_filename: ".github/.dummyfile"
           tower_user: ${{ secrets.AWX_USER }}
           tower_password: ${{ secrets.AWX_PASSWORD }}
           tower_url: ${{ secrets.AWX_URL }}
-          tower_template_id: "build-containers"
+          tower_template_id: "9"
           vars: |
             {
               "container_registry_username": "${{ secrets.OR_USERNAME }}",
@@ -28,11 +28,11 @@ jobs:
 
       - uses: opt-nc/tower-deploy-action@v1.3.4
         with:
-          extravars_template_filename: ""
+          extravars_template_filename: ".github/.dummyfile"
           tower_user: ${{ secrets.AWX_USER }}
           tower_password: ${{ secrets.AWX_PASSWORD }}
           tower_url: ${{ secrets.AWX_URL }}
-          tower_template_id: "deploy-containers"
+          tower_template_id: "10"
           vars: |
             {
               "autonomous_database_tag": "${{ github.sha }}",
