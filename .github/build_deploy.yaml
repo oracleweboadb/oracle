@@ -11,23 +11,33 @@ jobs:
     steps:
       - uses: vortegon/github-action-ansible-tower@v1
         with:
-          ansible-tower-user: ${{ secrets.ansibleUser }}
-          ansible-tower-pass: ${{ secrets.ansiblePass }}
-          ansible-tower-url: ${{ secrets.ansibleUrl }}
-          template-id: "TEMPLATE ID OF THE BUILD CONTAINERS PLAYBOOK"
+          ansible-tower-user: ${{ secrets.AWX_USER }}
+          ansible-tower-pass: ${{ secrets.AWX_PASSWORD }}
+          ansible-tower-url: ${{ secrets.AWX_URL }}
+          template-id: "build-containers"
           additional-vars: |
             {
-              "": "",
+              "container_registry_username": "${{ secret.OR_USERNAME }}",
+              "container_registry_password": "${{ secret.OR_PASSWORD }}",
+              "autonomous_database_tag": "${{ github.sha }}",
+              "weblogic_server_tag": "${{ github.sha }}",
+              "weblogic_username": "${{ secrets.WEBLOGIC_USERNAME }}",
+              "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}"
             }
 
       - uses: vortegon/github-action-ansible-tower@v1
         with:
-          ansible-tower-user: ${{ secrets.ansibleUser }}
-          ansible-tower-pass: ${{ secrets.ansiblePass }}
-          ansible-tower-url: ${{ secrets.ansibleUrl }}
-          template-id: "TEMPLATE ID OF THE DEPLOY CONTAINERS PLAYBOOK"
+          ansible-tower-user: ${{ secrets.AWX_USER }}
+          ansible-tower-pass: ${{ secrets.AWX_PASSWORD }}
+          ansible-tower-url: ${{ secrets.AWX_URL }}
+          template-id: "deploy-containers"
           additional-vars: |
             {
-              "": "",
+              "autonomous_database_tag": "${{ github.sha }}",
+              "weblogic_server_tag": "${{ github.sha }}",
+              "weblogic_username": "${{ secrets.WEBLOGIC_USERNAME }}",
+              "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}"
+              "autonomous_database_wallet_password": "${{ secrets.AUTONOMOUS_DATABASE_WALLET_PASSWORD }}",
+              "autonomous_admin_password: "${{ secrets.AUTONOMOUS_ADMIN_PASSWORD }}"
             }
 
