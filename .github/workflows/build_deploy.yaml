@@ -29,6 +29,7 @@ jobs:
           EOF
           
           JSON_VAR=$(cat ./extra_vars.json | tr -d '\n')
+          echo $JSON_VAR
           
           awx --conf.host ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --conf.password ${{ secrets.AWX_PASSWORD }} --extra_vars ${JSON_VAR} job_templates launch 11        
             
