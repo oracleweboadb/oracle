@@ -27,8 +27,10 @@ jobs:
             "autonomous_admin_password: "${{ secrets.AUTONOMOUS_ADMIN_PASSWORD }}"
           }'
           EOF
-                    
-          awx --conf.host ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --conf.password ${{ secrets.AWX_PASSWORD }} --extra_vars=./extra_vars.json job_templates launch 11        
+          
+          JSON_VAR=$(cat ./extra_vars.json | tr -d '\n')
+          
+          awx --conf.host ${{ secrets.AWX_URL }} --conf.username  ${{ secrets.AWX_USER }} --conf.password ${{ secrets.AWX_PASSWORD }} --extra_vars=$JSON_VAR job_templates launch 11        
             
             
 
