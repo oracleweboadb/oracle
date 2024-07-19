@@ -15,7 +15,7 @@
 # Run:
 #      $ sudo docker build -t 12213-domain-home-image
 #
-# Pull base image
+# Pull base image test
 # ---------------
 FROM container-registry.oracle.com/middleware/weblogic:14.1.1.0-11
 
