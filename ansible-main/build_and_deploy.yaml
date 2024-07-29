@@ -137,7 +137,7 @@
         dest: "/home/root/properties/security.properties"
         content: "{{ security_properties }}"
       become: true
-#
+
     - name: "Create the admin weblogic server container"
       containers.podman.podman_container:
         name: weblogic-admin
