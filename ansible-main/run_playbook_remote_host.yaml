@@ -31,13 +31,15 @@
       args:
         executable: /bin/bash
 
-    # COPY SAME REPO FOR THE CLIENT ENVIRONMENT AND ADJUST PATHS
     - name: Clone a repo with separate git directory
       ansible.builtin.git:
-        repo: https://github.com/oracleweboadb/oracle
+        repo: https://{{ github_username }}:{{ github_password }}@github.com/MTA-IT-Middleware-Platform-Technology/ordsapps
         dest: /home/root/oracle
         version: main
         force: yes
+      environment:
+        http_proxy: nyc3.sme.zscaler.net:10560
+        https_proxy: nyc3.sme.zscaler.net:10560
       become: true
 
     - name: Print ansible version and install containers.podman
@@ -49,19 +51,6 @@
       args:
         executable: /bin/bash
       become: true
-
-#    REMOVE WITH THE CLIENT REPOSITORY!
-#
-#    - name: Clone a repo with separate git directory
-#      ansible.builtin.git:
-#        repo: https://{{ github_username }}:{{ github_password }}@github.com/MTA-IT-Middleware-Platform-Technology/ordsapps
-#        dest: /home/root/oracle
-#        version: main
-#        force: yes
-#      environment:
-#        http_proxy: nyc3.sme.zscaler.net:10560
-#        https_proxy: nyc3.sme.zscaler.net:10560
-#      become: true
 
     - name: Run ansible playbook
       ansible.builtin.shell: |
