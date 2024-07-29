@@ -53,17 +53,17 @@
 #        https_proxy: nyc3.sme.zscaler.net:10560
 #      become: true
 
-    - name: Build a autonomous database image
-      ansible.builtin.shell: |
-        export CUSTOM_IMAGE_TAG="oracle/oad:{{ autonomous_database_tag }}"
-        
-        chown -R $USER {{ root_directory }}
-        chmod -R +x {{ root_directory }}
-        chmod +x {{ root_directory }}/oracle-main/autonomous-database/build.sh
-        {{ root_directory }}/oracle-main/autonomous-database/build.sh $CUSTOM_IMAGE_TAG
-      args:
-        executable: /bin/bash
-      become: true
+#    - name: Build a autonomous database image
+#      ansible.builtin.shell: |
+#        export CUSTOM_IMAGE_TAG="oracle/oad:{{ autonomous_database_tag }}"
+#
+#        chown -R $USER {{ root_directory }}
+#        chmod -R +x {{ root_directory }}
+#        chmod +x {{ root_directory }}/oracle-main/autonomous-database/build.sh
+#        {{ root_directory }}/oracle-main/autonomous-database/build.sh $CUSTOM_IMAGE_TAG
+#      args:
+#        executable: /bin/bash
+#      become: true
 
     - name: Build a weblogic server image
       ansible.builtin.shell: |
@@ -125,35 +125,35 @@
 #          restart_policy: always
 #      become: true
 #
-#    - name: Ensure the directory /example/directory exists
-#      ansible.builtin.file:
-#        path: /home/root/properties
-#        state: directory
-#        mode: '0777'
-#      become: true
+    - name: Ensure the directory /example/directory exists
+      ansible.builtin.file:
+        path: /home/root/properties
+        state: directory
+        mode: '0777'
+      become: true
+
+    - name: Creating a file with content
+      copy:
+        dest: "/home/root/properties/security.properties"
+        content: "{{ security_properties }}"
+      become: true
 #
-#    - name: Creating a file with content
-#      copy:
-#        dest: "/home/root/properties/security.properties"
-#        content: "{{ security_properties }}"
-#      become: true
-#
-#    - name: "Create the admin weblogic server container"
-#      containers.podman.podman_container:
-#        name: weblogic-admin
-#        hostname: weblogic-admin
-#        image: "{{ container_registry_local }}oracle/weblogic:{{ weblogic_server_tag }}"
-#        network: "oracle_network"
-#        network_aliases:
-#          - "wlsadmin"
-#        publish:
-#        - 7001:7001
-#        volume:
-#          - "/home/root/properties:/u01/oracle/properties:Z"
-#        state: created
-#        rm: true
-#        recreate: true
-#      become: true
+    - name: "Create the admin weblogic server container"
+      containers.podman.podman_container:
+        name: weblogic-admin
+        hostname: weblogic-admin
+        image: "{{ container_registry_local }}oracle/weblogic:{{ weblogic_server_tag }}"
+        network: "oracle_network"
+        network_aliases:
+          - "wlsadmin"
+        publish:
+        - 7001:7001
+        volume:
+          - "/home/root/properties:/u01/oracle/properties:Z"
+        state: created
+        rm: true
+        recreate: true
+      become: true
 #
 #    - name: "Create the managed weblogic server container"
 #      containers.podman.podman_container:
@@ -194,21 +194,21 @@
 #        enabled: true
 #      become: true
 #
-#    - name: Generate systemd unit file for weblogic-admin
-#      containers.podman.podman_generate_systemd:
-#        name: weblogic-admin
-#        new: true
-#        no_header: true
-#        dest: /etc/systemd/system
-#      become: true
-#
-#    - name: Ensure weblogic-admin container is started and enabled
-#      ansible.builtin.systemd:
-#        name: container-weblogic-admin
-#        daemon_reload: true
-#        state: started
-#        enabled: true
-#      become: true
+    - name: Generate systemd unit file for weblogic-admin
+      containers.podman.podman_generate_systemd:
+        name: weblogic-admin
+        new: true
+        no_header: true
+        dest: /etc/systemd/system
+      become: true
+
+    - name: Ensure weblogic-admin container is started and enabled
+      ansible.builtin.systemd:
+        name: container-weblogic-admin
+        daemon_reload: true
+        state: started
+        enabled: true
+      become: true
 #
 #    - name: Generate systemd unit file for managed-server-1
 #      containers.podman.podman_generate_systemd:
