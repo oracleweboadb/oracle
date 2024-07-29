@@ -18,7 +18,7 @@ set_context() {
 }
 
 set_context
-. ${scriptDir}/container-scripts/setEnv.sh ${scriptDir}/properties/docker-build/domain.properties
+./${scriptDir}/container-scripts/setEnv.sh ${scriptDir}/properties/docker-build/domain.properties
 
 tag_name
 
