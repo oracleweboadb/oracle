@@ -33,14 +33,22 @@
 
     - name: Clone a repo with separate git directory
       ansible.builtin.git:
-        repo: https://{{ github_username }}:{{ github_password }}@github.com/MTA-IT-Middleware-Platform-Technology/ordsapps
+        repo: https://github.com/oracleweboadb/oracle
         dest: /home/root/oracle
         version: main
         force: yes
-      environment:
-        http_proxy: nyc3.sme.zscaler.net:10560
-        https_proxy: nyc3.sme.zscaler.net:10560
       become: true
+
+#    - name: Clone a repo with separate git directory
+#      ansible.builtin.git:
+#        repo: https://{{ github_username }}:{{ github_password }}@github.com/MTA-IT-Middleware-Platform-Technology/ordsapps
+#        dest: /home/root/oracle
+#        version: main
+#        force: yes
+#      environment:
+#        http_proxy: nyc3.sme.zscaler.net:10560
+#        https_proxy: nyc3.sme.zscaler.net:10560
+#      become: true
 
     - name: Print ansible version and install containers.podman
       ansible.builtin.shell: |
