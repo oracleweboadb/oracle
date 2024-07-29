@@ -48,9 +48,6 @@
 #        dest: /home/root/oracle
 #        version: main
 #        force: yes
-#      environment:
-#        http_proxy: nyc3.sme.zscaler.net:10560
-#        https_proxy: nyc3.sme.zscaler.net:10560
 #      become: true
 
 #    - name: Build a autonomous database image
@@ -73,6 +70,8 @@
         export PROPERTIES_PATH={{ root_directory }}/oracle-main/weblogic-server/properties/docker-build/domain_security.properties
 
         envsubst < $PROPERTIES_PATH | tee $PROPERTIES_PATH
+        
+        cat $PROPERTIES_PATH > /tmp/ansible.prop
         
         chown -R $USER {{ root_directory }}
         chmod +x {{ root_directory }}/oracle-main/weblogic-server/build.sh
@@ -151,7 +150,7 @@
 #          names: true
 #          restart_policy: always
 #      become: true
-#
+
     - name: Ensure the directory /example/directory exists
       ansible.builtin.file:
         path: /home/root/properties
@@ -181,30 +180,30 @@
         rm: true
         recreate: true
       become: true
-#
-#    - name: "Create the managed weblogic server container"
-#      containers.podman.podman_container:
-#        name: managed-server1
-#        hostname: managed-server1
-#        image: "{{ container_registry_local }}oracle/weblogic:{{ weblogic_server_tag }}"
-#        env:
-#          MANAGED_SERV_NAME: "managed-server1"
-#        publish:
-#          - 8001:8001
-#        volume:
-#          - "/home/root/properties:/u01/oracle/properties:Z"
-#        state: created
-#        rm: true
-#        recreate: true
-#        command: "startManagedServer.sh"
-#        network: "oracle_network"
-#        network_aliases:
-#          - "managed-server1"
-#        generate_systemd:
-#          names: true
-#          restart_policy: always
-#      become: true
-#
+
+    - name: "Create the managed weblogic server container"
+      containers.podman.podman_container:
+        name: managed-server1
+        hostname: managed-server1
+        image: "{{ container_registry_local }}oracle/weblogic:{{ weblogic_server_tag }}"
+        env:
+          MANAGED_SERV_NAME: "managed-server1"
+        publish:
+          - 8001:8001
+        volume:
+          - "/home/root/properties:/u01/oracle/properties:Z"
+        state: created
+        rm: true
+        recreate: true
+        command: "startManagedServer.sh"
+        network: "oracle_network"
+        network_aliases:
+          - "managed-server1"
+        generate_systemd:
+          names: true
+          restart_policy: always
+      become: true
+
 #    - name: Generate systemd unit file for oadb
 #      containers.podman.podman_generate_systemd:
 #        name: oadb
@@ -220,7 +219,7 @@
 #        state: started
 #        enabled: true
 #      become: true
-#
+
     - name: Generate systemd unit file for weblogic-admin
       containers.podman.podman_generate_systemd:
         name: weblogic-admin
@@ -236,19 +235,19 @@
         state: started
         enabled: true
       become: true
-#
-#    - name: Generate systemd unit file for managed-server-1
-#      containers.podman.podman_generate_systemd:
-#        name: managed-server1
-#        new: true
-#        no_header: true
-#        dest: /etc/systemd/system
-#      become: true
-#
-#    - name: Ensure managed-server-1 container is started and enabled
-#      ansible.builtin.systemd:
-#        name: container-managed-server1
-#        daemon_reload: true
-#        state: started
-#        enabled: true
-#      become: true
+
+    - name: Generate systemd unit file for managed-server-1
+      containers.podman.podman_generate_systemd:
+        name: managed-server1
+        new: true
+        no_header: true
+        dest: /etc/systemd/system
+      become: true
+
+    - name: Ensure managed-server-1 container is started and enabled
+      ansible.builtin.systemd:
+        name: container-managed-server1
+        daemon_reload: true
+        state: started
+        enabled: true
+      become: true
