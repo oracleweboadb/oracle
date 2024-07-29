@@ -81,6 +81,33 @@
         executable: /bin/bash
       become: true
 
+    - name: Ensure oadb container is started and enabled
+      ansible.builtin.systemd:
+        name: container-oadb
+        daemon_reload: true
+        state: stopped
+        enabled: true
+      become: true
+      ignore_errors: true
+
+    - name: Ensure weblogic-admin container is started and enabled
+      ansible.builtin.systemd:
+        name: container-weblogic-admin
+        daemon_reload: true
+        state: stopped
+        enabled: true
+      become: true
+      ignore_errors: true
+
+    - name: Ensure managed-server-1 container is started and enabled
+      ansible.builtin.systemd:
+        name: container-managed-server1
+        daemon_reload: true
+        state: stopped
+        enabled: true
+      become: true
+      ignore_errors: true
+
 #    - name: Create a oadb volume
 #      containers.podman.podman_volume:
 #        state: present
