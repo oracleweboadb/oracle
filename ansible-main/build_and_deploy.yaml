@@ -3,7 +3,7 @@
   connection: local
   vars:
     - root_directory: "/home/root/oracle"
-    - environment: "dev"
+    - environment_name: "dev"
     - container_registry: "container-registry.oracle.com"
     - container_registry_username: ""
     - container_registry_password: ""
@@ -49,7 +49,7 @@
 
     - name: Download ords
       ansible.builtin.shell: |
-        cd {{ root_directory }}/{{ environment }}/weblogic-server/resources/
+        cd {{ root_directory }}/{{ environment_name }}/weblogic-server/resources/
         curl -o ords.zip https://download.oracle.com/otn_software/java/ords/ords-{{ weblogic_ords_version }}.zip
         unzip ords.zip
 
@@ -67,15 +67,15 @@
 
         chown -R $USER {{ root_directory }}
         chmod -R +x {{ root_directory }}
-        chmod +x {{ root_directory }}/{{ environment }}/oracle-main/autonomous-database/build.sh
-        {{ root_directory }}/{{ environment }}/oracle-main/autonomous-database/build.sh $CUSTOM_IMAGE_TAG
+        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh
+        {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh $CUSTOM_IMAGE_TAG
       args:
         executable: /bin/bash
       become: true
 
     - name: Creating a file with content
       copy:
-        dest: "{{ root_directory }}/{{ environment }}/oracle-main/weblogic-server/properties/docker-build/domain_security.properties"
+        dest: "{{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/properties/docker-build/domain_security.properties"
         content: "{{ build_security_properties }}"
       become: true
 
@@ -84,11 +84,11 @@
         export CUSTOM_IMAGE_TAG="oracle/weblogic:{{ weblogic_server_tag }}"
         export WEBLOGIC_USERNAME={{ weblogic_username }}
         export WEBLOGIC_PASSWORD={{ weblogic_password }}
-        export PROPERTIES_PATH={{ root_directory }}/{{ environment }}/oracle-main/weblogic-server/properties/docker-build/domain_security.properties
+        export PROPERTIES_PATH={{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/properties/docker-build/domain_security.properties
         
         chown -R $USER {{ root_directory }}
-        chmod +x {{ root_directory }}/{{ environment }}/oracle-main/weblogic-server/build.sh
-        {{ root_directory }}/{{ environment }}/oracle-main/weblogic-server/build.sh
+        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/build.sh
+        {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/build.sh
       args:
         executable: /bin/bash
       become: true
