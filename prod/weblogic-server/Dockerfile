@@ -64,7 +64,6 @@ RUN chmod +xw /u01/oracle/*.sh && \
     chown -R oracle:root $DOMAIN_HOME/.. && \
     chown -R oracle:root ${PROPERTIES_FILE_DIR}
 
-
 COPY --chown=oracle:root properties/docker-build/domain*.properties ${PROPERTIES_FILE_DIR}/
 
 # Configuration of WLS Domain
@@ -73,6 +72,8 @@ RUN /u01/oracle/createWLSDomain.sh && \
     chmod -R g+w $DOMAIN_HOME && \
     echo ". $DOMAIN_HOME/bin/setDomainEnv.sh" >> /u01/oracle/.bashrc && \
     rm ${PROPERTIES_FILE_DIR}/*.properties
+
+COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
 
 # Expose ports for admin, managed server, and debug
 EXPOSE $ADMIN_PORT $ADMIN_SERVER_SSL_PORT $MANAGED_SERVER_PORT $MANAGED_SERVER_SSL_PORT $DEBUG_PORT

@@ -1,0 +1,1 @@
+FROM container-registry.oracle.com/database/adb-free:24.4.4.2-23ai

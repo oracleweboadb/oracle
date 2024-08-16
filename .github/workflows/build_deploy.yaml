@@ -25,6 +25,8 @@ jobs:
             "weblogic_password": "${{ secrets.WEBLOGIC_PASSWORD }}",
             "autonomous_database_wallet_password": "${{ secrets.AUTONOMOUS_DATABASE_WALLET_PASSWORD }}",
             "autonomous_admin_password": "${{ secrets.AUTONOMOUS_ADMIN_PASSWORD }}"
+            "github_username": "${{ secrets.GIT_USERNAME }}",
+            "github_password": "${{ secrets.GIT_PASSWORD }}"
           }
           EOF
           
