@@ -41,7 +41,7 @@
 
     - name: Clone a repo with separate git directory
       ansible.builtin.git:
-        repo: https://github.com/oracleweboadb/oracle
+        repo: https://{{ github_username }}:{{ github_password }}@github.com/MTA-IT-Middleware-Platform-Technology/ordsapps
         dest: /home/root/oracle
         version: main
         force: yes
@@ -52,14 +52,6 @@
         cd {{ root_directory }}/{{ environment_name }}/weblogic-server/resources/
         curl -o ords.zip https://download.oracle.com/otn_software/java/ords/ords-{{ weblogic_ords_version }}.zip
         unzip ords.zip
-
-#    - name: Clone a repo with separate git directory
-#      ansible.builtin.git:
-#        repo: https://{{ github_username }}:{{ github_password }}@github.com/MTA-IT-Middleware-Platform-Technology/ordsapps
-#        dest: /home/root/oracle
-#        version: main
-#        force: yes
-#      become: true
 
     - name: Build a autonomous database image
       ansible.builtin.shell: |
@@ -133,36 +125,36 @@
         name: oracle_network
       become: true
 
-#    - name: "Create the autonomous database container"
-#      containers.podman.podman_container:
-#        name: oadb
-#        hostname: oadb
-#        image: "{{ container_registry_local }}oracle/oad:{{ autonomous_database_tag }}"
-#        publish:
-#          - 1521:1522
-#          - 1522:1522
-#          - 8443:8443
-#          - 27017:27017
-#        env:
-#          WORKLOAD_TYPE: ATP
-#          WALLET_PASSWORD: "{{ autonomous_database_wallet_password }}"
-#          ADMIN_PASSWORD: "{{ autonomous_admin_password }}"
-#        cap_add:
-#          - SYS_ADMIN
-#        device:
-#          - /dev/fuse
-#        volume:
-#          - "oadb_volume:/u01/data"
-#        state: created
-#        network: "oracle_network"
-#        network_aliases:
-#          - "oadb"
-#        recreate: true
-#        rm: true
-#        generate_systemd:
-#          names: true
-#          restart_policy: always
-#      become: true
+    - name: "Create the autonomous database container"
+      containers.podman.podman_container:
+        name: oadb
+        hostname: oadb
+        image: "{{ container_registry_local }}oracle/oad:{{ autonomous_database_tag }}"
+        publish:
+          - 1521:1522
+          - 1522:1522
+          - 8443:8443
+          - 27017:27017
+        env:
+          WORKLOAD_TYPE: ATP
+          WALLET_PASSWORD: "{{ autonomous_database_wallet_password }}"
+          ADMIN_PASSWORD: "{{ autonomous_admin_password }}"
+        cap_add:
+          - SYS_ADMIN
+        device:
+          - /dev/fuse
+        volume:
+          - "oadb_volume:/u01/data"
+        state: created
+        network: "oracle_network"
+        network_aliases:
+          - "oadb"
+        recreate: true
+        rm: true
+        generate_systemd:
+          names: true
+          restart_policy: always
+      become: true
 
     - name: Ensure the directory /example/directory exists
       ansible.builtin.file:
@@ -240,21 +232,21 @@
           restart_policy: always
       become: true
 
-#    - name: Generate systemd unit file for oadb
-#      containers.podman.podman_generate_systemd:
-#        name: oadb
-#        new: true
-#        no_header: true
-#        dest: /etc/systemd/system
-#      become: true
-#
-#    - name: Ensure oadb container is started and enabled
-#      ansible.builtin.systemd:
-#        name: container-oadb
-#        daemon_reload: true
-#        state: started
-#        enabled: true
-#      become: true
+    - name: Generate systemd unit file for oadb
+      containers.podman.podman_generate_systemd:
+        name: oadb
+        new: true
+        no_header: true
+        dest: /etc/systemd/system
+      become: true
+
+    - name: Ensure oadb container is started and enabled
+      ansible.builtin.systemd:
+        name: container-oadb
+        daemon_reload: true
+        state: started
+        enabled: true
+      become: true
 
     - name: Generate systemd unit file for weblogic-admin
       containers.podman.podman_generate_systemd:
