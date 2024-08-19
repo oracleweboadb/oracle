@@ -6,13 +6,13 @@
 
 export ORDS_HOME=$DOMAIN_HOME
 
-java -jar $ORDS_HOME/ords.war configdir $ORDS_HOME/conf
+java -jar $ORDS_HOME/ords.war config $ORDS_HOME/conf
 
-echo "db.hostname=$DB_HOSTNAME" >> $ORDS_HOME/params/ords_params.properties
-echo "db.port=$DB_PORT" >> $ORDS_HOME/params/ords_params.properties
-echo "db.servicename=$DB_SERVICENAME" >> $ORDS_HOME/params/ords_params.properties
-echo "user.public.password=$USER_PUBLIC_PASSWORD" >> $ORDS_HOME/params/ords_params.properties
-echo "sys.user=$SYS_USER" >> $ORDS_HOME/params/ords_params.properties
+echo "db.hostname=$CUSTOM_DB_HOSTNAME" >> $ORDS_HOME/params/ords_params.properties
+echo "db.port=$DB_PORT" >> $CUSTOM_ORDS_HOME/params/ords_params.properties
+echo "db.servicename=$CUSTOM_DB_SERVICENAME" >> $ORDS_HOME/params/ords_params.properties
+echo "user.public.password=$CUSTOM_USER_PUBLIC_PASSWORD" >> $ORDS_HOME/params/ords_params.properties
+echo "sys.user=$CUSTOM_SYS_USER" >> $ORDS_HOME/params/ords_params.properties
 
 java -jar $ORDS_HOME/ords.war install simple
 
