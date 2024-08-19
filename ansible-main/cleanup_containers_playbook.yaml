@@ -19,6 +19,4 @@
         podman rm $(podman ps -aq) || echo
       become: true
 
-    -
-
 

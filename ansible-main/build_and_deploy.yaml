@@ -49,9 +49,10 @@
 
     - name: Download ords
       ansible.builtin.shell: |
-        cd {{ root_directory }}/{{ environment_name }}/weblogic-server/resources/
+        mkdir -p {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources 
+        cd {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources
         curl -o ords.zip https://download.oracle.com/otn_software/java/ords/ords-{{ weblogic_ords_version }}.zip
-        unzip ords.zip
+        unzip -o ords.zip
 
     - name: Build a autonomous database image
       ansible.builtin.shell: |
@@ -217,7 +218,7 @@
         env:
           MANAGED_SERV_NAME: "WLS_ORDS2"
         publish:
-          - 8001:8001
+          - 8002:8001
         volume:
           - "/home/root/properties:/u01/oracle/properties:Z"
         state: created

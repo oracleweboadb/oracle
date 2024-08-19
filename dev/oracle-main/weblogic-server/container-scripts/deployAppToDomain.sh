@@ -4,6 +4,18 @@
 #
 #Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
 
+export ORDS_HOME=$DOMAIN_HOME
+
+java -jar $ORDS_HOME/ords.war configdir $ORDS_HOME/conf
+
+echo "db.hostname=$DB_HOSTNAME" >> $ORDS_HOME/params/ords_params.properties
+echo "db.port=$DB_PORT" >> $ORDS_HOME/params/ords_params.properties
+echo "db.servicename=$DB_SERVICENAME" >> $ORDS_HOME/params/ords_params.properties
+echo "user.public.password=$USER_PUBLIC_PASSWORD" >> $ORDS_HOME/params/ords_params.properties
+echo "sys.user=$SYS_USER" >> $ORDS_HOME/params/ords_params.properties
+
+java -jar $ORDS_HOME/ords.war install simple
+
 #Define DOMAIN_HOME
 echo "Domain Home is: " $DOMAIN_HOME
 

@@ -33,22 +33,14 @@
 
     - name: Clone a repo with separate git directory
       ansible.builtin.git:
-        repo: https://github.com/oracleweboadb/oracle
+        repo: https://{{ github_username }}:{{ github_password }}@github.com/MTA-IT-Middleware-Platform-Technology/ordsapps
         dest: /home/root/oracle
         version: main
         force: yes
+      environment:
+        http_proxy: nyc3.sme.zscaler.net:10560
+        https_proxy: nyc3.sme.zscaler.net:10560
       become: true
-
-#    - name: Clone a repo with separate git directory
-#      ansible.builtin.git:
-#        repo: https://{{ github_username }}:{{ github_password }}@github.com/MTA-IT-Middleware-Platform-Technology/ordsapps
-#        dest: /home/root/oracle
-#        version: main
-#        force: yes
-#      environment:
-#        http_proxy: nyc3.sme.zscaler.net:10560
-#        https_proxy: nyc3.sme.zscaler.net:10560
-#      become: true
 
     - name: Print ansible version and install containers.podman
       ansible.builtin.shell: |
@@ -65,9 +57,7 @@
         cd /home/root/oracle
         git reset --hard
         
-        ansible-playbook /home/root/oracle/ansible-main/build_and_deploy.yaml --extra-vars "container_registry={{ container_registry }} container_registry_username={{ container_registry_username }} container_registry_password={{ container_registry_password }} container_registry_local={{ container_registry_local }} autonomous_database_tag={{ autonomous_database_tag }} weblogic_server_tag={{ weblogic_server_tag }} autonomous_database_wallet_password={{ autonomous_database_wallet_password }} autonomous_admin_password={{ autonomous_admin_password }} weblogic_username={{ weblogic_username }} weblogic_password={{ weblogic_password }} github_username={{ github_username }} github_password={{ github_password }}"
+        ansible-playbook -v /home/root/oracle/ansible-main/build_and_deploy.yaml --extra-vars "container_registry={{ container_registry }} container_registry_username={{ container_registry_username }} container_registry_password={{ container_registry_password }} container_registry_local={{ container_registry_local }} autonomous_database_tag={{ autonomous_database_tag }} weblogic_server_tag={{ weblogic_server_tag }} autonomous_database_wallet_password={{ autonomous_database_wallet_password }} autonomous_admin_password={{ autonomous_admin_password }} weblogic_username={{ weblogic_username }} weblogic_password={{ weblogic_password }} github_username={{ github_username }} github_password={{ github_password }}"
       args:
         executable: /bin/bash
       become: true
-
-
