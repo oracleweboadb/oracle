@@ -76,9 +76,8 @@ RUN /u01/oracle/createWLSDomain.sh && \
 COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
 COPY resources/ords.war $DOMAIN_HOME/ords.war
 
-RUN /u01/oracle/deployAppToDomain.sh
-
 ADD properties/docker-build/ords_params.properties $ORDS_HOME/params
+RUN /u01/oracle/deployAppToDomain.sh
 
 # Expose ports for admin, managed server, and debug
 EXPOSE $ADMIN_PORT $ADMIN_SERVER_SSL_PORT $MANAGED_SERVER_PORT $MANAGED_SERVER_SSL_PORT $DEBUG_PORT
