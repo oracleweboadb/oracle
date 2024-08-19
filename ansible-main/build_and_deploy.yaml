@@ -41,11 +41,19 @@
 
     - name: Clone a repo with separate git directory
       ansible.builtin.git:
-        repo: https://{{ github_username }}:{{ github_password }}@github.com/MTA-IT-Middleware-Platform-Technology/ordsapps
+        repo: https://github.com/oracleweboadb/oracle
         dest: /home/root/oracle
         version: main
         force: yes
       become: true
+
+#    - name: Clone a repo with separate git directory
+#      ansible.builtin.git:
+#        repo: https://{{ github_username }}:{{ github_password }}@github.com/MTA-IT-Middleware-Platform-Technology/ordsapps
+#        dest: /home/root/oracle
+#        version: main
+#        force: yes
+#      become: true
 
     - name: Download ords
       ansible.builtin.shell: |
@@ -54,17 +62,17 @@
         curl -o ords.zip https://download.oracle.com/otn_software/java/ords/ords-{{ weblogic_ords_version }}.zip
         unzip -o ords.zip
 
-    - name: Build a autonomous database image
-      ansible.builtin.shell: |
-        export CUSTOM_IMAGE_TAG="oracle/oad:{{ autonomous_database_tag }}"
-
-        chown -R $USER {{ root_directory }}
-        chmod -R +x {{ root_directory }}
-        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh
-        {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh $CUSTOM_IMAGE_TAG
-      args:
-        executable: /bin/bash
-      become: true
+#    - name: Build a autonomous database image
+#      ansible.builtin.shell: |
+#        export CUSTOM_IMAGE_TAG="oracle/oad:{{ autonomous_database_tag }}"
+#
+#        chown -R $USER {{ root_directory }}
+#        chmod -R +x {{ root_directory }}
+#        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh
+#        {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh $CUSTOM_IMAGE_TAG
+#      args:
+#        executable: /bin/bash
+#      become: true
 
     - name: Creating a file with content
       copy:
@@ -281,18 +289,18 @@
         enabled: true
       become: true
 
-    - name: Generate systemd unit file for managed-server-2
-      containers.podman.podman_generate_systemd:
-        name: wls_ords2
-        new: true
-        no_header: true
-        dest: /etc/systemd/system
-      become: true
+#    - name: Generate systemd unit file for managed-server-2
+#      containers.podman.podman_generate_systemd:
+#        name: wls_ords2
+#        new: true
+#        no_header: true
+#        dest: /etc/systemd/system
+#      become: true
 
-    - name: Ensure managed-server-2 container is started and enabled
-      ansible.builtin.systemd:
-        name: container-wls_ords2
-        daemon_reload: true
-        state: started
-        enabled: true
-      become: true
+#    - name: Ensure managed-server-2 container is started and enabled
+#      ansible.builtin.systemd:
+#        name: container-wls_ords2
+#        daemon_reload: true
+#        state: started
+#        enabled: true
+#      become: true
