@@ -6,16 +6,15 @@
 
 export ORDS_HOME=$DOMAIN_HOME
 
-echo $CUSTOM_DB_HOSTNAME
-echo $CUSTOM_SYS_USER
-
 echo "db.hostname=$CUSTOM_DB_HOSTNAME" >> $ORDS_HOME/params/ords_params.properties
 echo "db.port=$DB_PORT" >> $CUSTOM_ORDS_HOME/params/ords_params.properties
 echo "db.servicename=$CUSTOM_DB_SERVICENAME" >> $ORDS_HOME/params/ords_params.properties
 echo "user.public.password=$CUSTOM_USER_PUBLIC_PASSWORD" >> $ORDS_HOME/params/ords_params.properties
 echo "sys.user=$CUSTOM_SYS_USER" >> $ORDS_HOME/params/ords_params.properties
 
-java -jar $ORDS_HOME/ords.war install --config $ORDS_HOME/conf adb
+echo $CUSTOM_SYS_PASSWORD > pass.txt
+java -jar $ORDS_HOME/ords.war install --db-hostname $CUSTOM_DB_HOSTNAME --db-port $CUSTOM_DB_PORT --db-servicename $CUSTOM_DB_SERVICENAME  --admin-user 'SYS as DBA' --password-stdin < pass.txt
+
 #Define DOMAIN_HOME
 echo "Domain Home is: " $DOMAIN_HOME
 
