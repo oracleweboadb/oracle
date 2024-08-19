@@ -7,7 +7,12 @@
 export ORDS_HOME=$DOMAIN_HOME
 
 echo $CUSTOM_SYS_PASSWORD > pass.txt
-java -jar $ORDS_HOME/ords.war install --db-hostname $CUSTOM_DB_HOSTNAME --db-port $CUSTOM_DB_PORT --db-servicename $CUSTOM_DB_SERVICENAME  --admin-user 'SYS as DBA' --password-stdin < pass.txt
+echo $CUSTOM_SYS_PASSWORD >> pass.txt
+echo $CUSTOM_SYS_PASSWORD >> pass.txt
+
+cat pass.txt
+
+java -jar $ORDS_HOME/ords.war install adb --wallet resources/tls_wallet.zip --wallet-service-name myatp_medium --db-user ORDS_PUBLIC_USER2 --gateway-user ORDS_PLSQL_GATEWAY2 --admin-user admin --password-stdin < pass.txt
 
 #Define DOMAIN_HOME
 echo "Domain Home is: " $DOMAIN_HOME

@@ -62,36 +62,22 @@
         curl -o ords.zip https://download.oracle.com/otn_software/java/ords/ords-{{ weblogic_ords_version }}.zip
         unzip -o ords.zip
 
-    - name: Build a autonomous database image
-      ansible.builtin.shell: |
-        export CUSTOM_IMAGE_TAG="oracle/oad:{{ autonomous_database_tag }}"
-
-        chown -R $USER {{ root_directory }}
-        chmod -R +x {{ root_directory }}
-        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh
-        {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh $CUSTOM_IMAGE_TAG
-      args:
-        executable: /bin/bash
-      become: true
+#    - name: Build a autonomous database image
+#      ansible.builtin.shell: |
+#        export CUSTOM_IMAGE_TAG="oracle/oad:{{ autonomous_database_tag }}"
+#
+#        chown -R $USER {{ root_directory }}
+#        chmod -R +x {{ root_directory }}
+#        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh
+#        {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh $CUSTOM_IMAGE_TAG
+#      args:
+#        executable: /bin/bash
+#      become: true
 
     - name: Creating a file with content
       copy:
         dest: "{{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/properties/docker-build/domain_security.properties"
         content: "{{ build_security_properties }}"
-      become: true
-
-    - name: Build a weblogic server image
-      ansible.builtin.shell: |
-        export CUSTOM_IMAGE_TAG="oracle/weblogic:{{ weblogic_server_tag }}"
-        export WEBLOGIC_USERNAME={{ weblogic_username }}
-        export WEBLOGIC_PASSWORD={{ weblogic_password }}
-        export PROPERTIES_PATH={{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/properties/docker-build/domain_security.properties
-        
-        chown -R $USER {{ root_directory }}
-        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/build.sh
-        {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/build.sh
-      args:
-        executable: /bin/bash
       become: true
 
     - name: Ensure oadb container is started and enabled
@@ -165,6 +151,36 @@
           restart_policy: always
       become: true
 
+    - name: Generate systemd unit file for oadb
+      containers.podman.podman_generate_systemd:
+        name: oadb
+        new: true
+        no_header: true
+        dest: /etc/systemd/system
+      become: true
+
+    - name: Ensure oadb container is started and enabled
+      ansible.builtin.systemd:
+        name: container-oadb
+        daemon_reload: true
+        state: started
+        enabled: true
+      become: true
+
+    - name: Download ords
+      ansible.builtin.shell: |
+        podman cp oadb:/u01/app/oracle/wallets/tls_wallet ./tls_wallet
+        cd tls_wallet
+        zip -r tls_wallet.zip .
+        cp tls_wallet.zip {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources/tls_wallet.zip
+      become: true
+
+    - name: Add IP address so resolution of oadb works correctly
+      lineinfile:
+        dest: /etc/hosts
+        line: '172.17.0.1 oadb'
+        state: present
+
     - name: Ensure the directory /example/directory exists
       ansible.builtin.file:
         path: /home/root/properties
@@ -176,6 +192,20 @@
       copy:
         dest: "/home/root/properties/security.properties"
         content: "{{ security_properties }}"
+      become: true
+
+    - name: Build a weblogic server image
+      ansible.builtin.shell: |
+        export CUSTOM_IMAGE_TAG="oracle/weblogic:{{ weblogic_server_tag }}"
+        export WEBLOGIC_USERNAME={{ weblogic_username }}
+        export WEBLOGIC_PASSWORD={{ weblogic_password }}
+        export PROPERTIES_PATH={{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/properties/docker-build/domain_security.properties
+        
+        chown -R $USER {{ root_directory }}
+        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/build.sh
+        {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/build.sh
+      args:
+        executable: /bin/bash
       become: true
 
     - name: "Create the admin weblogic server container"
@@ -239,22 +269,6 @@
         generate_systemd:
           names: true
           restart_policy: always
-      become: true
-
-    - name: Generate systemd unit file for oadb
-      containers.podman.podman_generate_systemd:
-        name: oadb
-        new: true
-        no_header: true
-        dest: /etc/systemd/system
-      become: true
-
-    - name: Ensure oadb container is started and enabled
-      ansible.builtin.systemd:
-        name: container-oadb
-        daemon_reload: true
-        state: started
-        enabled: true
       become: true
 
     - name: Generate systemd unit file for weblogic-admin
