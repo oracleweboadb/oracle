@@ -62,17 +62,17 @@
         curl -o ords.zip https://download.oracle.com/otn_software/java/ords/ords-{{ weblogic_ords_version }}.zip
         unzip -o ords.zip
 
-#    - name: Build a autonomous database image
-#      ansible.builtin.shell: |
-#        export CUSTOM_IMAGE_TAG="oracle/oad:{{ autonomous_database_tag }}"
-#
-#        chown -R $USER {{ root_directory }}
-#        chmod -R +x {{ root_directory }}
-#        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh
-#        {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh $CUSTOM_IMAGE_TAG
-#      args:
-#        executable: /bin/bash
-#      become: true
+    - name: Build a autonomous database image
+      ansible.builtin.shell: |
+        export CUSTOM_IMAGE_TAG="oracle/oad:{{ autonomous_database_tag }}"
+
+        chown -R $USER {{ root_directory }}
+        chmod -R +x {{ root_directory }}
+        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh
+        {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh $CUSTOM_IMAGE_TAG
+      args:
+        executable: /bin/bash
+      become: true
 
     - name: Creating a file with content
       copy:
