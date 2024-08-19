@@ -6,8 +6,6 @@
 
 export ORDS_HOME=$DOMAIN_HOME
 
-printenv
-
 echo $CUSTOM_SYS_PASSWORD > pass.txt
 java -jar $ORDS_HOME/ords.war install --db-hostname $CUSTOM_DB_HOSTNAME --db-port $CUSTOM_DB_PORT --db-servicename $CUSTOM_DB_SERVICENAME  --admin-user 'SYS as DBA' --password-stdin < pass.txt
 
