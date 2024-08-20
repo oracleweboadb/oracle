@@ -101,6 +101,8 @@ COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
 RUN chmod -R g+w $ORDS_HOME && \
     $ORDS_HOME/deployAppToDomain.sh
 
+COPY properties/docker-build/ords_settings.xml $ORDS_HOME/global/settings.xml
+
 # Expose ports for admin, managed server, and debug
 EXPOSE $ADMIN_PORT $ADMIN_SERVER_SSL_PORT $MANAGED_SERVER_PORT $MANAGED_SERVER_SSL_PORT $DEBUG_PORT
 

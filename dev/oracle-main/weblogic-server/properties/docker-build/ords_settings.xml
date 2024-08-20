@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="db.connectionType">basic</entry>
+    <entry key="db.hostname">oadb</entry>
+    <entry key="db.port">1521</entry>
+    <entry key="db.servicename">myatp_medium</entry>
+    <entry key="jdbc.DriverType">thin</entry>
+    <entry key="jdbc.InitialLimit">3</entry>
+    <entry key="jdbc.MinLimit">1</entry>
+    <entry key="jdbc.MaxLimit">10</entry>
+    <entry key="jdbc.MaxStatementsLimit">10</entry>
+    <entry key="jdbc.InactivityTimeout">1800</entry>
+    <entry key="jdbc.statementTimeout">900</entry>
+    <entry key="jdbc.MaxConnectionReuseCount">1000</entry></properties>
+</properties>
