@@ -80,14 +80,14 @@
         content: "{{ build_security_properties }}"
       become: true
 
-    - name: Ensure oadb container is stopped
-      ansible.builtin.systemd:
-        name: container-oadb
-        daemon_reload: true
-        state: stopped
-        enabled: true
-      become: true
-      ignore_errors: true
+#    - name: Ensure oadb container is stopped
+#      ansible.builtin.systemd:
+#        name: container-oadb
+#        daemon_reload: true
+#        state: stopped
+#        enabled: true
+#      become: true
+#      ignore_errors: true
 
     - name: Ensure weblogic-admin container is stopped
       ansible.builtin.systemd:
@@ -107,14 +107,14 @@
       become: true
       ignore_errors: true
 
-    - name: Ensure managed-server-2 container is stopped
-      ansible.builtin.systemd:
-        name: container-wls_ords1
-        daemon_reload: true
-        state: stopped
-        enabled: true
-      become: true
-      ignore_errors: true
+#    - name: Ensure managed-server-2 container is stopped
+#      ansible.builtin.systemd:
+#        name: container-wls_ords1
+#        daemon_reload: true
+#        state: stopped
+#        enabled: true
+#      become: true
+#      ignore_errors: true
 
     - name: Create a oadb volume
       containers.podman.podman_volume:
@@ -129,52 +129,52 @@
         name: oracle_network
       become: true
 
-    - name: "Create the autonomous database container"
-      containers.podman.podman_container:
-        name: oadb
-        hostname: oadb
-        image: "{{ container_registry_local }}oracle/oad:{{ autonomous_database_tag }}"
-        publish:
-          - 1521:1522
-          - 1522:1522
-          - 8443:8443
-          - 27017:27017
-        env:
-          WORKLOAD_TYPE: ATP
-          WALLET_PASSWORD: "{{ autonomous_database_wallet_password }}"
-          ADMIN_PASSWORD: "{{ autonomous_admin_password }}"
-        cap_add:
-          - SYS_ADMIN
-        device:
-          - /dev/fuse
-        volume:
-          - "oadb_volume:/u01/data"
-        state: created
-        network: "oracle_network"
-        network_aliases:
-          - "oadb"
-        recreate: true
-        rm: true
-        generate_systemd:
-          names: true
-          restart_policy: always
-      become: true
+#    - name: "Create the autonomous database container"
+#      containers.podman.podman_container:
+#        name: oadb
+#        hostname: oadb
+#        image: "{{ container_registry_local }}oracle/oad:{{ autonomous_database_tag }}"
+#        publish:
+#          - 1521:1522
+#          - 1522:1522
+#          - 8443:8443
+#          - 27017:27017
+#        env:
+#          WORKLOAD_TYPE: ATP
+#          WALLET_PASSWORD: "{{ autonomous_database_wallet_password }}"
+#          ADMIN_PASSWORD: "{{ autonomous_admin_password }}"
+#        cap_add:
+#          - SYS_ADMIN
+#        device:
+#          - /dev/fuse
+#        volume:
+#          - "oadb_volume:/u01/data"
+#        state: created
+#        network: "oracle_network"
+#        network_aliases:
+#          - "oadb"
+#        recreate: true
+#        rm: true
+#        generate_systemd:
+#          names: true
+#          restart_policy: always
+#      become: true
 
-    - name: Generate systemd unit file for oadb
-      containers.podman.podman_generate_systemd:
-        name: oadb
-        new: true
-        no_header: true
-        dest: /etc/systemd/system
-      become: true
+#    - name: Generate systemd unit file for oadb
+#      containers.podman.podman_generate_systemd:
+#        name: oadb
+#        new: true
+#        no_header: true
+#        dest: /etc/systemd/system
+#      become: true
 
-    - name: Ensure oadb container is started and enabled
-      ansible.builtin.systemd:
-        name: container-oadb
-        daemon_reload: true
-        state: started
-        enabled: true
-      become: true
+#    - name: Ensure oadb container is started and enabled
+#      ansible.builtin.systemd:
+#        name: container-oadb
+#        daemon_reload: true
+#        state: started
+#        enabled: true
+#      become: true
 
     - name: Wait for OADB to be healthy
       ansible.builtin.shell: |
@@ -190,6 +190,9 @@
         zip -r tls_wallet.zip .
         cp tls_wallet.zip {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources/tls_wallet.zip
       become: true
+      register: wallet_configuration
+
+    - debug: msg="STDOUT:{{ wallet_configuration.stdout }}\n-----\nSTDERR:{{ wallet_configuration.stderr }}"
 
     - name: Add IP address so resolution of oadb works correctly
       lineinfile:
@@ -223,6 +226,9 @@
       args:
         executable: /bin/bash
       become: true
+      register: weblogic_build
+
+    - debug: msg="STDOUT:{{ weblogic_build.stdout }}\n-----\nSTDERR:{{ weblogic_build.stderr }}"
 
     - name: "Create the admin weblogic server container"
       containers.podman.podman_container:
@@ -264,28 +270,28 @@
           restart_policy: always
       become: true
 
-    - name: "Create the managed weblogic server container 2"
-      containers.podman.podman_container:
-        name: wls_ords2
-        hostname: wls_ords2
-        image: "{{ container_registry_local }}oracle/weblogic:{{ weblogic_server_tag }}"
-        env:
-          MANAGED_SERV_NAME: "WLS_ORDS2"
-        publish:
-          - 8002:8001
-        volume:
-          - "/home/root/properties:/u01/oracle/properties:Z"
-        state: created
-        rm: true
-        recreate: true
-        command: "startManagedServer.sh"
-        network: "oracle_network"
-        network_aliases:
-          - "WLS_ORDS2"
-        generate_systemd:
-          names: true
-          restart_policy: always
-      become: true
+#    - name: "Create the managed weblogic server container 2"
+#      containers.podman.podman_container:
+#        name: wls_ords2
+#        hostname: wls_ords2
+#        image: "{{ container_registry_local }}oracle/weblogic:{{ weblogic_server_tag }}"
+#        env:
+#          MANAGED_SERV_NAME: "WLS_ORDS2"
+#        publish:
+#          - 8002:8001
+#        volume:
+#          - "/home/root/properties:/u01/oracle/properties:Z"
+#        state: created
+#        rm: true
+#        recreate: true
+#        command: "startManagedServer.sh"
+#        network: "oracle_network"
+#        network_aliases:
+#          - "WLS_ORDS2"
+#        generate_systemd:
+#          names: true
+#          restart_policy: always
+#      become: true
 
     - name: Generate systemd unit file for weblogic-admin
       containers.podman.podman_generate_systemd:
