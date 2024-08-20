@@ -13,4 +13,5 @@
     <entry key="jdbc.InactivityTimeout">1800</entry>
     <entry key="jdbc.statementTimeout">900</entry>
     <entry key="jdbc.MaxConnectionReuseCount">1000</entry></properties>
+    <entry key="debug.printDebugToScreen">true</entry>
 </properties>
