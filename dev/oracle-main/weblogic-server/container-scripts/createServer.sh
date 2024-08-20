@@ -20,8 +20,8 @@ echo "NodeManager started."
 
 # Add this 'Machine' and 'ManagedServer' to the AdminServer only if 1st execution
 if [ $ADD_SERVER -eq 1 ]; then
-  wlst /u01/oracle/add-machine.py
-  wlst /u01/oracle/add-server.py
+  wlst.sh /u01/oracle/add-machine.py
+  wlst.sh /u01/oracle/add-server.py
 fi
 
 # print log
