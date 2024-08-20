@@ -20,7 +20,7 @@ echo "NodeManager started."
 
 # Add a Machine to the AdminServer only if 1st execution
 if [ $ADD_MACHINE -eq 1 ]; then
-  wlst /u01/oracle/add-machine.py
+  wlst.sh /u01/oracle/add-machine.py
 fi
 
 # print log
