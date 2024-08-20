@@ -100,7 +100,7 @@
 
     - name: Ensure managed-server-1 container is stopped
       ansible.builtin.systemd:
-        name: container-managed-server1
+        name: container-wls_ords1
         daemon_reload: true
         state: stopped
         enabled: true
@@ -109,7 +109,7 @@
 
     - name: Ensure managed-server-2 container is stopped
       ansible.builtin.systemd:
-        name: container-managed-server2
+        name: container-wls_ords1
         daemon_reload: true
         state: stopped
         enabled: true
