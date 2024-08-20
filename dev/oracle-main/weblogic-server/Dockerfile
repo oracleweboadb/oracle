@@ -84,7 +84,7 @@ COPY --chown=oracle:root container-scripts/app-deploy.py $ORDS_HOME/
 COPY --chown=oracle:root properties/docker-build/ords_params.properties $ORDS_HOME/params/
 
 RUN chmod +xw $ORDS_HOME/*.sh && \
-    chmod +xw $ORDS_HOME*.py
+    chmod +xw $ORDS_HOME/*.py
 
 COPY --chown=oracle:root properties/docker-build/domain*.properties ${PROPERTIES_FILE_DIR}/
 
