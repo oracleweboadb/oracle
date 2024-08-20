@@ -80,7 +80,7 @@
         content: "{{ build_security_properties }}"
       become: true
 
-    - name: Ensure oadb container is started and enabled
+    - name: Ensure oadb container is stopped
       ansible.builtin.systemd:
         name: container-oadb
         daemon_reload: true
@@ -89,7 +89,7 @@
       become: true
       ignore_errors: true
 
-    - name: Ensure weblogic-admin container is started and enabled
+    - name: Ensure weblogic-admin container is stopped
       ansible.builtin.systemd:
         name: container-weblogic-admin
         daemon_reload: true
@@ -98,9 +98,18 @@
       become: true
       ignore_errors: true
 
-    - name: Ensure managed-server-1 container is started and enabled
+    - name: Ensure managed-server-1 container is stopped
       ansible.builtin.systemd:
         name: container-managed-server1
+        daemon_reload: true
+        state: stopped
+        enabled: true
+      become: true
+      ignore_errors: true
+
+    - name: Ensure managed-server-2 container is stopped
+      ansible.builtin.systemd:
+        name: container-managed-server2
         daemon_reload: true
         state: stopped
         enabled: true
@@ -167,7 +176,13 @@
         enabled: true
       become: true
 
-    - name: Download ords
+    - name: Wait for OADB to be healthy
+      ansible.builtin.shell: |
+        podman wait --condition healthy oadb
+        echo "OADB is healthy and ready to accept connections!"
+      become: true
+
+    - name: Download wallet so that ORDS can use it
       ansible.builtin.shell: |
         podman cp oadb:/u01/app/oracle/wallets/tls_wallet ./tls_wallet
         cd tls_wallet
