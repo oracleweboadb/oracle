@@ -4,7 +4,7 @@
 #
 #Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
 
-export ORDS_HOME=$DOMAIN_HOME
+export ORDS_HOME=/u01/oracle
 
 echo $CUSTOM_SYS_PASSWORD > pass.txt
 echo $CUSTOM_SYS_PASSWORD >> pass.txt
@@ -12,10 +12,8 @@ echo $CUSTOM_SYS_PASSWORD >> pass.txt
 
 CURRENT_DIR=$(pwd)
 
-cd $ORDS_HOME
 cat pass.txt
 java -jar $ORDS_HOME/ords.war install adb --wallet ${CURRENT_DIR}/resources/tls_wallet.zip --wallet-service-name myatp_medium --db-user ORDS_PUBLIC_USER2 --gateway-user ORDS_PLSQL_GATEWAY2 --admin-user admin --password-stdin < pass.txt
-cd $CURRENT_DIR
 
 #Define DOMAIN_HOME
 echo "Domain Home is: " $DOMAIN_HOME

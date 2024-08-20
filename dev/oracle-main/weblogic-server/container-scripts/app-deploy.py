@@ -15,7 +15,7 @@ domainhome = os.environ.get('DOMAIN_HOME', '')
 admin_name = os.environ.get('ADMIN_NAME', 'AdminServer')
 appname    = os.environ.get('APP_NAME', 'ords')
 appfile    = os.environ.get('APP_FILE', 'ords.war')
-appdir     = os.environ.get('DOMAIN_HOME')
+appdir     = os.environ.get('ORDS_HOME')
 cluster_name = os.environ.get("CLUSTER_NAME", "")
 
 print('Domain Home      : [%s]' % domainhome)
