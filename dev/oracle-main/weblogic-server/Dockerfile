@@ -97,7 +97,7 @@ COPY container-scripts/deployAppToDomain.sh $ORDS_HOME/
 COPY container-scripts/app-deploy.py $ORDS_HOME/
 ADD properties/docker-build/ords_params.properties $ORDS_HOME/params
 
-RUN $ORDS_HOME/deployAppToDomain.sh
+RUN chmod +x $ORDS_HOME/*.sh && $ORDS_HOME/deployAppToDomain.sh
 
 # Expose ports for admin, managed server, and debug
 EXPOSE $ADMIN_PORT $ADMIN_SERVER_SSL_PORT $MANAGED_SERVER_PORT $MANAGED_SERVER_SSL_PORT $DEBUG_PORT
