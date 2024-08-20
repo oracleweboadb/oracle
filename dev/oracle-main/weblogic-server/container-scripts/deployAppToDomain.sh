@@ -13,7 +13,7 @@ echo $CUSTOM_SYS_PASSWORD >> pass.txt
 CURRENT_DIR=$(pwd)
 
 cat pass.txt
-java -jar $ORDS_HOME/ords.war install adb --wallet ${CURRENT_DIR}/resources/tls_wallet.zip --wallet-service-name myatp_medium --db-user ORDS_PUBLIC_USER2 --gateway-user ORDS_PLSQL_GATEWAY2 --admin-user admin --password-stdin < pass.txt
+java -jar $ORDS_HOME/ords.war install adb --wallet ${CURRENT_DIR}/tls_wallet.zip --wallet-service-name myatp_medium --db-user ORDS_PUBLIC_USER2 --gateway-user ORDS_PLSQL_GATEWAY2 --admin-user admin --password-stdin < pass.txt
 
 #Define DOMAIN_HOME
 echo "Domain Home is: " $DOMAIN_HOME

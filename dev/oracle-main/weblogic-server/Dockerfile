@@ -80,8 +80,19 @@ RUN /u01/oracle/createWLSDomain.sh && \
     rm ${PROPERTIES_FILE_DIR}/*.properties
 
 COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
-COPY resources/ords.war /u01/oracle/ords.war
-COPY resources/tls_wallet.zip /u01/oracle/resources/tls_wallet.zip
+
+ENV ORDS_HOME="/u01/oracle/user_projects/ords"
+
+# Copy the startup file
+RUN mkdir $ORDS_HOME && \
+    mkdir $ORDS_HOME/conf && \
+    mkdir $ORDS_HOME/params
+
+COPY resources/ords.war $ORDS_HOME/ords.war
+COPY resources/tls_wallet.zip $ORDS_HOME/tls_wallet.zip
+COPY container-scripts/deployAppToDomain.sh $ORDS_HOME/
+COPY container-scripts/app-deploy.py $ORDS_HOME/
+ADD properties/docker-build/ords_params.properties $ORDS_HOME/params
 
 RUN /u01/oracle/deployAppToDomain.sh
 
