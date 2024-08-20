@@ -63,35 +63,23 @@ COPY --chown=oracle:root container-scripts/* /u01/oracle/
 
 #Create directory where domain will be written to
 USER root
+
+ENV ORDS_HOME="/u01/oracle/user_projects/ords"
+
 RUN chmod +xw /u01/oracle/*.sh && \
     chmod +xw /u01/oracle/*.py && \
     mkdir -p ${PROPERTIES_FILE_DIR} && \
     mkdir -p $DOMAIN_HOME && \
     chown -R oracle:root $DOMAIN_HOME/.. && \
-    chown -R oracle:root ${PROPERTIES_FILE_DIR}
+    chown -R oracle:root ${PROPERTIES_FILE_DIR} && \
+    mkdir $ORDS_HOME && \
+    mkdir $ORDS_HOME/conf && \
+    mkdir $ORDS_HOME/params && \
+    chown -R oracle:root $ORDS_HOME && \
 
 COPY --chown=oracle:root properties/docker-build/domain*.properties ${PROPERTIES_FILE_DIR}/
 
 # Configuration of WLS Domain
-
-ENV ORDS_HOME="/u01/oracle/user_projects/ords"
-
-RUN mkdir $ORDS_HOME && \
-    mkdir $ORDS_HOME/conf && \
-    mkdir $ORDS_HOME/params
-
-COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
-
-COPY resources/ords.war $ORDS_HOME/ords.war
-COPY resources/tls_wallet.zip $ORDS_HOME/tls_wallet.zip
-COPY container-scripts/deployAppToDomain.sh $ORDS_HOME/
-COPY container-scripts/app-deploy.py $ORDS_HOME/
-ADD properties/docker-build/ords_params.properties $ORDS_HOME/params
-
-RUN chmod +x $ORDS_HOME/*.sh
-
-RUN chown -R oracle:oracle $ORDS_HOME
-
 USER oracle
 
 RUN /u01/oracle/createWLSDomain.sh && \
