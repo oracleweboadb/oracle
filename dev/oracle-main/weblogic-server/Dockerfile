@@ -80,7 +80,7 @@ RUN /u01/oracle/createWLSDomain.sh && \
     rm ${PROPERTIES_FILE_DIR}/*.properties
 
 COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
-COPY resources/ords.war $DOMAIN_HOME/ords.war
+COPY resources/ords.war /u01/oracle/ords.war
 COPY resources/tls_wallet.zip /u01/oracle/resources/tls_wallet.zip
 
 RUN /u01/oracle/deployAppToDomain.sh
