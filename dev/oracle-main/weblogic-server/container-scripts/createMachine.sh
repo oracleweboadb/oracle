@@ -22,6 +22,3 @@ echo "NodeManager started."
 if [ $ADD_MACHINE -eq 1 ]; then
   wlst.sh /u01/oracle/add-machine.py
 fi
-
-# print log
-tail -f log.nm

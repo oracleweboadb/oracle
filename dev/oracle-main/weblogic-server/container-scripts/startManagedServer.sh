@@ -60,8 +60,6 @@ echo "username=${USER}" >> ${MS_SECURITY}/boot.properties
 echo "password=${PASS}" >> ${MS_SECURITY}/boot.properties
 ${DOMAIN_HOME}/bin/setDomainEnv.sh
 
-
-
 # Start 'ManagedServer'
 ADMIN_SERVER_URL="http://${ADMIN_HOST}:${ADMIN_PORT}"
 if [ "${SSL_ENABLED}" = "true" ]; then
