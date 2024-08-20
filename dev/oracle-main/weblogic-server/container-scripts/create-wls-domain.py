@@ -137,6 +137,7 @@ if cluster_type == "CONFIGURED":
     set('NumOfRetriesBeforeMSIMode', 0)
     set('RetryIntervalBeforeMSIMode', 1)
     set('Cluster', cluster_name)
+    set('Machine', "Machine-" + name)
 
     if (ssl_enabled == 'true'):
       print 'Enabling SSL in the managed server...'
