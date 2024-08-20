@@ -80,6 +80,16 @@ RUN mkdir $ORDS_HOME && \
     mkdir $ORDS_HOME/conf && \
     mkdir $ORDS_HOME/params
 
+COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
+
+COPY resources/ords.war $ORDS_HOME/ords.war
+COPY resources/tls_wallet.zip $ORDS_HOME/tls_wallet.zip
+COPY container-scripts/deployAppToDomain.sh $ORDS_HOME/
+COPY container-scripts/app-deploy.py $ORDS_HOME/
+ADD properties/docker-build/ords_params.properties $ORDS_HOME/params
+
+RUN chmod +x $ORDS_HOME/*.sh
+
 RUN chown -R oracle:oracle $ORDS_HOME
 
 USER oracle
@@ -97,7 +107,7 @@ COPY container-scripts/deployAppToDomain.sh $ORDS_HOME/
 COPY container-scripts/app-deploy.py $ORDS_HOME/
 ADD properties/docker-build/ords_params.properties $ORDS_HOME/params
 
-RUN chmod +x $ORDS_HOME/*.sh && $ORDS_HOME/deployAppToDomain.sh
+RUN $ORDS_HOME/deployAppToDomain.sh
 
 # Expose ports for admin, managed server, and debug
 EXPOSE $ADMIN_PORT $ADMIN_SERVER_SSL_PORT $MANAGED_SERVER_PORT $MANAGED_SERVER_SSL_PORT $DEBUG_PORT
