@@ -17,7 +17,9 @@ chmod -R +x ${DOMAIN_HOME}/bin/* || echo
 
 # Wait for AdminServer to become available for any subsequent operation
 /u01/oracle/waitForAdminServer.sh
-/u01/oracle/createMachine.sh
+/u01/oracle/createServer.sh
+
+tail -f log.nm /u01/oracle/user_projects/domains/$DOMAIN_NAME/servers/*/logs/*.out
 
 echo "Managed Server Name: ${MANAGED_SERV_NAME}"
 echo "Managed Server Home: ${MS_HOME}"
