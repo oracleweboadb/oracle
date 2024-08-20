@@ -89,13 +89,14 @@ RUN /u01/oracle/createWLSDomain.sh && \
 
 COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
 
-COPY resources/ords.war $ORDS_HOME/ords.war
-COPY resources/tls_wallet.zip $ORDS_HOME/tls_wallet.zip
-COPY container-scripts/deployAppToDomain.sh $ORDS_HOME/
-COPY container-scripts/app-deploy.py $ORDS_HOME/
-ADD properties/docker-build/ords_params.properties $ORDS_HOME/params
+COPY --chown=oracle:root resources/ords.war $ORDS_HOME/ords.war
+COPY --chown=oracle:root resources/tls_wallet.zip $ORDS_HOME/tls_wallet.zip
+COPY --chown=oracle:root container-scripts/deployAppToDomain.sh $ORDS_HOME/
+COPY --chown=oracle:root container-scripts/app-deploy.py $ORDS_HOME/
+COPY --chown=oracle:root properties/docker-build/ords_params.properties $ORDS_HOME/params/
 
-RUN $ORDS_HOME/deployAppToDomain.sh
+RUN chmod -R g+w $ORDS_HOME && \
+    $ORDS_HOME/deployAppToDomain.sh
 
 # Expose ports for admin, managed server, and debug
 EXPOSE $ADMIN_PORT $ADMIN_SERVER_SSL_PORT $MANAGED_SERVER_PORT $MANAGED_SERVER_SSL_PORT $DEBUG_PORT
