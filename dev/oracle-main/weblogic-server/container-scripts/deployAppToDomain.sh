@@ -4,8 +4,6 @@
 #
 #Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
 
-export ORDS_HOME=/u01/oracle
-
 echo $CUSTOM_SYS_PASSWORD > pass.txt
 echo $CUSTOM_SYS_PASSWORD >> pass.txt
 echo $CUSTOM_SYS_PASSWORD >> pass.txt
