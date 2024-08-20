@@ -37,3 +37,5 @@ editMode()
 
 cd('/Servers/%s' % hostname.upper())
 cmo.setMachine(getMBean('/Machines/' + nmname))
+
+saveActivate()
