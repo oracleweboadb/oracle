@@ -75,7 +75,7 @@ RUN chmod +xw /u01/oracle/*.sh && \
     mkdir $ORDS_HOME && \
     mkdir $ORDS_HOME/conf && \
     mkdir $ORDS_HOME/params && \
-    chown -R oracle:root $ORDS_HOME && \
+    chown -R oracle:root $ORDS_HOME
 
 COPY --chown=oracle:root properties/docker-build/domain*.properties ${PROPERTIES_FILE_DIR}/
 
