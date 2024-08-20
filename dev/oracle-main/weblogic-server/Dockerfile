@@ -77,6 +77,15 @@ RUN chmod +xw /u01/oracle/*.sh && \
     mkdir $ORDS_HOME/params && \
     chown -R oracle:root $ORDS_HOME
 
+COPY --chown=oracle:root resources/ords.war $ORDS_HOME/ords.war
+COPY --chown=oracle:root resources/tls_wallet.zip $ORDS_HOME/tls_wallet.zip
+COPY --chown=oracle:root container-scripts/deployAppToDomain.sh $ORDS_HOME/
+COPY --chown=oracle:root container-scripts/app-deploy.py $ORDS_HOME/
+COPY --chown=oracle:root properties/docker-build/ords_params.properties $ORDS_HOME/params/
+
+RUN chmod +xw $ORDS_HOME/*.sh && \
+    chmod +xw $ORDS_HOME*.py
+
 COPY --chown=oracle:root properties/docker-build/domain*.properties ${PROPERTIES_FILE_DIR}/
 
 # Configuration of WLS Domain
@@ -88,12 +97,6 @@ RUN /u01/oracle/createWLSDomain.sh && \
     rm ${PROPERTIES_FILE_DIR}/*.properties
 
 COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
-
-COPY --chown=oracle:root resources/ords.war $ORDS_HOME/ords.war
-COPY --chown=oracle:root resources/tls_wallet.zip $ORDS_HOME/tls_wallet.zip
-COPY --chown=oracle:root container-scripts/deployAppToDomain.sh $ORDS_HOME/
-COPY --chown=oracle:root container-scripts/app-deploy.py $ORDS_HOME/
-COPY --chown=oracle:root properties/docker-build/ords_params.properties $ORDS_HOME/params/
 
 RUN chmod -R g+w $ORDS_HOME && \
     $ORDS_HOME/deployAppToDomain.sh
