@@ -80,8 +80,7 @@ RUN mkdir $ORDS_HOME && \
     mkdir $ORDS_HOME/conf && \
     mkdir $ORDS_HOME/params
 
-RUN chmod ug+x $ORDS_HOME/*.sh && \
-    chown -R oracle:oracle $ORDS_HOME
+RUN chown -R oracle:oracle $ORDS_HOME
 
 USER oracle
 
