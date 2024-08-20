@@ -23,6 +23,3 @@ if [ $ADD_SERVER -eq 1 ]; then
   wlst.sh /u01/oracle/add-machine.py
   wlst.sh /u01/oracle/add-server.py
 fi
-
-# print log
-tail -f log.nm /u01/oracle/user_projects/domains/$DOMAIN_NAME/servers/*/logs/*.out

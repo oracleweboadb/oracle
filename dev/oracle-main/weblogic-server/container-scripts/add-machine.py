@@ -24,7 +24,7 @@ connectToAdmin()
 editMode()
 
 cd('/')
-cmo.createMachine(nmname)
+cmo.createMachine(nmname, 'UnixMachine')
 cd('/Machines/' + nmname +'/NodeManager/' + nmname)
 cmo.setListenPort(int(nmport))
 cmo.setListenAddress(nmhost)

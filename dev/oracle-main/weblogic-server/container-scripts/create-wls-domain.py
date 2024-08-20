@@ -119,7 +119,6 @@ cd('/')
 cl=create(cluster_name, 'Cluster')
 
 if cluster_type == "CONFIGURED":
-
   # Create managed servers
   for index in range(0, number_of_ms):
     cd('/')
@@ -137,7 +136,6 @@ if cluster_type == "CONFIGURED":
     set('NumOfRetriesBeforeMSIMode', 0)
     set('RetryIntervalBeforeMSIMode', 1)
     set('Cluster', cluster_name)
-    set('Machine', "Machine-" + name)
 
     if (ssl_enabled == 'true'):
       print 'Enabling SSL in the managed server...'
