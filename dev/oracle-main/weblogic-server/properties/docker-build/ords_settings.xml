@@ -14,4 +14,6 @@
     <entry key="jdbc.statementTimeout">900</entry>
     <entry key="jdbc.MaxConnectionReuseCount">1000</entry>
     <entry key="debug.printDebugToScreen">true</entry>
+    <entry key="restEnabledSql.active">true</entry>
+    <entry key="feature.sdw">true</entry>
 </properties>
