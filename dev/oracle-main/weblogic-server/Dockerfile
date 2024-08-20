@@ -73,20 +73,24 @@ RUN chmod +xw /u01/oracle/*.sh && \
 COPY --chown=oracle:root properties/docker-build/domain*.properties ${PROPERTIES_FILE_DIR}/
 
 # Configuration of WLS Domain
+
+ENV ORDS_HOME="/u01/oracle/user_projects/ords"
+
+RUN mkdir $ORDS_HOME && \
+    mkdir $ORDS_HOME/conf && \
+    mkdir $ORDS_HOME/params
+
+RUN chmod ug+x $ORDS_HOME/*.sh && \
+    chown -R oracle:oracle $ORDS_HOME
+
 USER oracle
+
 RUN /u01/oracle/createWLSDomain.sh && \
     chmod -R g+w $DOMAIN_HOME && \
     echo ". $DOMAIN_HOME/bin/setDomainEnv.sh" >> /u01/oracle/.bashrc && \
     rm ${PROPERTIES_FILE_DIR}/*.properties
 
 COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
-
-ENV ORDS_HOME="/u01/oracle/user_projects/ords"
-
-# Copy the startup file
-RUN mkdir $ORDS_HOME && \
-    mkdir $ORDS_HOME/conf && \
-    mkdir $ORDS_HOME/params
 
 COPY resources/ords.war $ORDS_HOME/ords.war
 COPY resources/tls_wallet.zip $ORDS_HOME/tls_wallet.zip
