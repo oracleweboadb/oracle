@@ -36,5 +36,7 @@ connectToAdmin()
 editMode()
 
 
+ls('a')
+ls('/Servers/')
 cd('/Servers/%s' % hostname)
 cmo.setMachine(getMBean('/Machines/' + nmname))
