@@ -22,10 +22,10 @@ cluster_name = os.environ.get("CLUSTER_NAME", "DockerCluster")
 
 # ManagedServer details
 msinternal = socket.gethostbyname(hostname)
+msname = os.environ.get('MS_NAME', hostname)
 mshost = os.environ.get('MS_HOST', msinternal)
-msport = os.environ.get('MS_PORT', '8001')
+msport = os.environ.get('MS_PORT', '7002')
 memargs = os.environ.get('USER_MEM_ARGS', '')
-domain_path = os.environ.get("DOMAIN_HOME")
 
 # Connect to the AdminServer
 # ==========================
@@ -34,11 +34,57 @@ connectToAdmin()
 # Create a ManagedServer
 # ======================
 editMode()
+cd('/')
+cmo.createServer(msname)
 
-readDomain(domain_path)
-
-cd('/Servers/' + hostname)
+cd('/Servers/' + msname)
 cmo.setMachine(getMBean('/Machines/' + nmname))
+cmo.setCluster(getMBean('/Clusters/' + cluster_name))
 
-updateDomain()
-closeDomain()
+# Default Channel for ManagedServer
+# ---------------------------------
+cmo.setListenAddress(mshost)
+cmo.setListenPort(int(msport))
+cmo.setListenPortEnabled(true)
+cmo.setExternalDNSName(mshost)
+
+# Disable SSL for this ManagedServer
+# ----------------------------------
+cd('/Servers/' + msname + '/SSL/' + msname)
+cmo.setEnabled(false)
+
+# Custom Channel for ManagedServer
+# --------------------------------
+#cd('/Servers/' + msname)
+#cmo.createNetworkAccessPoint('Channel-0')
+
+#cd('/Servers/' + msname + '/NetworkAccessPoints/Channel-0')
+#cmo.setProtocol('t3')
+#cmo.setEnabled(true)
+#cmo.setPublicAddress(mshost)
+#cmo.setPublicPort(int(msport))
+#cmo.setListenAddress(msinternal)
+#cmo.setListenPort(int(msport))
+#cmo.setHttpEnabledForThisProtocol(true)
+#cmo.setTunnelingEnabled(false)
+#cmo.setOutboundEnabled(false)
+#cmo.setTwoWaySSLEnabled(false)
+#cmo.setClientCertificateEnforced(false)
+
+# Custom Startup Parameters because NodeManager writes wrong AdminURL in startup.properties
+# -----------------------------------------------------------------------------------------
+cd('/Servers/' + msname + '/ServerStart/' + msname)
+arguments = '-Djava.security.egd=file:/dev/./urandom -Dweblogic.Name=' + msname + ' -Dweblogic.management.server=http://' + admin_host + ':' + admin_port + ' ' + memargs
+cmo.setArguments(arguments)
+saveActivate()
+
+# Start Managed Server
+# ------------
+try:
+    start(msname, 'Server')
+except:
+    dumpStack()
+
+# Exit
+# =========
+exit()

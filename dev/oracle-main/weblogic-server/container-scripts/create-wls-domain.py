@@ -118,54 +118,54 @@ setOption('OverwriteDomain', 'true')
 cd('/')
 cl=create(cluster_name, 'Cluster')
 
-if cluster_type == "CONFIGURED":
-  # Create managed servers
-  for index in range(0, number_of_ms):
-    cd('/')
-    msIndex = index+1
-
-    cd('/')
-    name = '%s%s' % (managed_server_name_base, msIndex)
-#   name_svc = '%s%s' % (managed_server_name_base_svc, msIndex)
-
-    create(name, 'Server')
-    cd('/Servers/%s/' % name )
-    print('managed server name is %s' % name);
-#   set('ListenAddress', '%s-%s' % (domain_uid, name_svc))
-    set('ListenPort', server_port)
-    set('NumOfRetriesBeforeMSIMode', 0)
-    set('RetryIntervalBeforeMSIMode', 1)
-    set('Cluster', cluster_name)
-
-    if (ssl_enabled == 'true'):
-      print 'Enabling SSL in the managed server...'
-      create(name, 'SSL')
-      cd('/Servers/' + name+ '/SSL/' + name)
-      set('ListenPort', managed_server_ssl_port)
-      set('Enabled', 'True')
-
-#    create(name,'Log')
-#    cd('/Servers/%s/Log/%s' % (name, name))
-#    set('FileName', '%s.log' % (name))
-
-else:
-  print('Configuring Dynamic Cluster %s' % cluster_name)
-
-  templateName = cluster_name + "-template"
-  print('Creating Server Template: %s' % templateName)
-  st1=create(templateName, 'ServerTemplate')
-  print('Done creating Server Template: %s' % templateName)
-  cd('/ServerTemplates/%s' % templateName)
-  cmo.setListenPort(server_port)
-  if (ssl_enabled == 'true'):
-    cmo.getSSL().setEnabled(true)
-    cmo.getSSL().setListenPort(managed_server_ssl_port)
-#  cmo.setListenAddress('%s-%s${id}' % (domain_uid, managed_server_name_base_svc))
-  cmo.setCluster(cl)
-#  create(templateName,'Log')
-#  cd('Log/%s' % templateName)
-#  set('FileName', '%s${id}.log' % (managed_server_name_base))
-#  print('Done setting attributes for Server Template: %s' % templateName);
+# if cluster_type == "CONFIGURED":
+#   # Create managed servers
+#   for index in range(0, number_of_ms):
+#     cd('/')
+#     msIndex = index+1
+#
+#     cd('/')
+#     name = '%s%s' % (managed_server_name_base, msIndex)
+# #   name_svc = '%s%s' % (managed_server_name_base_svc, msIndex)
+#
+#     create(name, 'Server')
+#     cd('/Servers/%s/' % name )
+#     print('managed server name is %s' % name);
+# #   set('ListenAddress', '%s-%s' % (domain_uid, name_svc))
+#     set('ListenPort', server_port)
+#     set('NumOfRetriesBeforeMSIMode', 0)
+#     set('RetryIntervalBeforeMSIMode', 1)
+#     set('Cluster', cluster_name)
+#
+#     if (ssl_enabled == 'true'):
+#       print 'Enabling SSL in the managed server...'
+#       create(name, 'SSL')
+#       cd('/Servers/' + name+ '/SSL/' + name)
+#       set('ListenPort', managed_server_ssl_port)
+#       set('Enabled', 'True')
+#
+# #    create(name,'Log')
+# #    cd('/Servers/%s/Log/%s' % (name, name))
+# #    set('FileName', '%s.log' % (name))
+#
+# else:
+#   print('Configuring Dynamic Cluster %s' % cluster_name)
+#
+#   templateName = cluster_name + "-template"
+#   print('Creating Server Template: %s' % templateName)
+#   st1=create(templateName, 'ServerTemplate')
+#   print('Done creating Server Template: %s' % templateName)
+#   cd('/ServerTemplates/%s' % templateName)
+#   cmo.setListenPort(server_port)
+#   if (ssl_enabled == 'true'):
+#     cmo.getSSL().setEnabled(true)
+#     cmo.getSSL().setListenPort(managed_server_ssl_port)
+# #  cmo.setListenAddress('%s-%s${id}' % (domain_uid, managed_server_name_base_svc))
+#   cmo.setCluster(cl)
+# #  create(templateName,'Log')
+# #  cd('Log/%s' % templateName)
+# #  set('FileName', '%s${id}.log' % (managed_server_name_base))
+# #  print('Done setting attributes for Server Template: %s' % templateName);
 
 
   cd('/Clusters/%s' % cluster_name)
