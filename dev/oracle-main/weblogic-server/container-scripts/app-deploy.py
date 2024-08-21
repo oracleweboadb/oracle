@@ -37,7 +37,7 @@ app.setStagingMode('nostage')
 
 # Assign application to AdminServer
 # =================================
-#assign('AppDeployment', appname, 'Target', admin_name)
+assign('AppDeployment', appname, 'Target', admin_name)
 assign('AppDeployment', appname, 'Target', cluster_name)
 
 # Update Domain, Close It, Exit
