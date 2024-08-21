@@ -10,7 +10,7 @@
     - container_registry_local: "localhost/"
     - autonomous_database_tag: "1"
     - weblogic_server_tag: "1"
-    - weblogic_ords_version: "23.1.2.115.1944"
+    - weblogic_ords_version: "24.2.3.201.1847"
     - autonomous_database_wallet_password: "123456789aA123"
     - autonomous_admin_password: "123456789aA123"
     - weblogic_username: "hello"
