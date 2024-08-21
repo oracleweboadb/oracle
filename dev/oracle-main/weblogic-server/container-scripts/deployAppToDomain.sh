@@ -12,9 +12,8 @@ echo $CUSTOM_SYS_PASSWORD > pass.txt
 echo $CUSTOM_SYS_PASSWORD >> pass.txt
 echo $CUSTOM_SYS_PASSWORD >> pass.txt
 
-mv ords.war ords_configured.war
-java -jar $ORDS_HOME/ords_configured.war install adb --wallet tls_wallet.zip --wallet-service-name myatp_medium --db-user ORDS_PUBLIC_USER2 --gateway-user ORDS_PLSQL_GATEWAY2 --admin-user admin --password-stdin < pass.txt
-java -jar $ORDS_HOME/ords_configured.war --config $(pwd) war ords.war
+java -jar $ORDS_HOME/ords.war install adb --wallet tls_wallet.zip --wallet-service-name myatp_medium --db-user ORDS_PUBLIC_USER2 --gateway-user ORDS_PLSQL_GATEWAY2 --admin-user admin --password-stdin < pass.txt
+java -jar $ORDS_HOME/ords.war --config $(pwd) war ords.war
 
 cd ${CURRENT_DIR}
 
