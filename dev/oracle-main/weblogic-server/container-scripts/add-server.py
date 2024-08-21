@@ -23,7 +23,7 @@ cluster_name = os.environ.get("CLUSTER_NAME", "DockerCluster")
 # ManagedServer details
 msinternal = socket.gethostbyname(hostname)
 mshost = os.environ.get('MS_HOST', msinternal)
-msport = os.environ.get('MS_PORT', '8001')
+msport = os.environ.get('MS_PORT', '8002')
 memargs = os.environ.get('USER_MEM_ARGS', '')
 domain_path = os.environ.get("DOMAIN_HOME")
 
