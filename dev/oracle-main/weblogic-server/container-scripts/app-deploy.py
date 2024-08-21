@@ -34,7 +34,7 @@ cd('/')
 app = create(appname, 'AppDeployment')
 app.setSourcePath(appdir + '/' + appfile)
 app.setStagingMode('nostage')
-app.xxx()
+app.setModuleType('Web Application')
 
 # Assign application to AdminServer
 # =================================
