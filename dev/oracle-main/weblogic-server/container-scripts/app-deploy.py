@@ -34,7 +34,6 @@ cd('/')
 app = create(appname, 'AppDeployment')
 app.setSourcePath(appdir + '/' + appfile)
 app.setStagingMode('nostage')
-app.setModuleType('Web Application')
 
 # Assign application to AdminServer
 # =================================
@@ -45,4 +44,17 @@ assign('AppDeployment', appname, 'Target', cluster_name)
 # ==========================
 updateDomain()
 closeDomain()
+
+readDomain(domainhome)
+
+# Create Application
+# ==================
+cd('/AppDeployment/ords')
+set('ModuleType','Web Application')
+
+# Update Domain, Close It, Exit
+# ==========================
+updateDomain()
+closeDomain()
+
 exit()
