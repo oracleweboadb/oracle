@@ -55,12 +55,12 @@
 #        force: yes
 #      become: true
 
-    - name: Download ords
-      ansible.builtin.shell: |
-        mkdir -p {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources 
-        cd {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources
-        curl -o ords.zip https://download.oracle.com/otn_software/java/ords/ords-{{ weblogic_ords_version }}.zip
-        unzip -o ords.zip
+#    - name: Download ords
+#      ansible.builtin.shell: |
+#        mkdir -p {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources
+#        cd {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources
+#        curl -o ords.zip https://download.oracle.com/otn_software/java/ords/ords-{{ weblogic_ords_version }}.zip
+#        unzip -o ords.zip
 
 #    - name: Build a autonomous database image
 #      ansible.builtin.shell: |
@@ -185,6 +185,8 @@
     - name: Download wallet so that ORDS can use it
       ansible.builtin.shell: |
         podman cp oadb:/u01/app/oracle/wallets/tls_wallet ./
+        ls
+        
         cd tls_wallet
         
         pwd
