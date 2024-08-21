@@ -45,16 +45,4 @@ assign('AppDeployment', appname, 'Target', cluster_name)
 updateDomain()
 closeDomain()
 
-readDomain(domainhome)
-
-# Create Application
-# ==================
-cd('/AppDeployment/ords')
-set('ModuleType','Web Application')
-
-# Update Domain, Close It, Exit
-# ==========================
-updateDomain()
-closeDomain()
-
 exit()
