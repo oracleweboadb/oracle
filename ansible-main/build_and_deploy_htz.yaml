@@ -184,7 +184,7 @@
 
     - name: Download wallet so that ORDS can use it
       ansible.builtin.shell: |
-        podman cp oadb:/u01/app/oracle/wallets/tls_wallet ./tls_wallet
+        podman cp oadb:/u01/app/oracle/wallets/tls_wallet ./
         cd tls_wallet
         
         pwd
