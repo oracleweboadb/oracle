@@ -23,7 +23,7 @@
     - security_properties: |-
         username={{ weblogic_username }}
         password={{ weblogic_password }}
-        JAVA_OPTIONS=-Dweblogic.StdoutDebugEnabled=true
+        JAVA_OPTIONS=-Dweblogic.StdoutDebugEnabled=true -Dweblogic.security.SSL.ignoreHostnameVerification=true
   tasks:
     - name: Print hostname information
       ansible.builtin.shell: |
