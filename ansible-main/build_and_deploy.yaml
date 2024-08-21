@@ -176,13 +176,15 @@
 
     - name: Download wallet so that ORDS can use it
       ansible.builtin.shell: |
-        podman cp oadb:/u01/app/oracle/wallets/tls_wallet ./tls_wallet
+        podman cp oadb:/u01/app/oracle/wallets/tls_wallet ./
+        ls
+        
         cd tls_wallet
         
         pwd
         ls
         sed -i 's/localhost/oadb/g' tnsnames.ora 
-                
+        
         zip -r tls_wallet.zip .
         cp tls_wallet.zip {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources/tls_wallet.zip
       become: true
