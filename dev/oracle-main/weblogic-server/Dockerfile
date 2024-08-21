@@ -98,8 +98,8 @@ RUN /u01/oracle/createWLSDomain.sh && \
 
 COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
 
-#RUN chmod -R g+w $ORDS_HOME && \
-#    $ORDS_HOME/deployAppToDomain.sh
+RUN chmod -R g+w $ORDS_HOME && \
+    $ORDS_HOME/deployAppToDomain.sh
 
 COPY properties/docker-build/ords_settings.xml $ORDS_HOME/global/settings.xml
 

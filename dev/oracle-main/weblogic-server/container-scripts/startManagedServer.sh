@@ -18,7 +18,6 @@ chmod -R +x ${DOMAIN_HOME}/bin/* || echo
 # Wait for AdminServer to become available for any subsequent operation
 /u01/oracle/waitForAdminServer.sh
 /u01/oracle/createServer.sh
-/u01/oracle/deployAppToDomain.sh
 
 echo "Managed Server Name: ${MANAGED_SERV_NAME}"
 echo "Managed Server Home: ${MS_HOME}"
