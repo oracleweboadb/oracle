@@ -249,7 +249,6 @@
           - 7001:7002
         volume:
           - "/home/root/properties:/u01/oracle/properties:Z"
-          -
         state: created
         rm: true
         recreate: true
