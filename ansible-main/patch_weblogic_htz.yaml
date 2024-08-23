@@ -20,7 +20,7 @@
     - oracle_username: ""
     - oracle_password: ""
     - weblogic_image_tag: "1"
-    - old_tag: ""
+    - old_tag: "1"
     - oracle_username: "xoxo"
     - oracle_password: "xoxo"
     - build_security_properties: |-
