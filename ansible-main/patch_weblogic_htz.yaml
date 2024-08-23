@@ -17,6 +17,12 @@
     - weblogic_password: "123456789"
     - github_username: ""
     - github_password: ""
+    - oracle_username: ""
+    - oracle_password: ""
+    - weblogic_image_tag: "1"
+    - old_tag: ""
+    - oracle_username: ""
+    - oracle_password: ""
     - build_security_properties: |-
         username={{ weblogic_username }}
         password={{ weblogic_password }}
@@ -55,39 +61,31 @@
 #        force: yes
 #      become: true
 
-#    - name: Download ords
-#      ansible.builtin.shell: |
-#        mkdir -p {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources
-#        cd {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources
-#        curl -o ords.zip https://download.oracle.com/otn_software/java/ords/ords-{{ weblogic_ords_version }}.zip
-#        unzip -o ords.zip
+    - name: Install Java
+      hosts: all
+      become: yes
+      tasks:
+        - name: Install Java
+          yum:
+            name: java-1.8.0-openjdk
+            state: present
 
-#    - name: Build a autonomous database image
-#      ansible.builtin.shell: |
-#        export CUSTOM_IMAGE_TAG="oracle/oad:{{ autonomous_database_tag }}"
-#
-#        chown -R $USER {{ root_directory }}
-#        chmod -R +x {{ root_directory }}
-#        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh
-#        {{ root_directory }}/{{ environment_name }}/oracle-main/autonomous-database/build.sh $CUSTOM_IMAGE_TAG
-#      args:
-#        executable: /bin/bash
-#      become: true
-
-    - name: Creating a file with content
-      copy:
-        dest: "{{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/properties/docker-build/domain_security.properties"
-        content: "{{ build_security_properties }}"
-      become: true
-
-#    - name: Ensure oadb container is stopped
-#      ansible.builtin.systemd:
-#        name: container-oadb
-#        daemon_reload: true
-#        state: stopped
-#        enabled: true
-#      become: true
-#      ignore_errors: true
+    - name: Download imagetool
+      ansible.builtin.shell: |
+        curl -m 120 -fL https://github.com/oracle/weblogic-image-tool/releases/latest/download/imagetool.zip -o ./imagetool.zip
+        unzip imagetool.zip
+        cd imagetool/bin
+        ./imagetool.sh cache addInstaller --type wls --version 14.1.1.0 --path /home/root/fmw_14.1.1.0.0_wls_lite_slim_Disk1_1of1.zip
+        ./imagetool.sh cache addInstaller --type jdk --version 8u202 --path /home/root/jdk-8u202-linux-x64.tar.gz
+        ./imagetool.sh imagetool rebase \
+                       --sourceImage=localhost/oracle/weblogic:{{ old_tag }} \
+                       --tag=oracle/weblogic:{{ old_tag }}-patched \
+                       --builder=/usr/bin/podman \
+                       --version 14.1.1.0 \
+                       --fromImage=container-registry.oracle.com/middleware/weblogic:14.1.1.0-11 \
+                       --latestPSU \
+                       --user {{ oracle_username }} \
+                       --password {{ oracle_password }}
 
     - name: Ensure weblogic-admin container is stopped
       ansible.builtin.systemd:
@@ -116,131 +114,17 @@
       become: true
       ignore_errors: true
 
-    - name: Create a oadb volume
-      containers.podman.podman_volume:
-        state: present
-        name: oadb_volume
-        label:
-          owner: autonomous-database
-      become: true
-
-    - name: Create a podman network
-      containers.podman.podman_network:
-        name: oracle_network
-      become: true
-
-#    - name: "Create the autonomous database container"
-#      containers.podman.podman_container:
-#        name: oadb
-#        hostname: oadb
-#        image: "{{ container_registry_local }}oracle/oad:{{ autonomous_database_tag }}"
-#        publish:
-#          - 1521:1522
-#          - 1522:1522
-#          - 8443:8443
-#          - 27017:27017
-#        env:
-#          WORKLOAD_TYPE: ATP
-#          WALLET_PASSWORD: "{{ autonomous_database_wallet_password }}"
-#          ADMIN_PASSWORD: "{{ autonomous_admin_password }}"
-#        cap_add:
-#          - SYS_ADMIN
-#        device:
-#          - /dev/fuse
-#        volume:
-#          - "oadb_volume:/u01/data"
-#        state: created
-#        network: "oracle_network"
-#        network_aliases:
-#          - "oadb"
-#        recreate: true
-#        rm: true
-#        generate_systemd:
-#          names: true
-#          restart_policy: always
-#      become: true
-
-#    - name: Generate systemd unit file for oadb
-#      containers.podman.podman_generate_systemd:
-#        name: oadb
-#        new: true
-#        no_header: true
-#        dest: /etc/systemd/system
-#      become: true
-
-#    - name: Ensure oadb container is started and enabled
-#      ansible.builtin.systemd:
-#        name: container-oadb
-#        daemon_reload: true
-#        state: started
-#        enabled: true
-#      become: true
-
-    - name: Wait for OADB to be healthy
-      ansible.builtin.shell: |
-        podman wait --condition healthy oadb
-        echo "OADB is healthy and ready to accept connections!"
-      become: true
-
-    - name: Download wallet so that ORDS can use it
-      ansible.builtin.shell: |
-        podman cp oadb:/u01/app/oracle/wallets/tls_wallet ./
-        ls
-        
-        cd tls_wallet
-        
-        pwd
-        ls
-        sed -i 's/localhost/oadb/g' tnsnames.ora 
-        
-        zip -r tls_wallet.zip .
-        cp tls_wallet.zip {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/resources/tls_wallet.zip
-      become: true
-      register: wallet_configuration
-
-    - debug: msg="STDOUT:{{ wallet_configuration.stdout }}\n-----\nSTDERR:{{ wallet_configuration.stderr }}"
-
-    - name: Add IP address so resolution of oadb works correctly
-      lineinfile:
-        dest: /etc/hosts
-        line: '172.17.0.1 oadb'
-        state: present
-
-    - name: Ensure the directory /home/root/oracle exists
-      ansible.builtin.file:
-        path: /home/root/properties
-        state: directory
-        mode: '0777'
-      become: true
-
     - name: Creating a file with content
       copy:
         dest: "/home/root/properties/security.properties"
         content: "{{ security_properties }}"
       become: true
 
-    - name: Build a weblogic server image
-      ansible.builtin.shell: |
-        export CUSTOM_IMAGE_TAG="oracle/weblogic:{{ weblogic_server_tag }}"
-        export WEBLOGIC_USERNAME={{ weblogic_username }}
-        export WEBLOGIC_PASSWORD={{ weblogic_password }}
-        export PROPERTIES_PATH={{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/properties/docker-build/domain_security.properties
-        
-        chown -R $USER {{ root_directory }}
-        chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/build.sh
-        {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/build.sh
-      args:
-        executable: /bin/bash
-      become: true
-      register: weblogic_build
-
-    - debug: msg="STDOUT:{{ weblogic_build.stdout }}\n-----\nSTDERR:{{ weblogic_build.stderr }}"
-
     - name: "Create the admin weblogic server container"
       containers.podman.podman_container:
         name: weblogic-admin
         hostname: weblogic-admin
-        image: "{{ container_registry_local }}oracle/weblogic:{{ weblogic_server_tag }}"
+        image: "{{ container_registry_local }}oracle/weblogic:{{ old_tag }}-patched"
         network: "oracle_network"
         network_aliases:
           - "AdminServer"
@@ -258,7 +142,7 @@
       containers.podman.podman_container:
         name: wls_ords1
         hostname: wls_ords1
-        image: "{{ container_registry_local }}oracle/weblogic:{{ weblogic_server_tag }}"
+        image: "{{ container_registry_local }}oracle/weblogic:{{ old_tag }}-patched"
         env:
           MANAGED_SERV_NAME: "WLS_ORDS1"
         publish:
@@ -281,7 +165,7 @@
       containers.podman.podman_container:
         name: wls_ords2
         hostname: wls_ords2
-        image: "{{ container_registry_local }}oracle/weblogic:{{ weblogic_server_tag }}"
+        image: "{{ container_registry_local }}oracle/weblogic:{{ old_tag }}-patched"
         env:
           MANAGED_SERV_NAME: "WLS_ORDS2"
         publish:

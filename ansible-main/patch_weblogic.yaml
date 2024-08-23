@@ -1,0 +1,48 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  vars:
+    - root_directory: "/home/root/oracle"
+    - environment_name: "dev"
+    - container_registry: "container-registry.oracle.com"
+    - container_registry_username: ""
+    - container_registry_password: ""
+    - container_registry_local: "localhost/"
+    - autonomous_database_tag: "1"
+    - weblogic_server_tag: "1"
+    - weblogic_ords_version: "24.2.3.201.1847"
+    - autonomous_database_wallet_password: "123456789aA123"
+    - autonomous_admin_password: "123456789aA123"
+    - weblogic_username: "hello"
+    - weblogic_password: "123456789"
+    - github_username: ""
+    - github_password: ""
+    - build_security_properties: |-
+        username={{ weblogic_username }}
+        password={{ weblogic_password }}
+    - security_properties: |-
+        username={{ weblogic_username }}
+        password={{ weblogic_password }}
+        JAVA_OPTIONS=-Dweblogic.StdoutDebugEnabled=true -Dweblogic.security.SSL.ignoreHostnameVerification=true
+  tasks:
+    - name: Print hostname information
+      ansible.builtin.shell: |
+        hostname
+      args:
+        executable: /bin/bash
+      become: true
+
+    - name: Login to  and create containers/auth.json
+      containers.podman.podman_login:
+        username: "{{ container_registry_username }}"
+        password: "{{ container_registry_password }}"
+        registry: "{{ container_registry }}"
+      become: true
+
+    - name: Clone a repo with separate git directory
+      ansible.builtin.git:
+        repo: https://{{ github_username }}:{{ github_password }}@github.com/MTA-IT-Middleware-Platform-Technology/ordsapps
+        dest: /home/root/oracle
+        version: main
+        force: yes
+      become: true
