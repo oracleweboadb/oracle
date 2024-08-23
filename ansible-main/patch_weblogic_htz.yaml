@@ -79,10 +79,10 @@
                        --tag=oracle/weblogic:{{ old_tag }}-patched \
                        --builder=/usr/bin/podman \
                        --version 14.1.1.0 \
-                       --fromImage=container-registry.oracle.com/middleware/weblogic:14.1.1.0-11 \
-                       --latestPSU \
-                       --user {{ oracle_username }} \
-                       --password {{ oracle_password }}
+                       --fromImage=container-registry.oracle.com/middleware/weblogic:14.1.1.0-11
+#                       --latestPSU \
+#                       --user {{ oracle_username }} \
+#                       --password {{ oracle_password }}
 
     - name: Ensure weblogic-admin container is stopped
       ansible.builtin.systemd:
