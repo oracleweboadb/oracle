@@ -62,16 +62,13 @@
 #      become: true
 
     - name: Install Java
-      hosts: all
-      become: yes
-      tasks:
-        - name: Install Java
-          yum:
-            name: java-1.8.0-openjdk
-            state: present
+      yum:
+        name: java-1.8.0-openjdk
+        state: present
 
     - name: Download imagetool
       ansible.builtin.shell: |
+        export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/
         curl -m 120 -fL https://github.com/oracle/weblogic-image-tool/releases/latest/download/imagetool.zip -o ./imagetool.zip
         unzip imagetool.zip
         cd imagetool/bin
