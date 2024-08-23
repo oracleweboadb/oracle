@@ -24,4 +24,4 @@ tag_name
 
 cd ${scriptDir}
 echo "podman build --force-rm=true --no-cache=true $BUILD_ARG -t ${tagName} ${scriptDir}"
-podman build --force-rm=true --no-cache=true $BUILD_ARG BASE_IMAGE=$1 -t ${tagName} ${scriptDir}
+podman build --force-rm=true --no-cache=true $BUILD_ARG --build-arg BASE_IMAGE=$1 -t ${tagName} ${scriptDir}
