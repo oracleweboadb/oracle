@@ -17,6 +17,7 @@
     - weblogic_password: "123456789"
     - github_username: ""
     - github_password: ""
+    - weblogic_base_image: "container-registry.oracle.com/middleware/weblogic:14.1.1.0-11"
     - build_security_properties: |-
         username={{ weblogic_username }}
         password={{ weblogic_password }}
@@ -228,7 +229,7 @@
         
         chown -R $USER {{ root_directory }}
         chmod +x {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/build.sh
-        {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/build.sh
+        {{ root_directory }}/{{ environment_name }}/oracle-main/weblogic-server/build.sh {{ weblogic_base_image }}
       args:
         executable: /bin/bash
       become: true
