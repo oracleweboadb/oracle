@@ -21,8 +21,8 @@
     - oracle_password: ""
     - weblogic_image_tag: "1"
     - old_tag: ""
-    - oracle_username: ""
-    - oracle_password: ""
+    - oracle_username: "xoxo"
+    - oracle_password: "xoxo"
     - build_security_properties: |-
         username={{ weblogic_username }}
         password={{ weblogic_password }}
