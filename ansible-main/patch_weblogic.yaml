@@ -55,7 +55,7 @@
 
     - name: Install Java
       yum:
-        name: openjdk-8-jdk
+        name: java-1.8.0-openjdk
         state: present
 
     - name: Download imagetool
