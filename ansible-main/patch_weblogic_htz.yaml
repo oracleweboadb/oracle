@@ -72,7 +72,7 @@
         curl -m 120 -fL https://github.com/oracle/weblogic-image-tool/releases/latest/download/imagetool.zip -o ./imagetool.zip
         unzip imagetool.zip
         cd imagetool/bin
-        ./imagetool.sh cache addInstaller --type wls --version 14.1.1.0 --path /home/root/fmw_14.1.1.0.0_wls_lite_slim_Disk1_1of1.zip --force
+        ./imagetool.sh cache addInstaller --type wls --version 14.1.1.0 --path /home/root/fmw_14.1.1.0.0_wls_lite_Disk1_1of1.zip --force
         ./imagetool.sh cache addInstaller --type jdk --version 8u202 --path /home/root/jdk-8u202-linux-x64.tar.gz --force
         ./imagetool.sh rebase \
                        --sourceImage=localhost/oracle/weblogic:{{ old_tag }} \
