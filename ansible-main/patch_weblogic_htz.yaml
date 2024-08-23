@@ -62,7 +62,7 @@
 #      become: true
 
     - name: Install Java
-      yum:
+      apt:
         name: java-1.8.0-openjdk
         state: present
 
