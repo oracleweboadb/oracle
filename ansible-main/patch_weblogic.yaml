@@ -20,16 +20,9 @@
     - oracle_username: ""
     - oracle_password: ""
     - weblogic_image_tag: "1"
-    - old_tag: ""
-    - oracle_username: ""
-    - oracle_password: ""
-    - build_security_properties: |-
-        username={{ weblogic_username }}
-        password={{ weblogic_password }}
-    - security_properties: |-
-        username={{ weblogic_username }}
-        password={{ weblogic_password }}
-        JAVA_OPTIONS=-Dweblogic.StdoutDebugEnabled=true -Dweblogic.security.SSL.ignoreHostnameVerification=true
+    - old_tag: "1"
+    - oracle_username: "oracle_username"
+    - oracle_password: "oracle_password"
   tasks:
     - name: Print hostname information
       ansible.builtin.shell: |
@@ -54,8 +47,8 @@
       become: true
 
     - name: Install Java
-      yum:
-        name: java-1.8.0-openjdk
+      apt:
+        name: openjdk-8-jdk
         state: present
 
     - name: Download imagetool
@@ -73,10 +66,9 @@
                        --builder=/usr/bin/podman \
                        --version 14.1.1.0 \
                        --fromImage=container-registry.oracle.com/middleware/weblogic:14.1.1.0-11
-    #                       --latestPSU \
-    #                       --user {{ oracle_username }} \
-    #                       --password {{ oracle_password }}
-
+                       --latestPSU \
+                       --user {{ oracle_username }} \
+                       --password {{ oracle_password }}
 
     - name: Ensure weblogic-admin container is stopped
       ansible.builtin.systemd:

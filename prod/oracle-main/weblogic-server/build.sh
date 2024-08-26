@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 tag_name() {
    tagName=${CUSTOM_IMAGE_TAG:-"weblogic:latest"}
@@ -18,9 +18,10 @@ set_context() {
 }
 
 set_context
-./${scriptDir}/container-scripts/setEnv.sh ${scriptDir}/properties/docker-build/domain.properties
-
+chmod +x ${scriptDir}/container-scripts/setEnv.sh
+. ${scriptDir}/container-scripts/setEnv.sh ${scriptDir}/properties/docker-build/domain.properties
 tag_name
 
-cat ${scriptDir}/properties/docker-build/domain_security.properties > /tmp/ds.prop
-podman build --force-rm=true --no-cache=true $BUILD_ARG -t  ${tagName}  ${scriptDir}
+cd ${scriptDir}
+echo "podman build --force-rm=true --no-cache=true $BUILD_ARG -t ${tagName} ${scriptDir}"
+podman build --force-rm=true --no-cache=true $BUILD_ARG --build-arg BASE_IMAGE=$1 -t ${tagName} ${scriptDir}

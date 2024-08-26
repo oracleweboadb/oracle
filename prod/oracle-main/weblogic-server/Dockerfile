@@ -17,7 +17,8 @@
 #
 # Pull base image test
 # ---------------
-FROM container-registry.oracle.com/middleware/weblogic:14.1.1.0-11
+ARG BASE_IMAGE=container-registry.oracle.com/middleware/weblogic:14.1.1.0-11
+FROM $BASE_IMAGE
 
 # Maintainer
 # ----------
@@ -33,6 +34,12 @@ ARG CUSTOM_ADMIN_NAME="${CUSTOM_ADMIN_NAME:-admin-server}"
 ARG CUSTOM_ADMIN_HOST="${CUSTOM_ADMIN_HOST:-wlsadmin}"
 ARG CUSTOM_CLUSTER_NAME="${CUSTOM_CLUSTER_NAME:-DockerCluster}"
 ARG CUSTOM_SSL_ENABLED="${CUSTOM_SSL_ENABLED:-false}"
+ARG CUSTOM_DB_HOSTNAME="${CUSTOM_DB_HOSTNAME:-false}"
+ARG CUSTOM_DB_PORT="${CUSTOM_DB_PORT:-false}"
+ARG CUSTOM_DB_SERVICENAME="${CUSTOM_DB_SERVICENAME:-false}"
+ARG CUSTOM_USER_PUBLIC_PASSWORD="${CUSTOM_USER_PUBLIC_PASSWORD:-false}"
+ARG CUSTOM_SYS_USER="${CUSTOM_SYS_USER:-false}"
+ARG CUSTOM_SYS_PASSWORD="${CUSTOM_SYS_PASSWORD:-false}"
 
 # WLS Configuration
 # ---------------------------
@@ -49,6 +56,7 @@ ENV ORACLE_HOME=/u01/oracle \
     MANAGED_SERVER_PORT="${CUSTOM_MANAGED_SERVER_PORT}" \
     MANAGED_SERVER_SSL_PORT="${CUSTOM_MANAGED_SERVER_SSL_PORT}" \
     MANAGED_SERV_NAME="${CUSTOM_MANAGED_SERV_NAME}" \
+    JAVA_OPTIONS="${CUSTOM_JAVA_OPTIONS}" \
     DEBUG_PORT="8453" \
     PATH=$PATH:/u01/oracle/oracle_common/common/bin:/u01/oracle/wlserver/common/bin:${DOMAIN_HOME}:${DOMAIN_HOME}/bin:/u01/oracle
 
@@ -57,27 +65,45 @@ COPY --chown=oracle:root container-scripts/* /u01/oracle/
 
 #Create directory where domain will be written to
 USER root
+
+ENV ORDS_HOME="/u01/oracle/user_projects/ords"
+
 RUN chmod +xw /u01/oracle/*.sh && \
     chmod +xw /u01/oracle/*.py && \
     mkdir -p ${PROPERTIES_FILE_DIR} && \
     mkdir -p $DOMAIN_HOME && \
     chown -R oracle:root $DOMAIN_HOME/.. && \
-    chown -R oracle:root ${PROPERTIES_FILE_DIR}
+    chown -R oracle:root ${PROPERTIES_FILE_DIR} && \
+    mkdir $ORDS_HOME && \
+    mkdir $ORDS_HOME/conf && \
+    mkdir $ORDS_HOME/params && \
+    chown -R oracle:root $ORDS_HOME
+
+COPY --chown=oracle:root resources/ords.war $ORDS_HOME/ords.war
+COPY --chown=oracle:root resources/tls_wallet.zip $ORDS_HOME/tls_wallet.zip
+COPY --chown=oracle:root container-scripts/deployAppToDomain.sh $ORDS_HOME/
+COPY --chown=oracle:root container-scripts/app-deploy.py $ORDS_HOME/
+COPY --chown=oracle:root properties/docker-build/ords_params.properties $ORDS_HOME/params/
+
+RUN chmod +xw $ORDS_HOME/*.sh && \
+    chmod +xw $ORDS_HOME/*.py
 
 COPY --chown=oracle:root properties/docker-build/domain*.properties ${PROPERTIES_FILE_DIR}/
 
 # Configuration of WLS Domain
 USER oracle
+
 RUN /u01/oracle/createWLSDomain.sh && \
     chmod -R g+w $DOMAIN_HOME && \
     echo ". $DOMAIN_HOME/bin/setDomainEnv.sh" >> /u01/oracle/.bashrc && \
     rm ${PROPERTIES_FILE_DIR}/*.properties
 
 COPY container-scripts/setUserOverrides.sh $DOMAIN_HOME/bin/setUserOverrides.sh
-COPY resources/ords.war /u01/oracle/ords.war
 
-RUN cd /u01/oracle & $JAVA_HOME/bin/jar xf /u01/oracle/$APP_PKG_FILE && \
-    /u01/oracle/deployAppToDomain.sh
+RUN chmod -R g+w $ORDS_HOME && \
+    $ORDS_HOME/deployAppToDomain.sh
+
+COPY properties/docker-build/ords_settings.xml $ORDS_HOME/global/settings.xml
 
 # Expose ports for admin, managed server, and debug
 EXPOSE $ADMIN_PORT $ADMIN_SERVER_SSL_PORT $MANAGED_SERVER_PORT $MANAGED_SERVER_SSL_PORT $DEBUG_PORT
