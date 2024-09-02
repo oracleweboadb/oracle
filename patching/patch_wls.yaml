@@ -58,15 +58,80 @@
         var: psuappliedpatch
       tags: debug
 
-    - name: Extract PSU
-      include_tasks: tasks/extract_files.yml
-      tags: extract_files
-      when: (quarterly_patches[oracle_version]) is defined or (oneoff_patches[oracle_version]) is defined
+    - name: Create Patch directory
+      file:
+        path: "{{ patch_directory }}"
+        state: directory
+        owner: "{{ oracle_user }}"
+        group: "{{ oracle_group }}"
 
-    - name: Apply Quarterly Patch
-      include_tasks: tasks/psu_apply.yml
-      when: psuappliedpatch.stdout|string == "" and (quarterly_patches[oracle_version]) is defined
+    - name: copy psu patch file
+      copy:
+        src: "{{ oracle_stage_base }}/{{ oracle_version }}/{{ patch_name }}/{{ quarterly_patches[oracle_version][patch_name].filename }}"
+        dest: "{{ oracle_stage_install }}"
+      #with_items: "{{ quarterly_patches[oracle_version][patch_name].filename }}"
 
-    - name: Applied Patch[s] Output
-      include_tasks: tasks/post_checks.yml
-      tags: list_patch
+    - name: Check for PSU zip file
+      stat:
+        path: "{{ oracle_stage_install }}/{{ quarterly_patches[oracle_version][patch_name].filename }}"
+        get_checksum: false
+        get_md5: false
+      register: psu_patch_st
+      failed_when: not psu_patch_st.stat.exists
+      when: not rollback_psu
+
+    - name: Check PSU zip file for Rollback
+      stat:
+        path: "{{ oracle_stage_install }}/{{ quarterly_patches[oracle_version][patch_name].filename }}"
+        get_checksum: false
+        get_md5: false
+      register: psu_patch_st
+      failed_when: not psu_patch_st.stat.exists
+      when: rollback_psu
+
+    - name: Unzip Quarterly Patch
+      unarchive:
+        src: "{{ oracle_stage_install }}/{{ quarterly_patches[oracle_version][patch_name].filename }}"
+        dest: "{{ patch_directory}}/"
+        copy: no
+        creates: "{{ patch_directory }}/{{ quarterly_patches[oracle_version][patch_name].patchid }}/"
+        owner: "{{ oracle_user }}"
+        group: "{{ oracle_group }}"
+      when: not rollback_psu
+
+    - name: Unzip Quarterly Patch for rollback
+      unarchive:
+        src: "{{ oracle_stage_install }}/{{ quarterly_patches[oracle_version][patch_name].filename }}"
+        dest: "{{ patch_directory}}/"
+        copy: no
+        creates: "{{ patch_directory }}/{{ quarterly_patches[oracle_version][patch_name].patchid }}/"
+        owner: "{{ oracle_user }}"
+        group: "{{ oracle_group }}"
+      when: rollback_psu
+
+    - name: Template patch list
+      template:
+        src: quarterly_patch_list.j2
+        dest: "{{ oracle_stage_install }}/patch_list_{{ oracle_version }}_{{ patch_name }}.txt"
+        owner: "{{ oracle_user }}"
+        group: "{{ oracle_group }}"
+
+    - name: Apply PSU patches
+      shell: opatch napply -force -silent -skip_subset -skip_duplicate -phBaseFile {{ oracle_stage_install }}/patch_list_{{ oracle_version }}_{{ patch_name }}.txt
+      environment: "{{ env }}"
+      register: apply_psu
+      async: 1200
+      poll: 60
+
+    - debug:
+        msg: "{{ apply_psu.rc }}"
+      tags: debug
+
+    - name: List Current Patch[s]
+      shell: opatch lspatches | grep ';'| cut -d';' -f1
+      environment: "{{ env }}"
+      register: applied_patches
+
+    - debug:
+        var: applied_patches.stdout_lines
+
