@@ -1,0 +1,76 @@
+#- name: main
+- hosts: all
+  become: true
+  become_user: "{{oracle_user}}"
+  gather_facts: false
+
+  tasks:
+
+    - stat:
+        path: "{{oracle_home}}"
+      register: ohCheck
+
+    - set_fact:
+        rollback_psu: "false"
+
+    - debug:
+        var: rollback_psu
+      when: not rollback_psu
+
+    - name: Check if Oracle_Home Exists
+      fail:
+        msg: Message {{oracle_home}} doesn't exits on {{ansible_hostname}}.
+      when: not ohCheck.stat.exists
+
+    - debug:
+        msg: "{{ patch_name }}"
+      tags: debug
+
+    - name: fail if required variables are not defined
+      fail:
+        msg: Message {{ item }} is not defined for {{ ansible_hostname }}
+      when: ' item|string is not defined'
+      tags: always
+      with_items:
+        - oracle_version
+        - patch_name
+
+    - name: check tmp free disk space
+      action: shell df -P /tmp | awk 'END { print $4 }'
+      register: tmpsize
+      failed_when: tmpsize.stdout|int < tmp_size_gb  * 1024 * 1024
+
+    - name: check var tmp free disk space
+      action: shell df -P /var/tmp | awk 'END { print $4 }'
+      register: vartmpsize
+      failed_when: vartmpsize.stdout|int < tmp_size_gb  * 1024 * 1024
+
+    - name: Check PSU patches if already applied
+      shell: opatch lspatches | grep ';'| cut -d';' -f1 | grep {{ quarterly_patches[oracle_version][patch_name].patchid }}
+      environment: "{{ env }}"
+      register: psuappliedpatch
+      when: (quarterly_patches[oracle_version]) is defined
+      ignore_errors: yes
+      async: 900
+      poll: 30
+
+    - debug:
+        var: psuappliedpatch
+      tags: debug
+
+    - name: Extract PSU and One-off patches
+      include_tasks: tasks/extract_files.yml
+      tags: extract_files
+      when: (quarterly_patches[oracle_version]) is defined or (oneoff_patches[oracle_version]) is defined
+
+    - name: Apply Quarterly Patch
+      include_tasks: tasks/psu_apply.yml
+      when: psuappliedpatch.stdout|string == "" and (quarterly_patches[oracle_version]) is defined
+
+    - name: Apply One-off Patch
+      include_tasks: tasks/oneoff_apply.yml
+      when: oneoff_patches[oracle_version] is defined
+
+    - name: Applied Patch[s] Output
+      include_tasks: tasks/post_checks.yml
+      tags: list_patch

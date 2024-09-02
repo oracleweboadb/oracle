@@ -1,0 +1,44 @@
+# CONTROL File to manage the Patching
+#
+# Here are variables related to the Weblogic Environment
+
+oracle_user: oracle
+oracle_group: oracle
+oracle_version: 12214
+patch_name: JUL2024
+
+# WLS Home Details for various WLS Versions
+wl_vars:
+  12214:
+    oracleBase: {{ ansible_env.MW_HOME }}
+    oracleHome: {{ ansible_env.ORACLE_HOME }}
+    wlHome: {{ ansible_env.WLS_HOME }}
+    domainHome: {{ ansible_env.DOMAIN_HOME }}
+
+# PSU Patch Details need to be apply or rollback to for specific WLS Version.
+quarterly_patches:
+  12214:
+    JUL2024:
+      filename: p36822778_122140_Generic.zip
+      patchid: 36822778
+
+##  Another important Variable created with above details
+oracle_base: "{{wl_vars[oracle_version].oracleBase}}"
+oracle_home: "{{wl_vars[oracle_version].oracleHome}}"
+domain_home: "{{wl_vars[oracle_version].domainHome}}"
+domain_name: "{{ app[app_name].domain_name }}"
+mserver_home: "{{wl_vars[oracle_version].mserverHome}}"
+wl_home: "{{wl_vars[oracle_version].wlHome}}"
+nm_listen_port: "{{wl_vars[oracle_version].nmPort}}"
+syshiera: /etc/syshiera.yaml
+
+env:
+  ORACLE_HOME: "{{ oracle_home }}"
+  ORACLE_BASE: "{{ oracle_base }}"
+  PATH: "{{ oracle_home }}/OPatch:$PATH:/bin:/usr/bin"
+
+tmp_size_gb: 1
+var_tmp_size_gb: 1
+oracle_stage_install: /var/tmp/patch
+oracle_stage_base: "{{playbook_dir}}/patches"
+patch_directory: "{{ oracle_stage_install }}/{{ oracle_version }}/{{ patch_name }}"
