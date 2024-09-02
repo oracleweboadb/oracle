@@ -1,9 +1,5 @@
-# CONTROL File to manage the Patching
-#
-# Here are variables related to the Weblogic Environment
-
-oracle_user: oracle
-oracle_group: oracle
+oracle_user: oracle # Check user
+oracle_group: oracle # Check group
 oracle_version: 12214
 patch_name: JUL2024
 
