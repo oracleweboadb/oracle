@@ -1,0 +1,17 @@
+- name: Stop Node Manager
+  ansible.builtin.shell: |
+    ./stopNodeManager.sh
+  args:
+    chdir: {{ item }}/bin
+  loop: {{ domain_home }}
+
+- name: Check if any services are running for domain
+  ansible.builtin.shell: |
+    ps -ef | grep -E 'java|NodeManager'
+  register: service_status
+  ignore_errors: yes
+
+- name: Stop running services if found
+  ansible.builtin.shell: |
+    ps -ef | grep -E 'java|NodeManager' | awk '{print $2}' | xargs kill -9
+  when: service_status.stdout != ""

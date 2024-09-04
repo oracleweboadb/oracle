@@ -1,0 +1,4 @@
+domain_base:
+  - "/fmwwec/u01/app/oracle/product/wec_home"
+domain_home:
+  - "/fmwoim/u01/app/oracle/product/wec_home/user_projects/domains/#DOMAIN_HERE"

@@ -1,2 +1,0 @@
-Download manually:
-Patch 36822778: WLS STACK PATCH BUNDLE 12.2.1.4.240710

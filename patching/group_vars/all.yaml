@@ -1,0 +1,14 @@
+oracle_home: "/u01/app/oracle"
+mw_home: "/software/oracle/middleware"
+java_home: "{{ oracle_home }}/java"
+upgrade_home: "{{ mw_home }}/OAM_OIM_OID_OHS_UPGRADE/QUARTLEY_PATCHING/WEBLOGIC_12.2.1.4"
+
+jdk_patch_zip: "p36734925_180421_Linux-x86-64.zip"
+jdk_patch_number: "421"
+
+weblogic_patch_directory: "WEBLOGIC_PSU_JUL_2024"
+weblogic_patch_spb_directory: "WLS_SPB_12.2.1.4.240710"
+weblogic_patch_zip: "p36822778_122140_Generic.zip"
+
+patch_id: "31182726"
+

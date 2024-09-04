@@ -1,0 +1,25 @@
+- name: Start Node Manager
+  ansible.builtin.shell: |
+    nohup startNodeManager.sh &
+  args:
+    chdir: {{ item }}/bin
+  loop: {{ domain_home }}
+
+- name: Wait for Node Manager to Start
+  shell: |
+    while ! pgrep -f NodeManager > /dev/null; do sleep 5; done
+    echo "Node Manager is up"
+
+- name: Start WebLogic Admin Server
+  command: nohup /fmwoim/u01/app/oracle/product/Middleware_1/user_projects/domains/fmwidm/bin/startWebLogic.sh >> /fmwoim/u01/app/oracle/product/Middleware_1/user_projects/domains/fmwidm/servers/AdminServer/logs/AdminServer.out 2>&1 &
+  async: 300
+  poll: 10
+
+- name: Start WebLogic Admin Server
+  ansible.builtin.shell: |
+    nohup startWebLogic.sh >> {{ item }}servers/AdminServer/logs/AdminServer.out 2>&1 &
+    while ! grep -q 'Server startup complete' /fmwoim/u01/app/oracle/product/Middleware_1/user_projects/domains/fmwidm/servers/AdminServer/logs/AdminServer.out; do sleep 5; done
+    echo "Admin Server is up"
+  args:
+    chdir: {{ item }}/bin
+  loop: {{ domain_home }}

@@ -1,0 +1,18 @@
+- name: Apply WebLogic PSU Patch
+  block:
+    - name: Rollback Previous Patch
+      command: |
+        export ORACLE_HOME={{ item }}/products/identity_home
+        {{ item }}/products/identity_home/OPatch/opatch rollback -id {{ patch_id }}
+
+    - name: Apply SPB
+      command: |
+        export ORACLE_HOME={{ item }}/products/identity_home
+
+        {{ item }}/{{ weblogic_patch_directory }}/WLS_SPB_12.2.1.4.240710/tools/spbat/generic/SPBAT 
+        ./spbat.sh -phase apply -oracle.home {{ item }}/products/identity_home
+
+    - name: Apply Patch
+      command: {{ item }}/products/identity_home/OPatch/opatch apply
+
+  loop: {{ domain_base }}

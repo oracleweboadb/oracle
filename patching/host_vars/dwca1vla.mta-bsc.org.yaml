@@ -1,0 +1,6 @@
+domain_base:
+  - "/fmwwcc/u01/app/oracle/wcc_home"
+  - "/fmwwcc/u01/app/oracle/product/wci_home"
+domain_home:
+  - "/fmwoim/u01/app/oracle/wcc_home/user_projects/domains/##DOMAIN_HERE"
+  - "/fmwoim/u01/app/oracle/product/wci_home/user_projects/domains/##DOMAIN_HERE"

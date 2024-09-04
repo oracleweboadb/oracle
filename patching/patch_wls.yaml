@@ -1,137 +1,31 @@
 #- name: main
 - hosts: all
   become: true
-  become_user: "{{oracle_user}}"
-  gather_facts: false
+  gather_facts: true
 
   tasks:
+    # JDK Patching tasks
+    - name: Run prepare jdk patch tasks
+      include_tasks: tasks/prepare_jdk.yaml
 
-    - stat:
-        path: "{{oracle_home}}"
-      register: ohCheck
+    - name: Run stop services tasks
+      include_tasks: tasks/stop_services.yaml
 
-    - set_fact:
-        rollback_psu: "false"
+    - name: Run jdk backup tasks
+      include_tasks: tasks/backup_jdk.yaml
 
-    - debug:
-        var: rollback_psu
-      when: not rollback_psu
+    - name: Run jdk patch
+      include_tasks: tasks/patch_jdk.yaml
 
-    - name: Check if Oracle_Home Exists
-      fail:
-        msg: Message {{oracle_home}} doesn't exits on {{ansible_hostname}}.
-      when: not ohCheck.stat.exists
+    # Weblogic Patching tasks
+    - name: Run prepare weblogic patch tasks
+      include_tasks: tasks/prepare_weblogic.yaml
 
-    - debug:
-        msg: "{{ patch_name }}"
-      tags: debug
+    - name: Run weblogic backup tasks
+      include_tasks: tasks/backup_weblogic.yaml
 
-    - name: fail if required variables are not defined
-      fail:
-        msg: Message {{ item }} is not defined for {{ ansible_hostname }}
-      when: ' item|string is not defined'
-      tags: always
-      with_items:
-        - oracle_version
-        - patch_name
+    - name: Run weblogic patch
+      include_tasks: tasks/patch_weblogic.yaml
 
-    - name: check tmp free disk space
-      action: shell df -P /tmp | awk 'END { print $4 }'
-      register: tmpsize
-      failed_when: tmpsize.stdout|int < tmp_size_gb  * 1024 * 1024
-
-    - name: check var tmp free disk space
-      action: shell df -P /var/tmp | awk 'END { print $4 }'
-      register: vartmpsize
-      failed_when: vartmpsize.stdout|int < tmp_size_gb  * 1024 * 1024
-
-    - name: Check PSU patches if already applied
-      shell: opatch lspatches | grep ';'| cut -d';' -f1 | grep {{ quarterly_patches[oracle_version][patch_name].patchid }}
-      environment: "{{ env }}"
-      register: psuappliedpatch
-      when: (quarterly_patches[oracle_version]) is defined
-      ignore_errors: yes
-      async: 900
-      poll: 30
-
-    - debug:
-        var: psuappliedpatch
-      tags: debug
-
-    - name: Create Patch directory
-      file:
-        path: "{{ patch_directory }}"
-        state: directory
-        owner: "{{ oracle_user }}"
-        group: "{{ oracle_group }}"
-
-    - name: copy psu patch file
-      copy:
-        src: "{{ oracle_stage_base }}/{{ oracle_version }}/{{ patch_name }}/{{ quarterly_patches[oracle_version][patch_name].filename }}"
-        dest: "{{ oracle_stage_install }}"
-      #with_items: "{{ quarterly_patches[oracle_version][patch_name].filename }}"
-
-    - name: Check for PSU zip file
-      stat:
-        path: "{{ oracle_stage_install }}/{{ quarterly_patches[oracle_version][patch_name].filename }}"
-        get_checksum: false
-        get_md5: false
-      register: psu_patch_st
-      failed_when: not psu_patch_st.stat.exists
-      when: not rollback_psu
-
-    - name: Check PSU zip file for Rollback
-      stat:
-        path: "{{ oracle_stage_install }}/{{ quarterly_patches[oracle_version][patch_name].filename }}"
-        get_checksum: false
-        get_md5: false
-      register: psu_patch_st
-      failed_when: not psu_patch_st.stat.exists
-      when: rollback_psu
-
-    - name: Unzip Quarterly Patch
-      unarchive:
-        src: "{{ oracle_stage_install }}/{{ quarterly_patches[oracle_version][patch_name].filename }}"
-        dest: "{{ patch_directory}}/"
-        copy: no
-        creates: "{{ patch_directory }}/{{ quarterly_patches[oracle_version][patch_name].patchid }}/"
-        owner: "{{ oracle_user }}"
-        group: "{{ oracle_group }}"
-      when: not rollback_psu
-
-    - name: Unzip Quarterly Patch for rollback
-      unarchive:
-        src: "{{ oracle_stage_install }}/{{ quarterly_patches[oracle_version][patch_name].filename }}"
-        dest: "{{ patch_directory}}/"
-        copy: no
-        creates: "{{ patch_directory }}/{{ quarterly_patches[oracle_version][patch_name].patchid }}/"
-        owner: "{{ oracle_user }}"
-        group: "{{ oracle_group }}"
-      when: rollback_psu
-
-    - name: Template patch list
-      template:
-        src: quarterly_patch_list.j2
-        dest: "{{ oracle_stage_install }}/patch_list_{{ oracle_version }}_{{ patch_name }}.txt"
-        owner: "{{ oracle_user }}"
-        group: "{{ oracle_group }}"
-
-    - name: Apply PSU patches
-      shell: opatch napply -force -silent -skip_subset -skip_duplicate -phBaseFile {{ oracle_stage_install }}/patch_list_{{ oracle_version }}_{{ patch_name }}.txt
-      environment: "{{ env }}"
-      register: apply_psu
-      async: 1200
-      poll: 60
-
-    - debug:
-        msg: "{{ apply_psu.rc }}"
-      tags: debug
-
-    - name: List Current Patch[s]
-      shell: opatch lspatches | grep ';'| cut -d';' -f1
-      environment: "{{ env }}"
-      register: applied_patches
-
-    - debug:
-        var: applied_patches.stdout_lines
-
+    - name: Run weblogic patch
+      include_tasks: tasks/start_services.yaml

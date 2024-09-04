@@ -1,0 +1,27 @@
+- name: Change to the target directory for JDK patch
+  ansible.builtin.shell: |
+    cd {{ upgrade_home }}/JAVA
+  args:
+    chdir: {{ upgrade_home }}/JAVA
+
+- name: Unzip JDK patch file
+  ansible.builtin.unarchive:
+    src: {{ jdk_patch_zip }}
+    dest: {{ upgrade_home }}/JAVA
+    remote_src: yes
+
+- name: Create directory for JDK 1.8_{{ jdk_patch_number }}
+  ansible.builtin.file:
+    path: {{ upgrade_home }}/JAVA/jdk1.8_{{ jdk_patch_number }}
+    state: directory
+
+- name: Copy JDK tarball to new directory
+  ansible.builtin.copy:
+    src: {{ upgrade_home }}/JAVA/jdk-8u{{ jdk_patch_number }}-linux-x64.tar.gz
+    dest: {{ upgrade_home }}/JAVA/jdk1.8_{{ jdk_patch_number }}/jdk-8u{{ jdk_patch_number }}-linux-x64.tar.gz
+
+- name: Extract JDK tarball
+  ansible.builtin.unarchive:
+    src: {{ upgrade_home }}/JAVA/jdk1.8_{{ jdk_patch_number }}/jdk-8u{{ jdk_patch_number }}-linux-x64.tar.gz
+    dest: {{ upgrade_home }}/JAVA/jdk1.8_{{ jdk_patch_number }}/
+    remote_src: yes
