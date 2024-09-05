@@ -6,7 +6,7 @@
 
 - name: Unzip JDK patch file
   ansible.builtin.unarchive:
-    src: {{ jdk_patch_zip }}
+    src: {{ upgrade_home }}/JAVA/{{ jdk_patch_zip }}
     dest: {{ upgrade_home }}/JAVA
     remote_src: yes
 
