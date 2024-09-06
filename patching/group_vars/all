@@ -1,7 +1,6 @@
 oracle_home: "/u01/app/oracle"
-mw_home: "/software/oracle/middleware"
 java_home: "{{ oracle_home }}/java"
-upgrade_home: "{{ mw_home }}/OAM_OIM_OID_OHS_UPGRADE/QUARTLEY_PATCHING/WEBLOGIC_12.2.1.4"
+upgrade_home: "UPGRADE_DIRECTORY_WHERE_PATCHES_IS_DOWNLOADED"
 
 jdk_patch_zip: "p36734925_180421_Linux-x86-64.zip"
 jdk_patch_number: "421"

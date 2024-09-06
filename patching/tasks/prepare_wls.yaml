@@ -2,6 +2,6 @@
   block:
     - name: Unzip WebLogic PSU Patch
       unarchive:
-        src: {{ upgrade_home }}/{{ weblogic_patch_directory }}/{{ weblogic_patch_zip }}
-        dest: {{ upgrade_home }}/{{ weblogic_patch_directory }}/
+        src: {{ upgrade_home }}/{{ weblogic_patch_zip }}
+        dest: {{ upgrade_home }}/
         remote_src: yes
