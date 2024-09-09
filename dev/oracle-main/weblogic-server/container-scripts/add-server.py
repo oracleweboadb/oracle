@@ -19,7 +19,7 @@ def randomName():
 
 # AdminServer details
 cluster_name = os.environ.get("CLUSTER_NAME", "DockerCluster")
-cluster_address = os.environ.get("CLUSTER_ADDRESS", "WLS_ORDS1:8001")
+cluster_address = os.environ.get("CLUSTER_ADDRESS", "WLS_ORDS1:8002")
 
 # ManagedServer details
 msinternal = socket.gethostbyname(hostname)
