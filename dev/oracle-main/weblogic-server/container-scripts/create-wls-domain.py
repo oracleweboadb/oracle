@@ -38,6 +38,7 @@ t3_channel_port               = int(T3_CHANNEL_PORT)
 t3_public_address             = T3_PUBLIC_ADDRESS
 number_of_ms                  = int(CONFIGURED_MANAGED_SERVER_COUNT)
 cluster_type                  = CLUSTER_TYPE
+cluster_address               = os.environ.get("CLUSTER_ADDRESS")
 managed_server_name_base      = MANAGED_SERVER_NAME_BASE
 #managed_server_name_base_svc = MANAGED_SERVER_NAME_BASE_SVC
 #domain_logs                  = DOMAIN_LOGS_DIR
@@ -178,6 +179,9 @@ else:
   set('CalculatedListenPorts', false)
 
   print('Done setting attributes for Dynamic Cluster: %s' % cluster_name);
+
+cd('/Clusters/' + cluster_name)
+cmo.setClusterAddress(cluster_address)
 
 # Create a Data Source
 # ======================
