@@ -19,6 +19,7 @@ def randomName():
 
 # AdminServer details
 cluster_name = os.environ.get("CLUSTER_NAME", "DockerCluster")
+cluster_address = os.environ.get("CLUSTER_ADDRESS", "")
 
 # ManagedServer details
 msinternal = socket.gethostbyname(hostname)
@@ -37,5 +38,8 @@ editMode()
 
 cd('/Servers/%s' % hostname.upper())
 cmo.setMachine(getMBean('/Machines/' + nmname))
+
+cd('/Cluster/%s' % cluster_name)
+cmo.setClusterAddress(clusterAddress)
 
 saveActivate()
