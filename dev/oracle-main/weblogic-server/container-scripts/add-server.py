@@ -40,6 +40,6 @@ cd('/Servers/%s' % hostname.upper())
 cmo.setMachine(getMBean('/Machines/' + nmname))
 
 cd('/Clusters/%s' % cluster_name)
-cmo.setClusterAddress(cluster_address)
+cmo.setClusterAddress("WLS_ORDS2:8002")
 
 saveActivate()
