@@ -39,7 +39,7 @@ editMode()
 cd('/Servers/%s' % hostname.upper())
 cmo.setMachine(getMBean('/Machines/' + nmname))
 
-cd('/Cluster/%s' % cluster_name)
+cd('/Clusters/%s' % cluster_name)
 cmo.setClusterAddress(clusterAddress)
 
 saveActivate()
