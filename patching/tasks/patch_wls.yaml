@@ -1,6 +1,6 @@
 - name: Apply WebLogic PSU Patch
   block:
-    - name: Rollback Previous Patch
+    - name: Rollback Previous Patch if failed before starting new try
       command: |
         export ORACLE_HOME={{ item }}
         {{ item }}/OPatch/opatch rollback -id {{ patch_id }}
@@ -22,5 +22,5 @@
     - name: Rollback Curent Patch if error caught
       command: |
         export ORACLE_HOME={{ item }}
-        {{ item }}/OPatch/opatch rollback -id {{ current_patch_id }}
+        {{ item }}/OPatch/opatch rollback -id {{ patch_id }}
       loop: {{ oracle_home }}
