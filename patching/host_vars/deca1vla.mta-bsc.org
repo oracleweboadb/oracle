@@ -1,4 +1,4 @@
 oracle_home:
-  - "/fmwwec/u01/app/oracle/product/wec_home/wccapture"
+  - "/fmwwec/u01/app/oracle/product/wec_home"
 domain_home:
   - "/fmwwec/u01/app/oracle/config/domains/fmwwec"
