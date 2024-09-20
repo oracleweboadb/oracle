@@ -2,17 +2,25 @@
   block:
     - name: Rollback Previous Patch
       command: |
-        export ORACLE_HOME={{ item }}/products/identity_home
-        {{ item }}/products/identity_home/OPatch/opatch rollback -id {{ patch_id }}
+        export ORACLE_HOME={{ item }}
+        {{ item }}/OPatch/opatch rollback -id {{ patch_id }}
+      loop: {{ oracle_home }}
 
     - name: Apply SPB
       command: |
-        export ORACLE_HOME={{ item }}/products/identity_home
+        export ORACLE_HOME={{ item }}
 
         {{ item }}/{{ weblogic_patch_directory }}/WLS_SPB_12.2.1.4.240710/tools/spbat/generic/SPBAT 
-        ./spbat.sh -phase apply -oracle.home {{ item }}/products/identity_home
+        ./spbat.sh -phase apply -oracle.home {{ item }}
+      loop: {{ oracle_home }}
 
     - name: Apply Patch
-      command: {{ item }}/products/identity_home/OPatch/opatch apply
+      command: {{ item }}/OPatch/opatch apply
+      loop: {{ oracle_home }}
 
-  loop: {{ domain_base }}
+  rescue:
+      - name: Rollback Curent Patch if error caught
+        command: |
+          export ORACLE_HOME={{ item }}
+          {{ item }}/OPatch/opatch rollback -id {{ current_patch_id }}
+        loop: {{ oracle_home }}

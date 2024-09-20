@@ -1,5 +1,5 @@
-oracle_home: "/u01/app/oracle"
-java_home: "{{ oracle_home }}/java"
+oracle_base: "/u01/app/oracle"
+java_home: "{{ oracle_base }}/java"
 upgrade_home: "UPGRADE_DIRECTORY_WHERE_PATCHES_IS_DOWNLOADED"
 
 jdk_patch_zip: "p36734925_180421_Linux-x86-64.zip"

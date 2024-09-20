@@ -1,6 +1,6 @@
-domain_base:
+oracle_home:
   - "/fmwwcc/u01/app/oracle/wcc_home"
   - "/fmwwcc/u01/app/oracle/product/wci_home"
 domain_home:
-  - "/fmwwcc/u01/app/oracle/wcc_home/user_projects/domains/##DOMAIN_HERE"
-  - "/fmwwcc/u01/app/oracle/product/wci_home/user_projects/domains/##DOMAIN_HERE"
+  - "/fmwwcc/u01/app/oracle/config/domains/fmwwcc"
+  - "/fmwwcc/u01/app/oracle/product/Middleware_1/user_projects/domains/fmwipm"

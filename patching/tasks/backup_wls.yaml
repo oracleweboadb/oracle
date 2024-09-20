@@ -1,6 +1,6 @@
 - name: Backup identity home
   ansible.builtin.archive:
-    path: {{ item }}/products/identity_home
-    dest: {{ item }}/products/identity_home_{{ hostname }}_{{ date }}_0904.tar.gz
+    path: {{ item }}
+    dest: {{ item }}/{{ hostname }}_{{ date }}_0904.tar.gz
     format: gz
-  loop: {{ domain_base }}
+  loop: {{ oracle_home }}
