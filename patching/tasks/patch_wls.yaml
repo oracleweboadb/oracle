@@ -19,8 +19,8 @@
       loop: {{ oracle_home }}
 
   rescue:
-      - name: Rollback Curent Patch if error caught
-        command: |
-          export ORACLE_HOME={{ item }}
-          {{ item }}/OPatch/opatch rollback -id {{ current_patch_id }}
-        loop: {{ oracle_home }}
+    - name: Rollback Curent Patch if error caught
+      command: |
+        export ORACLE_HOME={{ item }}
+        {{ item }}/OPatch/opatch rollback -id {{ current_patch_id }}
+      loop: {{ oracle_home }}
