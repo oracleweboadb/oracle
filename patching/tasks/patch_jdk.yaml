@@ -1,12 +1,12 @@
 - name: Apply Java Patch
   block:
     - name: Move Old JDK
-      command: mv {{ java_home }}/jdk1.8 {{ java_home }}/jdk1.8_old
+      command: "mv {{ java_home }}/jdk1.8 {{ java_home }}/jdk1.8_old"
 
     - name: Copy New JDK
       copy:
-        src: {{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk1.8.0_{{ jdk_patch_number }}
-        dest: {{ java_home }}/jdk1.8
+        src: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk1.8.0_{{ jdk_patch_number }}"
+        dest: "{{ java_home }}/jdk1.8"
         remote_src: yes
 
 - name: Check Java Version
