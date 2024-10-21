@@ -1,5 +1,5 @@
 - name: Backup JDK 1.8
   ansible.builtin.archive:
-    path: {{ oracle_base }}/java/jdk1.8/
-    dest: {{ oracle_base }}/java/jdk1.8_{{ hostname }}_{{ date }}_0900.tar.gz
-    format: gz
+    path: "{{ oracle_base }}/java/jdk1.8/"
+    dest: "{{ oracle_base }}/java/jdk1.8_{{ hostname }}_{{ date }}_0900.tar.gz"
+    format: "gz"
