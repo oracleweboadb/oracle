@@ -2,8 +2,8 @@
   ansible.builtin.shell: |
     ./stopNodeManager.sh
   args:
-    chdir: {{ item }}/bin
-  loop: {{ domain_home }}
+    chdir: "{{ item }}/bin"
+  loop: "{{ domain_home }}"
 
 - name: Check if any services are running for domain
   ansible.builtin.shell: |
