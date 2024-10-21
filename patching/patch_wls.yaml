@@ -1,6 +1,5 @@
 #- name: main
 - hosts: all
-  become: true
   gather_facts: true
 
   tasks:
