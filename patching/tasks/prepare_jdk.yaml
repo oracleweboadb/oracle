@@ -1,8 +1,12 @@
 - name: Change to the target directory for JDK patch
   ansible.builtin.shell: |
-    cd {{ upgrade_home }}/java
-  args:
-    chdir: "{{ upgrade_home }}/java"
+    pwd
+    ls {{ upgrade_home }}/java
+    mkdir -p {{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}
+    ls {{ upgrade_home }}/java
+  register: out
+
+- debug: var=out.stdout_lines
 
 - name: Unzip JDK patch file
   ansible.builtin.unarchive:
