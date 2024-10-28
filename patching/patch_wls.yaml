@@ -3,28 +3,162 @@
   gather_facts: true
 
   tasks:
-    # JDK Patching tasks
-    - name: Run prepare jdk patch tasks
-      include_tasks: tasks/prepare_jdk.yaml
+    - name: Change to the target directory for JDK patch
+      ansible.builtin.shell: |
+        pwd
+        ls {{ upgrade_home }}/java
+        mkdir -p {{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}
+        ls {{ upgrade_home }}/java
+      register: out
 
-    - name: Run stop services tasks
-      include_tasks: tasks/stop_services.yaml
+    - debug: var=out.stdout_lines
 
-    - name: Run jdk backup tasks
-      include_tasks: tasks/backup_jdk.yaml
+    ## Prepare JDK patch
+    - name: Unzip JDK patch file
+      ansible.builtin.unarchive:
+        src: "{{ upgrade_home }}/java/{{ jdk_patch_zip }}"
+        dest: "{{ upgrade_home }}/java"
+        remote_src: yes
 
-    - name: Run jdk patch
-      include_tasks: tasks/patch_jdk.yaml
+    - name: "Create directory for JDK 1.8_{{ jdk_patch_number }}"
+      ansible.builtin.file:
+        path: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}"
+        state: directory
+
+    - name: Copy JDK tarball to new directory
+      ansible.builtin.copy:
+        src: "{{ upgrade_home }}/java/jdk-8u{{ jdk_patch_number }}-linux-i586.tar.gz"
+        dest: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk-8u{{ jdk_patch_number }}-linux-i586.tar.gz"
+        remote_src: yes
+
+    - name: Extract JDK tarball
+      ansible.builtin.unarchive:
+        src: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk-8u{{ jdk_patch_number }}-linux-i586.tar.gz"
+        dest: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/"
+        remote_src: yes
+
+    ## Stop services
+    - name: Stop Node Manager
+      ansible.builtin.shell: |
+        ./stopNodeManager.sh
+      args:
+        chdir: "{{ item }}/bin"
+      loop: "{{ domain_home }}"
+
+    - name: Check if any services are running for domain
+      ansible.builtin.shell: |
+        ps -ef | grep -E 'java|NodeManager'
+      register: service_status
+      ignore_errors: yes
+
+    - name: Stop running services if found
+      ansible.builtin.shell: |
+        ps -ef | grep -E 'java|NodeManager' | awk '{print $2}' | xargs kill -9
+      when: service_status.stdout != ""
+
+    ## Backup jdk
+    - name: Backup JDK 1.8
+      ansible.builtin.archive:
+        path: "{{ oracle_base }}/java/jdk1.8/"
+        dest: "{{ oracle_base }}/java/jdk1.8_{{ hostname }}_{{ date }}_0900.tar.gz"
+        format: "gz"
+
+    ## Patch JDK
+    - name: Apply Java Patch
+      block:
+        - name: Move Old JDK
+          command: "mv {{ java_home }}/jdk1.8 {{ java_home }}/jdk1.8_old"
+
+        - name: Copy New JDK
+          copy:
+            src: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk1.8.0_{{ jdk_patch_number }}"
+            dest: "{{ java_home }}/jdk1.8"
+            remote_src: yes
+
+    - name: Check Java Version
+      block:
+        - name: Set JAVA_HOME and PATH
+          shell: |
+            export JAVA_HOME={{ java_home }}/jdk1.8
+            export PATH=$JAVA_HOME/bin:$PATH
+            java -version
+          register: java_version
+
+        - name: Display Java Version
+          debug:
+            msg: "{{ java_version.stdout }}"
 
     # Weblogic Patching tasks
-    - name: Run prepare weblogic patch tasks
-      include_tasks: tasks/prepare_weblogic.yaml
 
-    - name: Run weblogic backup tasks
-      include_tasks: tasks/backup_weblogic.yaml
+    ## Prepare weblogic
+    - name: Prepare for WebLogic PSU Patch
+      block:
+        - name: Unzip WebLogic PSU Patch
+          unarchive:
+            src: "{{ upgrade_home }}/{{ weblogic_patch_zip }}"
+            dest: "{{ upgrade_home }}/"
+            remote_src: yes
 
-    - name: Run weblogic patch
-      include_tasks: tasks/patch_weblogic.yaml
 
-    - name: Run weblogic patch
-      include_tasks: tasks/start_services.yaml
+    ## Backup weblogic
+    - name: Backup identity home
+      ansible.builtin.archive:
+        path: "{{ item }}"
+        dest: "{{ item }}/{{ hostname }}_{{ date }}_0904.tar.gz"
+        format: "gz"
+      loop: "{{ oracle_home }}"
+
+    ## Patch weblogic
+    - name: Apply WebLogic PSU Patch
+      block:
+        - name: Rollback Previous Patch if failed before starting new try
+          command: |
+            export ORACLE_HOME={{ item }}
+            {{ item }}/OPatch/opatch rollback -id {{ patch_id }}
+          loop: { { oracle_home } }
+
+        - name: Apply SPB
+          command: |
+            export ORACLE_HOME={{ item }}
+            {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT /spbat.sh -phase apply -oracle.home {{ item }}
+          loop: { { oracle_home } }
+
+        - name: Apply Patch
+          command: { { item } }/OPatch/opatch apply
+          loop: { { oracle_home } }
+
+      rescue:
+        - name: Rollback Curent Patch if error caught
+          command: |
+            export ORACLE_HOME={{ item }}
+            {{ item }}/OPatch/opatch rollback -id {{ patch_id }}
+          loop: { { oracle_home } }
+
+    ## Start services
+    - name: Start Node Manager
+      ansible.builtin.shell: |
+        nohup startNodeManager.sh &
+      args:
+        chdir: "{{ item }}/bin"
+      loop: "{{ domain_home }}"
+
+    - name: Wait for Node Manager to Start
+      shell: |
+        while ! pgrep -f NodeManager > /dev/null; do sleep 5; done
+        echo "Node Manager is up"
+
+    - name: Start WebLogic Admin Server
+      command: "nohup {{ item }}/bin/startWebLogic.sh >> {{ item }}/servers/AdminServer/logs/AdminServer.out 2>&1 &"
+      async: 300
+      poll: 10
+      loop: "{{ domain_home }}"
+
+    - name: Start WebLogic Admin Server
+      ansible.builtin.shell: |
+        nohup startWebLogic.sh >> {{ item }}/servers/AdminServer/logs/AdminServer.out 2>&1 &
+        while ! grep -q 'Server startup complete' {{ domain_home }}/servers/AdminServer/logs/AdminServer.out; do sleep 5; done
+        echo "Admin Server is up"
+      args:
+        chdir: "{{ item }}/bin"
+      loop: "{{ domain_home }}"
+
