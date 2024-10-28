@@ -115,24 +115,24 @@
           command: |
             export ORACLE_HOME={{ item }}
             {{ item }}/OPatch/opatch rollback -id {{ patch_id }}
-          loop: { { oracle_home } }
+          loop: "{{ oracle_home }}"
 
         - name: Apply SPB
           command: |
             export ORACLE_HOME={{ item }}
             {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT /spbat.sh -phase apply -oracle.home {{ item }}
-          loop: { { oracle_home } }
+          loop: "{{ oracle_home }}"
 
         - name: Apply Patch
-          command: { { item } }/OPatch/opatch apply
-          loop: { { oracle_home } }
+          command: {{ item }}/OPatch/opatch apply
+          loop: "{{ oracle_home }}"
 
       rescue:
         - name: Rollback Curent Patch if error caught
           command: |
             export ORACLE_HOME={{ item }}
             {{ item }}/OPatch/opatch rollback -id {{ patch_id }}
-          loop: { { oracle_home } }
+          loop: "{{ oracle_home }}"
 
     ## Start services
     - name: Start Node Manager
