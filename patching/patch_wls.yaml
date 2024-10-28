@@ -124,7 +124,7 @@
           loop: "{{ oracle_home }}"
 
         - name: Apply Patch
-          command: {{ item }}/OPatch/opatch apply
+          command: "{{ item }}/OPatch/opatch apply"
           loop: "{{ oracle_home }}"
 
       rescue:
