@@ -1,4 +1,3 @@
-#- name: main
 - hosts: all
   gather_facts: true
 
@@ -19,11 +18,17 @@
         src: "{{ upgrade_home }}/java/{{ jdk_patch_zip }}"
         dest: "{{ upgrade_home }}/java"
         remote_src: yes
+        register: unzip_result
+
+    - debug: var=unzip_result.stdout_lines
 
     - name: "Create directory for JDK 1.8_{{ jdk_patch_number }}"
       ansible.builtin.file:
         path: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}"
         state: directory
+        register: unzip_result
+
+    - debug: var=unzip_result.stdout_lines
 
     - name: Copy JDK tarball to new directory
       ansible.builtin.copy:
