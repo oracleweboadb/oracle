@@ -101,6 +101,14 @@
         chdir: "{{ upgrade_home }}"
         executable: /bin/bash
 
+    ## Delete old backups
+    - name: Delete old backups
+      ansible.builtin.shell: |
+        cd {{ item }}
+        find . -name "*.tar.gz" -type f -delete
+      ignore_errors: yes
+      loop: "{{ oracle_home }}"
+
     ## Backup weblogic
     - name: Backup identity home
       ansible.builtin.archive:
