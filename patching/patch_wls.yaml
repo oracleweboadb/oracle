@@ -68,6 +68,9 @@
     - name: Apply Java Patch
       block:
         - name: Move Old JDK
+          command: "rm -rf {{ java_home }}/jdk1.8_old"
+
+        - name: Move Old JDK
           command: "mv {{ java_home }}/jdk1.8 {{ java_home }}/jdk1.8_old"
 
         - name: Copy New JDK
