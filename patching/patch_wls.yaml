@@ -28,11 +28,11 @@
         dest: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk-8u{{ jdk_patch_number }}-linux-i586.tar.gz"
         remote_src: yes
 
-    - name: Extract JDK tarball
-      ansible.builtin.unarchive:
-        src: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk-8u{{ jdk_patch_number }}-linux-i586.tar.gz"
-        dest: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/"
-        remote_src: yes
+    - name: untar
+      ansible.builtin.shell: "tar xzf jdk-8u{{ jdk_patch_number }}-linux-i586.tar.gz"
+      args:
+        chdir: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}"
+        executable: /bin/bash
 
     ## Stop services
     - name: Stop Node Manager
@@ -88,14 +88,11 @@
     # Weblogic Patching tasks
 
     ## Prepare weblogic
-    - name: Prepare for WebLogic PSU Patch
-      block:
-        - name: Unzip WebLogic PSU Patch
-          unarchive:
-            src: "{{ upgrade_home }}/{{ weblogic_patch_zip }}"
-            dest: "{{ upgrade_home }}/"
-            remote_src: yes
-
+    - name: untar
+      ansible.builtin.shell: "tar xzf {{ weblogic_patch_zip }}"
+      args:
+        chdir: "{{ upgrade_home }}"
+        executable: /bin/bash
 
     ## Backup weblogic
     - name: Backup identity home
