@@ -54,10 +54,14 @@
 #      when: service_status.stdout != ""
 
     ## Backup jdk
+    - name: Ansible fact - ansible_date_time
+      debug:
+        var: ansible_date_time
+
     - name: Backup JDK 1.8
       ansible.builtin.archive:
         path: "{{ oracle_base }}/java/jdk1.8/"
-        dest: "{{ oracle_base }}/java/jdk1.8_{{ inventory_hostname }}_{{ date }}_0900.tar.gz"
+        dest: "{{ oracle_base }}/java/jdk1.8_{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}_0900.tar.gz"
         format: "gz"
 
     ## Patch JDK
@@ -98,7 +102,7 @@
     - name: Backup identity home
       ansible.builtin.archive:
         path: "{{ item }}"
-        dest: "{{ item }}/{{ inventory_hostname }}_{{ date }}_0904.tar.gz"
+        dest: "{{ item }}/{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}_0904.tar.gz"
         format: "gz"
       loop: "{{ oracle_home }}"
 
