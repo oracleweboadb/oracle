@@ -37,7 +37,7 @@
     ## Stop services
     - name: Stop Node Manager
       ansible.builtin.shell: |
-        ./stopNodeManager.sh
+        ./stopNodeManager.sh || echo
       args:
         chdir: "{{ item }}/bin"
       loop: "{{ domain_home }}"
@@ -48,10 +48,10 @@
       register: service_status
       ignore_errors: yes
 
-    - name: Stop running services if found
-      ansible.builtin.shell: |
-        ps -ef | grep -E 'java|NodeManager' | awk '{print $2}' | xargs kill -9
-      when: service_status.stdout != ""
+#    - name: Stop running services if found
+#      ansible.builtin.shell: |
+#        ps -ef | grep -E 'java|NodeManager' | awk '{print $2}' | xargs kill -9
+#      when: service_status.stdout != ""
 
     ## Backup jdk
     - name: Backup JDK 1.8
