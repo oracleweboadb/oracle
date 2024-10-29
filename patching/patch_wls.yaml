@@ -72,7 +72,7 @@
 
         - name: Copy New JDK
           copy:
-            src: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk1.8.0_{{ jdk_patch_number }}"
+            src: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk1.8.0_{{ jdk_patch_number }}/"
             dest: "{{ java_home }}/jdk1.8"
             remote_src: yes
 
