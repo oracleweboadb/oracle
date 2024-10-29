@@ -110,24 +110,24 @@
     - name: Apply WebLogic PSU Patch
       block:
         - name: Rollback Previous Patch if failed before starting new try
-          command: |
+          shell: |
             export ORACLE_HOME={{ item }}
             {{ item }}/OPatch/opatch rollback -id {{ patch_id }}
           loop: "{{ oracle_home }}"
 
         - name: Apply SPB
-          command: |
+          shell: |
             export ORACLE_HOME={{ item }}
-            {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT /spbat.sh -phase apply -oracle.home {{ item }}
+            {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle.home {{ item }}
           loop: "{{ oracle_home }}"
 
         - name: Apply Patch
-          command: "{{ item }}/OPatch/opatch apply"
+          shell: "{{ item }}/OPatch/opatch apply"
           loop: "{{ oracle_home }}"
 
       rescue:
         - name: Rollback Curent Patch if error caught
-          command: |
+          shell: |
             export ORACLE_HOME={{ item }}
             {{ item }}/OPatch/opatch rollback -id {{ patch_id }}
           loop: "{{ oracle_home }}"
