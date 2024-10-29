@@ -62,7 +62,7 @@
     - name: Delete old backups
       ansible.builtin.shell: |
         cd {{ oracle_base }}/java/
-        find . -name "*.tar.gz" -maxdepth 1 -type f -delete
+        find . -name "{{ inventory_hostname }}*.tar.gz" -maxdepth 1 -type f -delete
       ignore_errors: yes
 
     - name: Backup JDK 1.8
@@ -112,7 +112,7 @@
     - name: Delete old backups
       ansible.builtin.shell: |
         cd {{ item }}
-        find . -name "*.tar.gz" -maxdepth 1 -type f -delete
+        find . -name "{{ inventory_hostname }}*.tar.gz" -maxdepth 1 -type f -delete
       ignore_errors: yes
       loop: "{{ oracle_home }}"
 
