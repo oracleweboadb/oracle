@@ -58,6 +58,13 @@
       debug:
         var: ansible_date_time
 
+    ## Delete old backups
+    - name: Delete old backups
+      ansible.builtin.shell: |
+        cd {{ oracle_base }}/java/
+        find . -name "*.tar.gz" -maxdepth 1 -type f -delete
+      ignore_errors: yes
+
     - name: Backup JDK 1.8
       ansible.builtin.archive:
         path: "{{ oracle_base }}/java/jdk1.8/"
@@ -105,7 +112,7 @@
     - name: Delete old backups
       ansible.builtin.shell: |
         cd {{ item }}
-        find . -name "*.tar.gz" -type f -delete
+        find . -name "*.tar.gz" -maxdepth 1 -type f -delete
       ignore_errors: yes
       loop: "{{ oracle_home }}"
 
