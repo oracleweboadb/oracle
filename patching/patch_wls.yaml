@@ -29,7 +29,7 @@
         remote_src: yes
 
     - name: untar
-      ansible.builtin.shell: "tar xzf jdk-8u{{ jdk_patch_number }}-linux-i586.tar.gz"
+      ansible.builtin.shell: "tar xzf jdk-8u{{ jdk_patch_number }}-linux-i586.tar.gz || echo done"
       args:
         chdir: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}"
         executable: /bin/bash
@@ -89,7 +89,7 @@
 
     ## Prepare weblogic
     - name: untar
-      ansible.builtin.shell: "tar xzf {{ weblogic_patch_zip }}"
+      ansible.builtin.shell: "tar xzf {{ weblogic_patch_zip }} || echo done"
       args:
         chdir: "{{ upgrade_home }}"
         executable: /bin/bash
