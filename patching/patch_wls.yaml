@@ -102,8 +102,8 @@
     # Weblogic Patching tasks
 
     ## Prepare weblogic
-    - name: untar
-      ansible.builtin.shell: "tar xzf {{ weblogic_patch_zip }} || echo done"
+    - name: Unzip weblogic patch
+      ansible.builtin.shell: "unzip {{ weblogic_patch_zip }}"
       args:
         chdir: "{{ upgrade_home }}"
         executable: /bin/bash
@@ -132,6 +132,7 @@
             export ORACLE_HOME={{ item }}
             {{ item }}/OPatch/opatch rollback -silent -id {{ patch_id }}
           loop: "{{ oracle_home }}"
+          ignore_errors: yes
 
         - name: Apply SPB
           shell: |
