@@ -61,14 +61,14 @@
     ## Delete old backups
     - name: Delete old backups
       ansible.builtin.shell: |
-        cd {{ oracle_base }}/java/
+        cd {{ java_home }}/java/
         find . -name "{{ inventory_hostname }}*.tar.gz" -maxdepth 1 -type f -delete
       ignore_errors: yes
 
     - name: Backup JDK 1.8
       ansible.builtin.archive:
-        path: "{{ oracle_base }}/java/jdk1.8/"
-        dest: "{{ oracle_base }}/java/jdk1.8_{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}_0900.tar.gz"
+        path: "{{ java_home }}/java/jdk1.8/"
+        dest: "{{ java_home }}/java/jdk1.8_{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}_0900.tar.gz"
         format: "gz"
 
     ## Patch JDK
@@ -130,7 +130,7 @@
         - name: Rollback Previous Patch if failed before starting new try
           shell: |
             export ORACLE_HOME={{ item }}
-            {{ item }}/OPatch/opatch rollback -id {{ patch_id }}
+            {{ item }}/OPatch/opatch rollback silent -id {{ patch_id }}
           loop: "{{ oracle_home }}"
 
         - name: Apply SPB
@@ -140,14 +140,14 @@
           loop: "{{ oracle_home }}"
 
         - name: Apply Patch
-          shell: "{{ item }}/OPatch/opatch apply"
+          shell: "{{ item }}/OPatch/opatch apply silent"
           loop: "{{ oracle_home }}"
 
       rescue:
         - name: Rollback Curent Patch if error caught
           shell: |
             export ORACLE_HOME={{ item }}
-            {{ item }}/OPatch/opatch rollback -id {{ patch_id }}
+            {{ item }}/OPatch/opatch rollback silent -id {{ patch_id }}
           loop: "{{ oracle_home }}"
 
     ## Start services
