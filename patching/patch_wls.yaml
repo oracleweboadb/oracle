@@ -103,10 +103,9 @@
 
     ## Prepare weblogic
     - name: Unzip weblogic patch
-      ansible.builtin.shell: "unzip {{ weblogic_patch_zip }}"
-      args:
-        chdir: "{{ upgrade_home }}"
-        executable: /bin/bash
+      ansible.builtin.shell: |
+        cd {{ upgrade_home }}
+        unzip {{ weblogic_patch_zip }}"
 
     ## Delete old backups
     - name: Delete old backups
