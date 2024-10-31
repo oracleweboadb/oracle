@@ -131,7 +131,7 @@
         - name: Apply SPB
           shell: |
             export ORACLE_HOME={{ item }}
-            {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle.home {{ item }}
+            {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle-home {{ item }}
           loop: "{{ oracle_home }}"
 
         - name: Apply Patch
