@@ -126,12 +126,12 @@
     ## Patch weblogic
     - name: Apply WebLogic PSU Patch
       block:
-        - name: Rollback Previous Patch if failed before starting new try
-          shell: |
-            export ORACLE_HOME={{ item }}
-            {{ item }}/OPatch/opatch rollback -silent -id {{ patch_id }}
-          loop: "{{ oracle_home }}"
-          ignore_errors: yes
+#        - name: Rollback Previous Patch if failed before starting new try
+#          shell: |
+#            export ORACLE_HOME={{ item }}
+#            {{ item }}/OPatch/opatch rollback -silent -id {{ patch_id }}
+#          loop: "{{ oracle_home }}"
+#          ignore_errors: yes
 
         - name: Apply SPB
           shell: |
