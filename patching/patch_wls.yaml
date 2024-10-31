@@ -105,7 +105,9 @@
     - name: Unzip weblogic patch
       ansible.builtin.shell: |
         cd {{ upgrade_home }}
-        unzip -o {{ weblogic_patch_zip }}
+        unzip -o {{ weblogic_patch_zip }} -d /tmp
+        cp -r /tmp/{{ weblogic_patch_spb_directory }} {{ upgrade_home }}/
+        rm -rf /tmp/{{ weblogic_patch_spb_directory }}
 
     ## Delete old backups
     - name: Delete old backups
@@ -126,13 +128,6 @@
     ## Patch weblogic
     - name: Apply WebLogic PSU Patch
       block:
-#        - name: Rollback Previous Patch if failed before starting new try
-#          shell: |
-#            export ORACLE_HOME={{ item }}
-#            {{ item }}/OPatch/opatch rollback -silent -id {{ patch_id }}
-#          loop: "{{ oracle_home }}"
-#          ignore_errors: yes
-
         - name: Apply SPB
           shell: |
             export ORACLE_HOME={{ item }}
