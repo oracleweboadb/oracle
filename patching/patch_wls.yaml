@@ -131,6 +131,7 @@
         - name: Apply SPB
           shell: |
             export ORACLE_HOME={{ item }}
+            export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
             {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item }}
           loop: "{{ oracle_home }}"
 
@@ -142,6 +143,7 @@
         - name: Rollback Curent Patch if error caught
           shell: |
             export ORACLE_HOME={{ item }}
+            export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
             {{ item }}/OPatch/opatch rollback -silent -id {{ patch_id }}
           loop: "{{ oracle_home }}"
 
