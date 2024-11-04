@@ -165,7 +165,7 @@
     - name: Start WebLogic Admin Server
       ansible.builtin.shell: |
         cd {{ item }}/bin
-        nohup startWebLogic.sh >> {{ item }}/servers/AdminServer/logs/AdminServer.out 2>&1 &
+        nohup ./startWebLogic.sh >> {{ item }}/servers/AdminServer/logs/AdminServer.out 2>&1 &
         while ! grep -q 'Server startup complete' {{ domain_home }}/servers/AdminServer/logs/AdminServer.out; do sleep 5; done
         echo "Admin Server is up"
       loop: "{{ domain_home }}"
