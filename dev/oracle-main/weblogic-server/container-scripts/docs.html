@@ -1,0 +1,1051 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            /*  line-height: 125%; */
+            color: black;
+            background-color: white;
+            font-size: small;
+        }
+        * html body {
+            /* http://www.info.com.ph/~etan/w3pantheon/style/modifiedsbmh.html */
+            font-size: x-small;
+            /* for IE5.x/win */
+            f\ont-size: small;
+            /* for other IE versions */
+        }
+        h1 {
+            font-size: 165%;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            width: 100%;
+        }
+        h2 {
+            font-size: 152%;
+            font-weight: bold;
+        }
+        h3 {
+            font-size: 139%;
+            font-weight: bold;
+        }
+        h4 {
+            font-size: 126%;
+            font-weight: bold;
+        }
+        h5 {
+            font-size: 113%;
+            font-weight: bold;
+            display: inline;
+        }
+        h6 {
+            font-size: 100%;
+            font-weight: bold;
+            font-style: italic;
+            display: inline;
+        }
+        a:link {
+            color: #039;
+            background: inherit;
+        }
+        a:visited {
+            color: #72007C;
+            background: inherit;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        a img,
+        img[usemap] {
+            border-style: none;
+        }
+        code,
+        pre,
+        samp,
+        tt {
+            font-family: monospace;
+            font-size: 110%;
+        }
+        caption {
+            text-align: center;
+            font-weight: bold;
+            width: auto;
+        }
+        dt {
+            font-weight: bold;
+        }
+        table {
+            font-size: small;
+            /* for ICEBrowser */
+        }
+        td {
+            vertical-align: top;
+        }
+        th {
+            font-weight: bold;
+            text-align: left;
+            vertical-align: bottom;
+        }
+        ol ol {
+            list-style-type: lower-alpha;
+        }
+        ol ol ol {
+            list-style-type: lower-roman;
+        }
+        td p:first-child,
+        td pre:first-child {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+        table.table-border {
+            border-collapse: collapse;
+            border-top: 1px solid #ccc;
+            border-left: 1px solid #ccc;
+        }
+        table.table-border th {
+            padding: 0.5ex 0.25em;
+            color: black;
+            background-color: #f7f7ea;
+            border-right: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+        }
+        table.table-border td {
+            padding: 0.5ex 0.25em;
+            border-right: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+        }
+        span.gui-object,
+        span.gui-object-action {
+            font-weight: bold;
+        }
+        span.gui-object-title {}
+        p.horizontal-rule {
+            width: 100%;
+            border: solid #cc9;
+            border-width: 0px 0px 1px 0px;
+            margin-bottom: 4ex;
+        }
+        div.zz-skip-header {
+            display: none;
+        }
+        td.zz-nav-header-cell {
+            text-align: left;
+            font-size: 95%;
+            width: 99%;
+            color: black;
+            background: inherit;
+            font-weight: normal;
+            vertical-align: top;
+            margin-top: 0ex;
+            padding-top: 0ex;
+        }
+        a.zz-nav-header-link {
+            font-size: 95%;
+        }
+        td.zz-nav-button-cell {
+            white-space: nowrap;
+            text-align: center;
+            width: 1%;
+            vertical-align: top;
+            padding-left: 4px;
+            padding-right: 4px;
+            margin-top: 0ex;
+            padding-top: 0ex;
+        }
+        a.zz-nav-button-link {
+            font-size: 90%;
+        }
+        div.zz-nav-footer-menu {
+            width: 100%;
+            text-align: center;
+            margin-top: 2ex;
+            margin-bottom: 4ex;
+        }
+        p.zz-legal-notice,
+        a.zz-legal-notice-link {
+            font-size: 85%;
+            /* display: none; */
+            /* Uncomment to hide legal notice */
+        }
+    </style>
+    <title>WLS_SPB_12.2.1.4.0_README</title>
+</head>
+<body>
+<h1>Oracle WebLogic Server Stack Patch Bundle 12.2.1.4.241008 README</h1>
+<p>Stack Patch Bundle (SPB): 37150572</p>
+<p>Date : 08-Oct-24 </p>
+<p>Platform Patch for : Generic Platform </p>
+<p>Product Patched : Oracle WebLogic Server</p>
+<p>Product Version : 12.2.1.4.0</p>
+<p>This document describes how to install patch 37150572.</p>
+<p>It includes the following sections:</p>
+<ul>
+    <li> <a href="#intro">Section 1: Introduction</a> </li>
+</ul>
+<ul>
+    <li> <a href="#sysover">Section 2: System Overview</a> </li>
+</ul>
+<ul>
+    <li> <a href="#prereq">Section 3: Prerequisites</a> </li>
+</ul>
+<ul>
+    <li> <a href="#patch">Section 4: Patch Installation Steps</a> </li>
+</ul>
+<ul>
+    <li> <a href="#postinstall">Section 5: Post Installation Steps</a> </li>
+</ul>
+<ul>
+    <li> <a href="#rollback">Section 6: Rollback Steps</a> </li>
+</ul>
+<h2><a name="intro"></a>Section 1: Introduction</h2>
+The Oracle WebLogic Server (WLS) Stack Patch Bundle (SPB) provides a
+collection of required patches released quarterly with the Critical Patch
+Update program.
+<p>This WLS SPB is applicable to the following distributions:</p>
+<ul>
+    <li>WLS 12.2.1.4 Generic</li>
+    <li>WLS 12.2.1.4 Slim </li>
+    <li>WLS 12.2.1.4 Lite </li>
+    <li>FMW 12.2.1.4 Infrastructure </li>
+</ul>
+<p><strong>Note</strong>: The WebLogic Server SPB is supported only for products installed from the Oracle Fusion Middleware Infrastructure distribution or standalone WebLogic Server distributions. The SPB will only update the components listed in <a href="#sysover">Section 2</a>. Patches for other components included in the FMW Infrastructure distribution must be applied separately using the OPatch<strong> napply</strong> method. If any other Oracle product installs an FMW Infrastructure, then the SPBAT would not be supported. An example of this is Oracle Enterprise Manager Cloud Control 13c.</p>
+<h3><strong>1.1 Installation Options</strong></h3>
+<p>In this SPB release you now have two options to apply the patches. Review
+    the following to determine which patching option to use:</p>
+<ul>
+    <li> If you are running Linux, Solaris or Windows, then you can use
+        the <strong>Stack Patch Bundle Automation Tool (SPBAT)</strong>
+        patching option. This tool applies the patches in the SPB, but can also
+        perform a precheck of the environment before patching to ensure that
+        your WebLogic environment meets requirements. SPBAT will also update the
+        OPatch version of the WebLogic environment (if necessary). After
+        completing the required prerequisites, refer to <a href="#spbat">Section
+            4.1</a> for more information about using the SPBAT.</li>
+</ul>
+<ul>
+    <li>Use OPatch <strong>napply</strong> to install the bundled patches.
+        This is recommended for other platforms or when you need more control
+        over the process. Note the SPBAT can also be run in a precheck phase
+        before upgrading OPatch or running <strong>opatch</strong> <strong>napply</strong>.
+        If you prefer to use the OPatch <strong>napply</strong> method,
+        complete the required prerequisites and then follow the procedures in <a href="#napply"> Section 4.2</a>.</li>
+</ul>
+<h3>1.2 Additional SPB Program Information</h3>
+<p>Refer to the following document for more program information, including a
+    Webcast demonstrating how to apply the SPB:</p>
+<p>Doc ID 2764636.1 Introducing the Stack Patch Bundle (SPB) with SPBAT Utility for Oracle WebLogic Server</p>
+<p><a href="https://support.oracle.com/epmos/faces/DocumentDisplay?id=2764636.1" target="_blank">https://support.oracle.com/epmos/faces/DocumentDisplay?id=2764636.1</a></p>
+<p><a href="https://support.oracle.com/epmos/faces/DocumentDisplay?id=2764636.1"></a></p>
+<h2><a name="sysover"></a>Section 2: System Overview</h2>
+<p>Oracle WebLogic Stack Patch Bundle (SPB) contains patches applicable for
+    the following supported platforms:</p>
+<ul>
+    <li>Linux x86-64</li>
+    <li>Solaris x86-64</li>
+    <li>Solaris Sparc</li>
+    <li>IBM AIX 64</li>
+    <li>Windows 64</li>
+    <li>HPUX-IA64</li>
+    <li>IBM Linux on System Z</li>
+    <li>Linux ARM-64</li>
+</ul>
+<p>Patches included in this SPB are listed below. Note that each patch has
+    its own README that contains a list of the bugs fixed.</p>
+<p><strong>Note</strong>: As mentioned above, the WebLogic Server SPB is supported only for products installed from the Oracle Fusion Middleware Infrastructure distribution or standalone WebLogic Server distributions. If any other Oracle product installs an FMW Infrastructure, then the SPBAT would not be supported and patches would need to be applied using the OPatch <strong>napply</strong> method. An example of this is Oracle Enterprise Manager Cloud Control 13c. </p>
+<table border="1">
+    <tbody>
+    <tr>
+        <td>Serial Number</td>
+        <td>Patch Name</td>
+        <td>Patch Tracking Number</td>
+        <td>Comments</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>
+            <p>WLS STACK PATCH BUNDLE 12.2.1.4.241008 (PATCH 37150572) (INTERIM PATCH 37150574)</p>
+        </td>
+        <td>37150600 </td>
+        <td>This patch allows for the Stack Patch Bundle to be included in the OPatch lsinventory output.</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>ADR FOR WEBLOGIC SERVER 12.2.1.4.0 - SIZE OPTIMIZED FOR JAN 2024</td>
+        <td>35965629 </td>
+        <td>Applicable to Generic and Infrastructure distributions only. </td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>WLS PATCH SET UPDATE 12.2.1.4.240922</td>
+        <td>37087476</td>
+        <td>Applicable to Generic and Infrastructure distributions only. </td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>WEBLOGIC SAMPLES SPU 12.2.1.4.240416</td>
+        <td>36426672</td>
+        <td>Applicable to Generic and Infrastructure distributions only.</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>Coherence 12.2.1.4 Cumulative Patch 23 (12.2.1.4.23)</td>
+        <td>37049907</td>
+        <td>Applicable to all distributions (lspatches shows patch number as 1221421).</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>FMW PLATFORM BUNDLE PATCH 12.2.1.4.240812</td>
+        <td>36789759</td>
+        <td><br>
+        </td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>FMW Thirdparty Bundle Patch 12.2.1.4.240925</td>
+        <td>37103277</td>
+        <td><br>
+        </td>
+    </tr>
+    <tr>
+        <td height="46">8</td>
+        <td>OPATCH 13.9.4.2.17 FOR EM 13.4 AND FMW/WLS 12.2.1.3.0, 12.2.1.4.0
+            AND 14.1.1.0.0</td>
+        <td>28186730</td>
+        <td>If you are using the opatch napply method, then you will need to
+            manually upgrade OPatch. This is a separate upgrade applicable to
+            all distributions.</td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>JDBC 19.24.0.0 FOR CPUOCT2024 (WLS 12.2.1.4, WLS 14.1.1)</td>
+        <td>36926636</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>RDA release 24.4-20241015 for FMW 12.2.1.4.0 </td>
+        <td>36851321</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>OSS 19C BUNDLE PATCH 12.2.1.4.241001 </td>
+        <td>37096063</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>12</td>
+        <td>OCT 2024 CLONING SPU FOR FMW 12.2.1.4.0 </td>
+        <td>37056593</td>
+        <td>&nbsp;</td>
+    </tr>
+    </tbody>
+</table>
+<p>If you are using WebLogic Server Proxy Plug-In for IIS or Apache, download and apply the latest patches from the following link::&nbsp; </p>
+<ul>
+    <li>Doc ID 2806740.2, Critical Patch Update (CPU) Patch Advisor for Oracle Fusion Middleware <a href="https://support.oracle.com/epmos/faces/DocumentDisplay?id=2806740.2#WLPROXY" target="_blank">Patch
+        WLS Proxy Plug-In for Third-Party Web Servers</a> </li>
+</ul>
+<p><strong>Note</strong>: The updated WLS Proxy Plug-In for Oracle HTTP
+    Server (mod_wl_ohs) is included in the latest OHS Bundle Patch for your
+    version.</p>
+<h2><a name="prereq"></a>Section 3: Prerequisites</h2>
+<p>Follow these required steps before applying the SPB: </p>
+<ul>
+    <li>3.1 Stage and verify the SPB zip file</li>
+    <li>3.2 Check Java version</li>
+    <li>3.3 Create a full backup</li>
+    <li>3.4 Check OPatch version</li>
+    <li>3.5 Stop all processes for WebLogic Server</li>
+    <li>3.6 Disable all anti-virus software</li>
+</ul>
+<h3>3.1 Stage and Verify SPB Zip File</h3>
+<ol>
+    <li>Download the p37150572_122140_Generic.zip from My Oracle Support and decide
+        where you want to extract the SPB.<br>
+        <br>
+        <ul>
+            <li>The location must be outside of your Oracle home.</li>
+            <li>The location should have 4GB free disk space.</li>
+            <li>The user should have
+                read, write, and execute rights on the filesystem.<br>
+                <br>
+            </li>
+        </ul>
+    </li>
+    <li>Extract the contents of the SPB download on the system you will be
+        applying the patch. <br>
+        <br>
+        <ul>
+            <li>On Windows, use the jar utility to avoid issues with the native
+                zip program:<br>
+                <br>
+                <strong>JDK_HOME\bin\jar -xvf p37150572_122140_Generic.zip</strong><br>
+                &nbsp;</li>
+            <li>On UNIX platforms, use unzip to preserve permissions:<br>
+                <br>
+                <strong>unzip p37150572_122140_Generic.zip</strong><strong></strong><br>
+                <strong></strong></li>
+        </ul>
+        <br>
+    </li>
+    <li>After extracting the patch, you should have a
+        WLS_SPB_12.2.1.4.&lt;VERSION&gt; directory with the following contents:
+        <br>
+        <br>
+        <strong>Note:</strong> Do not make any post-extraction changes to this
+        directory structure.
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            WLS_SPB_12.2.1.4.&lt;VERSION&gt;/</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|spbat-bundle.properties (file) <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|README.txt (file) <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|README.html (file) <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|binary_patches (dir) <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|tools (dir)<br>
+        </p>
+    </li>
+    <li>Navigate to the SPBAT directory and verify it contains the following
+        directory structure:<br>
+        <br>
+        <strong>Note</strong>: The default logs directory is created after
+        running the SPBAT (shown below for reference).&nbsp;
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            WLS_SPB_12.2.1.4.&lt;VERSION&gt;/tools/spbat/generic/SPBAT</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|ExecEngine (dir) <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|README.txt (this file) <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|bin (dir) <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|config (dir) <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|spbat.sh (file) <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|spbat.bat (file) <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|tools (dir) <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|version.txt (file)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            -|logs (dir generated after running SPBAT)</p>
+    </li>
+</ol>
+<h3>3.2 Check for Minimum Java Version</h3>
+There is a minimum update level of Java SE (JDK/JRE) requirement before
+installing the WLS SPB.
+<p>Included in this Stack Patch Bundle, certain fixes in the WebLogic Server PSU
+    for deserialization vulnerabilities
+    depend on JEP 290 filtering and JEP 290 global scope filtering features
+    provided in July 2018 JDK Updates
+    and later JDK updates. These fixes for deserialization vulnerabilities are
+    not effective without
+    these JDK updates. Users applying this SPB/PSU without these JDK
+    updates will receive
+    warnings in the WebLogic Server console and in WebLogic Server logs. Refer to
+    the following document for details: </p>
+<p><a href="https://support.oracle.com/rs?type=doc&id=2421487.1">Doc ID 2421487.1</a> Restricting Incoming Serialized Java Objects to Oracle WebLogic Server<br>
+</p>
+<p>Refer to the following table for minimum and recommended Java SE versions:</p>
+<table border="1">
+    <tbody>
+    <tr>
+        <td>Platform</td>
+        <td>JDK Vendor</td>
+        <td>Major JDK Version</td>
+        <td>Expected Minimum Version</td>
+        <td>Latest Recommended Version</td>
+    </tr>
+    <tr>
+        <td>Windows 64</td>
+        <td>Oracle</td>
+        <td>1.8.0</td>
+        <td>1.8.0_211+</td>
+        <td> <a href="https://support.oracle.com/epmos/faces/ui/patch/PatchDetail.jspx?patchId=18143322">Java
+            SE 8u431</a></td>
+    </tr>
+    <tr>
+        <td>Linux x86-64</td>
+        <td>Oracle</td>
+        <td>1.8.0</td>
+        <td>1.8.0_211+</td>
+        <td> <a href="https://support.oracle.com/epmos/faces/ui/patch/PatchDetail.jspx?patchId=18143322">Java
+            SE 8u431</a></td>
+    </tr>
+    <tr>
+        <td>Solaris x86-64</td>
+        <td>Oracle</td>
+        <td>1.8.0</td>
+        <td>1.8.0_211+</td>
+        <td> <a href="https://support.oracle.com/epmos/faces/ui/patch/PatchDetail.jspx?patchId=18143322">Java
+            SE 8u431</a></td>
+    </tr>
+    <tr>
+        <td>Solaris Sparc</td>
+        <td>Oracle</td>
+        <td>1.8.0</td>
+        <td>1.8.0_211+</td>
+        <td> <a href="https://support.oracle.com/epmos/faces/ui/patch/PatchDetail.jspx?patchId=18143322">Java
+            SE 8u431</a></td>
+    </tr>
+    <tr>
+        <td>IBM AIX 64</td>
+        <td>IBM</td>
+        <td>1.8.0</td>
+        <td>1.8.0 SR6 FP5+</td>
+        <td>Obtain from vendor</td>
+    </tr>
+    <tr>
+        <td>IBM Linux on System Z</td>
+        <td>IBM</td>
+        <td>1.8.0</td>
+        <td>1.8.0 SR6 FP5+</td>
+        <td>Obtain from vendor</td>
+    </tr>
+    <tr>
+        <td>HPUX-IA64</td>
+        <td>HP</td>
+        <td>1.8.0</td>
+        <td>1.8.0.19+</td>
+        <td>Obtain from vendor</td>
+    </tr>
+    <tr>
+        <td>Linux ARM-64</td>
+        <td>Oracle</td>
+        <td>1.8.0</td>
+        <td>1.8.0_251+</td>
+        <td> <a href="https://support.oracle.com/epmos/faces/ui/patch/PatchDetail.jspx?patchId=18143322">Java
+            SE 8u431</a></td>
+    </tr>
+    </tbody>
+</table>
+<p>Refer the following document to verify and upgrade to relevant JDK:</p>
+<p><a href="https://support.oracle.com/epmos/faces/DocumentDisplay?id=1492980.1" target="_blank">Doc ID 1492980.1</a> on How to Install and Maintain the Java SE Installed or
+    Used with FMW 11g/12c/14.1.1 Products</p>
+<h3>3.3 Create a Complete Backup</h3>
+<p>Create a complete backup of DOMAIN_HOME, ORACLE_HOME and CENTRAL INVENTORY using
+    standard backup software/utilities. </p>
+<strong>IMPORTANT</strong>: In some cases restoring from backup is the only
+way to roll back the patches. See <a href="#rollback">Section 6</a> for
+additional rollback options.
+<p>Refer the following <a href="https://docs.oracle.com/en/middleware/fusion-middleware/12.2.1.4/asadm/backing-your-environment.html#GUID-78A77EED-FD97-41AB-8CE6-2E23760BEC0B">Backing
+    Up Your Environment</a> for Oracle recommended backup strategies.</p>
+<h3>3.4 Check OPatch Version</h3>
+<p>The Critical Patch Update program for October 2024 includes OPatch 13.9.4.2.17. The following should be noted about this version:</p>
+<ul>
+    <li>The WebLogic Server Patch Set Update requires OPatch 13.9.4.2.13 or later in order to successfully apply new updates. </li>
+    <li>The SPBAT script requires OPatch to be at 13.9.4.2.13 or later when performing prerequisite checks (precheck phase). <br>
+    </li>
+    <li>OPatch will be upgraded if running SPBAT -phase apply during downtime, see &quot;4.1.3 Applying the SPB Patches with SPBAT&quot;<br>
+    </li>
+</ul>
+<p>If running the optional SPBAT -phase precheck without being on at least OPatch 13.9.4.2.13:</p>
+<ol>
+    <li>Check if Patch 23335292 exists in the ORACLE_HOME and rollback the patch <strong>before an OPatch upgrade.</strong><br>
+        You can get the list of patches by executing lspatches:
+        ORACLE_HOME/OPatch/opatch lspatches
+        <p>If patch 23335292 exists, rollback the patch by executing the following command:
+            ORACLE_HOME/OPatch/opatch rollback -id 23335292</p>
+        <strong>Note</strong>: You should wait approximately 15-30 seconds before running any opatch commands. The rollback of Patch 23335292 should not be executed after the upgrade.&nbsp;<br>
+        <br>
+    </li>
+    <li> Unzip OPatch (bundled as part of WLS SPB) to a temporary location outside of your Oracle home.<br>
+        <br>
+        Example for UNIX:<br>
+        <br>
+        <strong>unzip WLS_SPB_&lt;RELEASE&gt;.&lt;VERSION&gt;/tools/opatch/generic/&lt;VERSION&gt;_Generic.zip -d /tmp/opatch</strong><br>
+        <br>
+    </li>
+    <li>Refer to the <a href="https://updates.oracle.com/Orion/Services/download?type=readme&aru=25781163" target="_blank">OPatch Readme</a> file for instructions on upgrading OPatch in the ORACLE_HOME.
+        <br>
+        <br>
+        In general, the command is:<br>
+        <br>
+        [Linux/UNIX] <strong>java -jar &lt;PATCH_HOME&gt;/6880880/opatch_generic.jar -silent oracle_home=&lt;ORACLE_HOME&gt;<br>
+        </strong><br>
+        [Windows] <strong>java -jar &lt;PATCH_HOME&gt;\6880880\opatch_generic.jar -silent oracle_home=&lt;ORACLE_HOME&gt;</strong><br>
+        <br>
+        Where<strong> &lt;PATCH_HOME&gt;</strong> is the directory you used to extract the <strong>&lt;VERSION&gt;_Generic.zip</strong>.<strong><br>
+        </strong><br>
+        <br>
+    </li>
+    <li>To verify the OPatch version, run the following command:<br>
+        <br>
+        <strong>ORACLE_HOME/OPatch/opatch version </strong><br>
+    </li>
+</ol>
+<p><strong>Note</strong>: OPatch will be upgraded to 13.9.4.2.17 from any version if only running SPBAT <strong>-phase apply</strong>. To avoid unexpected issues, ensure all prerequisites are met in your environment.</p>
+<h3>3.5 Stop All Processes for WebLogic Server</h3>
+<p>Stop all WebLogic Server processes before proceeding with the patch
+    installation.</p>
+<h3>3.6 Disable all anti-virus software</h3>
+<p>On Windows, anti-virus software should be temporarily stopped while applying patches in order to avoid problems copying files.</p>
+<h2><a name="patch"></a>Section 4: Patch Installation Steps</h2>
+<p>As noted in the Introduction, there are two ways to apply the SPB.
+    Review the following descriptions and then proceed to the designated
+    section for detailed instructions:</p>
+<ul>
+    <li> <strong>Using SPBAT (Linux, Solaris, and Windows only)</strong> SPBAT will help
+        to make the patch installation easier by validating the patch target
+        environment before patching (precheck phase) and then installing the
+        patches (apply phase). The tool can also update your OPatch version if
+        the existing OPatch version is not compatible with the new patches in
+        the SPB. SPBAT can also be run in precheck-only phase, so you can
+        prepare in advance for applying the patches. If you would like to use
+        SPBAT, continue to <a href="#spbat">Section 4.1</a>. </li>
+</ul>
+<ul>
+    <li> <strong>Using OPatch napply (all platforms)</strong> If you would
+        like to continue to use the OPatch <strong>napply</strong> method to
+        apply the SPB, continue to <a href="#napply">Section 4.2</a>. </li>
+</ul>
+<h3><a name="spbat"></a>4.1 Using SPBAT (Linux, Solaris, and Windows only)</h3>
+<h4>4.1.1 SPBAT Requirements</h4>
+<ol>
+    <li>Log in and run commands as the OS user that installed Oracle WebLogic
+        Server.</li>
+    <li>As noted in the prerequisites, OPatch 13.9.4.2.13 is the minimum required
+        version to run the SPBAT precheck.</li>
+    <li>Verify that the JAVA_HOME setting in the
+        ORACLE_HOME/oui/.globalEnv.properties is where you have installed your
+        Java SE (JDK/JRE).</li>
+    <br>
+    <strong>Note</strong>: SPBAT will not allow a location within the
+    ORACLE_HOME, see <a href="https://support.oracle.com/epmos/faces/DocumentDisplay?id=1492980.1" target="_blank">Doc
+    ID 1492980.1</a> for updating your Java SE.
+</ol>
+<h4>4.1.2 SPBAT Patching Process Overview</h4>
+<p>Once the prerequisite steps from <a href="#prereq">Section 3</a> are
+    completed, the steps to apply the SPB patches using SPBAT include the
+    following:</p>
+<ol>
+    <li>Run precheck phase (optional)</li>
+    <li>Stop services</li>
+    <li>Run precheck and apply phase during downtime</li>
+    <li>Restart services</li>
+    <li>Complete validation</li>
+</ol>
+<h4>4.1.3 Applying the SPB Patches with SPBAT</h4>
+<h6>SPBAT Precheck Phase</h6>
+<p>Follow the steps below to check prerequisites in the WLS 12.2.1.4 environment during uptime or downtime without an intention of making changes. This requires OPatch 13.9.4.2.13, see the section, "3.4 Check OPatch Version". </p>
+<ol>
+    <li>Run the SPBAT utility with appropriate options for the optional
+        precheck-only phase:<br>
+        <br>
+        a. Navigate to the SPBAT directory:<strong><br>
+            <br>
+            &nbsp;&nbsp;&nbsp; WLS_SPB_&lt;VERSION&gt;/tools/spbat/generic/SPBAT</strong>
+        <p>b. Run the SPBAT utility for the precheck phase:</p>
+        <p>&nbsp;&nbsp; [Linux/UNIX] <strong>./spbat.sh -phase precheck
+            -oracle_home &lt;ORACLE_HOME&gt;</strong></p>
+        <p>&nbsp;&nbsp; [Windows] <strong>spbat.bat -phase precheck</strong> <strong>-oracle_home
+            &lt;ORACLE_HOME&gt;</strong></p>
+        <p>c. Review the standard out reports before proceeding with the next
+            phase.</p>
+        <ul>
+            <li>If there are any issues that need to be addressed, you can run the
+                precheck phase again.</li>
+            <li> Repeat these steps on each node in a multi-node environment.<strong></strong></li>
+            <li>To monitor the progress during execution on Windows platform, open a new terminal and monitor the log files as required.
+                <br>
+                <br>
+            </li>
+        </ul>
+    </li>
+</ol>
+<h6>SPBAT Apply Phase</h6>
+<p>When you are ready to apply updates during downtime, follow the steps below to upgrade OPatch, check prerequisites, and apply patches.</p>
+<ol>
+    <li>Stop all services and ensure that there are no Java processes running
+        on this Oracle home.</li>
+    <li>Navigate to the SPBAT directory:</p>
+        <p><strong>&nbsp;&nbsp;&nbsp;
+            WLS_SPB_&lt;VERSION&gt;/tools/spbat/generic/SPBAT</strong></p>
+    </li>
+    <li>Run the SPBAT utility for the apply phase:
+        <p>&nbsp;&nbsp;&nbsp; [Linux/UNIX] <strong>./spbat.sh -phase apply
+            -oracle_home &lt;ORACLE_HOME&gt;</strong></p>
+        <p>&nbsp;&nbsp;&nbsp; [Windows] <strong>spbat.bat -phase apply</strong>
+            <strong>-oracle_home &lt;ORACLE_HOME&gt;<br>
+                <br>
+            </strong>&nbsp;&nbsp;&nbsp; Where:</p>
+        <p><strong>&nbsp;&nbsp;&nbsp;&nbsp; -phase</strong>: The various phases
+            of applying the patch, valid values are precheck and apply.</p>
+        <p><strong>&nbsp; &nbsp;&nbsp; -oracle_home</strong>: The directory path
+            to Oracle home.</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp; -<strong>log_dir</strong>: (optional) The
+            default directory is
+            WLS_SPB_&lt;VERSION&gt;/tools/spbat/generic/SPBAT/logs or you can set
+            your own location. The directory should already exist and be writable. Windows users should specify a custom log location with a shorter path in order to prevent long path issues known to Windows platforms. </p>
+        <p><strong>&nbsp;&nbsp; &nbsp; -skip_acl</strong> (optional - Windows
+            platform only): True or False. True will preserve permissions in
+            ORACLE_HOME whereas False will override ACL settings if any.<br>
+        </p>
+    </li>
+    <li>Review the standard out reports before proceeding with the
+        next phase. </li>
+    <ul>
+        <li> If there are any issues that need to be addressed, you can run
+            the precheck phase again.</li>
+        <li>Repeat these steps on each node in a multi-node environment.</li>
+        <li>To monitor the progress during execution on Windows platform, open a new terminal and monitor the log files as required.<br>
+        </li>
+    </ul>
+    <br>
+    </li>
+    <li>Complete the post installation tasks in <a href="#postinstall">Section
+        5</a>. </li>
+</ol>
+<h3><a name="napply"></a>4.2 Using OPatch napply (All Platforms)</h3>
+<p> Before running OPatch napply commands, it is recommended to upgrade OPatch.<br>
+    Refer to section &quot;<strong>3.4 Check OPatch Version</strong>&quot; to upgrade OPatch.</p>
+<p>If Patch 23335292 was applied to OPatch 13.9.4.2.13, it should be rolled back before upgrading OPatch:
+<ol>
+    <li>Check if Patch 23335292 exists in the Inventory:
+        ORACLE_HOME/OPatch/opatch lspatches
+        <p>If patch 23335292 exists, rollback the patch by executing the following command:
+            ORACLE_HOME/OPatch/opatch rollback -id 23335292</p>
+        <strong>Note</strong>:
+        <ol>
+            <li>You should wait approximately 15-30 seconds before running any opatch commands.</li>
+            <li>The rollback of Patch 23335292 should not be executed after the upgrade.</li>
+        </ol>
+        <br>
+    </li>
+    <li>&nbsp; Unzip OPatch (bundled as part of WLS SPB) to a temporary
+        location outside of your Oracle home.<br>
+        &nbsp;&nbsp;&nbsp; <br>
+        &nbsp;&nbsp; Example for UNIX:<strong><br>
+            <br>
+            &nbsp;&nbsp; unzip
+            WLS_SPB_&lt;RELEASE&gt;.&lt;VERSION&gt;/tools/opatch/generic/&lt;VERSION&gt;_Generic.zip
+            -d /tmp/opatch</strong><br>
+        <strong><br>
+        </strong></li>
+    <li>&nbsp; Refer to the OPatch <a href="https://updates.oracle.com/Orion/Services/download?type=readme&aru=25781163">Readme.txt</a>
+        for instructions on upgrading OPatch in the ORACLE_HOME. In general the
+        command is:<br>
+        <br>
+        [Linux/UNIX] <strong> java -jar &lt;PATCH_HOME&gt;/6880880/opatch_generic.jar -silent
+            oracle_home=&lt;ORACLE_HOME&gt;</strong><br>
+        <br>
+        [Windows]<strong> java -jar &lt;PATCH_HOME&gt;\6880880\opatch_generic.jar -silent
+            oracle_home=&lt;ORACLE_HOME&gt;</strong> <br>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Where<strong> &lt;PATCH_HOME&gt;</strong> is the directory you used to extract the <strong>&lt;VERSION&gt;_Generic.zip</strong>. <br></li>
+</ol>
+<h4>4.2.1 OPatch napply Requirements</h4>
+<ol>
+    <li>Log in and run commands as the OS user that installed Oracle WebLogic
+        Server.</li>
+    <li>Unset the JAVA_HOME and ORACLE_HOME environment variables.</li>
+    <li>Verify that the JAVA_HOME setting in the
+        ORACLE_HOME/oui/.globalEnv.properties is where you have installed your
+        Java SE (JDK/JRE).</li>
+    <br>
+    <strong>Note:</strong> To prevent OPatch from entering into self-patching
+    mode, and to avoid inventory corruption issues, ensure that no OPatch
+    operations are consuming a JDK/JRE located inside the ORACLE_HOME. See <a href="https://support.oracle.com/epmos/faces/DocumentDisplay?id=1492980.1">Doc
+    ID 1492980.1</a> for updating your Java SE installation.
+</ol>
+<h4><strong>4.2.2 OPatch napply - UNIX Platform Steps</strong></h4>
+<ol>
+    <li>Check if Patch 32720458 exists in the ORACLE_HOME and rollback the patch.<br>
+        You can get the list of patches by executing lspatches:
+        ORACLE_HOME/OPatch/opatch lspatches
+        <p>If patch 32720458 exists, rollback the patch by executing the following command:
+            ORACLE_HOME/OPatch/opatch rollback -id 32720458</p>
+        <br>
+    </li>
+    <li>(Optional) Run OPatch with the <strong>-report</strong> flag to
+        produce a log of patches that will be applied, but does not actually
+        update anything:<br>
+        <br>
+        a. Navigate to the binary patches directory:<strong><br>
+            <br>
+            &nbsp;&nbsp;&nbsp; WLS_SPB_12.2.1.4.&lt;VERSION&gt;/binary_patches</strong><br>
+        <br>
+        b. Run OPatch with the <strong>-report</strong> flag to produce a log
+        to review:<strong><br>
+            <br>
+            &nbsp;&nbsp;&nbsp; </strong><strong><strong>ORACLE_HOME</strong>/OPatch/opatch
+            napply -report -oh &lt;ORACLE_HOME&gt; -phBaseFile
+            &lt;patch_list_file&gt;<br>
+        </strong>
+        <p>When composing the command line, make sure the <strong>-phBaseFile</strong>
+            value corresponds to your specific UNIX operating platform. </p>
+        <p>linux64_patchlist.txt | solaris64_patchlist.txt |
+            solaris_sparc64_patchlist.txt | aix64_patchlist.txt |
+            hpuxia64_patchlist.txt | linux_zser_patchlist.txt |
+            generic_patchlist.txt</p>
+        <p><strong>Note</strong>: Use generic_patchlist.txt to apply generic
+            patches only in case the install platform is different from the list
+            detailed in <a href="#sysover">Section 2</a> of this document.</p>
+        Here is an example of the command for UNIX:
+        <p><strong><strong>ORACLE_HOME</strong>/OPatch/opatch napply -report -oh
+            &lt;ORACLE_HOME&gt; -phBaseFile linux64_patchlist.txt</strong></p>
+        <ul>
+            <ul>
+            </ul>
+            <li>The patchlist files are bundled into the SPB and you do not need to
+                provide a path to the file.</li>
+            <ul>
+            </ul>
+            <li>Once the <strong>opatch napply -report</strong> command is
+                executed, review the output of the command and the logs it produces to
+                be aware of any possible issues.</li>
+            <ul>
+            </ul>
+            <li>No changes have been made to your Oracle home even though the
+                command output may say that patches were successfully applied.<br>
+            </li>
+        </ul>
+</ol>
+&nbsp;&nbsp;&nbsp;&nbsp; 3.&nbsp;&nbsp; Run OPatch to install the patches
+included in the SPB:<br>
+<ol>
+    <p>a. Navigate to the binary patches directory:<br>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <strong>WLS_SPB_12.2.1.4.&lt;VERSION&gt;/binary_patches</strong>
+    </p>
+    <p>b. Run <strong>opatch napply</strong>:</p>
+    <p><strong>&nbsp;&nbsp;&nbsp; </strong><strong><strong>ORACLE_HOME</strong>/OPatch/opatch
+        napply -oh &lt;ORACLE_HOME&gt; -phBaseFile &lt;patch_list_file&gt;</strong></p>
+    <p>When composing the command line, make sure the <strong>-phBaseFile</strong>
+        value corresponds to your specific UNIX operating platform. </p>
+    <p>linux64_patchlist.txt | solaris64_patchlist.txt |
+        solaris_sparc64_patchlist.txt | aix64_patchlist.txt |
+        hpuxia64_patchlist.txt | linux_zser_patchlist.txt |
+        generic_patchlist.txt</p>
+    <p><strong>Note</strong>: Use generic_patchlist.txt to apply generic
+        patches only if the install platform is different from the list detailed
+        in <a href="#sysover">Section 2</a> of this document.</p>
+    <p>Here is an example of the command for UNIX:</p>
+    <p><strong><strong>ORACLE_HOME</strong>/OPatch/opatch napply -oh
+        &lt;ORACLE_HOME&gt; -phBaseFile linux64_patchlist.txt</strong></p>
+    <ul>
+        <li>The patchlist files are bundled into the SPB, so you do not need to
+            provide a path to the file.</li>
+        <li>Once the <strong>opatch napply</strong> command is executed, review
+            the output of the command and the logs it produces to be aware of any
+            possible issues.</li>
+        <li>Changes have been made to your Oracle home if this command was
+            successful.<br>
+        </li>
+    </ul>
+</ol>
+</li>
+<h4>4.2.3 OPatch napply - Windows Platform Steps</h4>
+<p>Open the command prompt as Administrator to execute the following steps:</p>
+<ol>
+    <li>Check if Patch 32720458 exists in the ORACLE_HOME and rollback the patch.<br>
+        You can get the list of patches by executing lspatches:
+        ORACLE_HOME/OPatch/opatch lspatches
+        <p>If patch 32720458 exists, rollback the patch by executing the following command:
+            ORACLE_HOME/OPatch/opatch rollback -id 32720458</p>
+        <br>
+    </li>
+    <li>(Optional) Run OPatch with the <strong>-report</strong> flag to
+        produce a log to review:<br>
+        <br>
+        a. Navigate to the binary patches directory:<strong><br>
+            <br>
+            WLS_SPB_12.2.1.4.&lt;VERSION&gt;\binary_patches</strong><br>
+        <br>
+        b. Run <strong>opatch napply</strong>:<strong><br>
+            <br>
+        </strong><strong><strong>ORACLE_HOME</strong>\OPatch\opatch napply
+            -report -oh &lt;ORACLE_HOME&gt; -phBaseFile windows64_patchlist.txt<br>
+            <br>
+        </strong></li>
+    <ul>
+        <ul>
+        </ul>
+        <li>The windows64_patchlist.txt file is bundled into the SPB, so you do
+            not need to provide a path to the file.</li>
+        <ul>
+        </ul>
+        <li>Once the <strong>opatch napply -report</strong> command is
+            executed, review the output of the command and the log files it
+            produces to be aware of any possible issues.</li>
+        <ul>
+        </ul>
+        <li>No changes have been made to your Oracle home even though the
+            command output may say that patches were successfully applied.<strong><br>
+            </strong></li>
+        <ul>
+        </ul>
+    </ul>
+    <p style="margin-left: -14px;">3. Run OPatch to install the patches
+        included in the SPB: </p>
+    a. Navigate to the binary patches directory:<strong><br>
+    <br>
+    &nbsp;&nbsp; WLS_SPB_12.2.1.4.&lt;VERSION&gt;/binary_patches</strong><br>
+    <br>
+    b. Run <strong>opatch napply</strong>:<strong><br>
+    <br>
+    &nbsp; </strong><strong><strong>ORACLE_HOME</strong>\OPatch\opatch
+    napply -oh &lt;ORACLE_HOME&gt; -phBaseFile windows64_patchlist.txt<br>
+    <br>
+</strong>
+    <ul>
+        <li>The windows64_patchlist.txt file is bundled into the SPB and you do
+            not need to provide a path to the file.</li>
+        <li>Once the <strong>opatch napply</strong> command is executed, review
+            the output of the command and the log files it produces to be aware of
+            any possible issues.</li>
+        <li>Changes have been made to your Oracle home if this command is
+            successful.</li>
+    </ul>
+</ol>
+</li>
+
+<h4>4.2.4 OPatch napply - ARM-64 Platform Steps</h4>
+<p>Open the command prompt as Administrator to execute the following steps:</p>
+<ol>
+    <li>Check if Patch 32720458 exists in the ORACLE_HOME and rollback the patch.<br>
+        You can get the list of patches by executing lspatches:
+        ORACLE_HOME/OPatch/opatch lspatches
+        <p>If patch 32720458 exists, rollback the patch by executing the following command:
+            ORACLE_HOME/OPatch/opatch rollback -id 32720458</p>
+        <br>
+    </li>
+
+    <li>(Optional) Run OPatch with the <strong>-report</strong> flag to
+        produce a log to review:<br>
+        <br>
+        a. Navigate to the binary patches directory:<strong><br>
+            <br>
+            WLS_SPB_12.2.1.4.&lt;VERSION&gt;\binary_patches</strong><br>
+        <br>
+        b. Run <strong>opatch napply</strong>:<strong><br>
+            <br>
+        </strong><strong><strong>ORACLE_HOME</strong>\OPatch\opatch napply
+            -report -oh &lt;ORACLE_HOME&gt; -phBaseFile arm64_patchlist.txt<br>
+            <br>
+        </strong></li>
+    <ul>
+        <ul>
+        </ul>
+        <li>The windows64_patchlist.txt file is bundled into the SPB, so you do
+            not need to provide a path to the file.</li>
+        <ul>
+        </ul>
+        <li>Once the <strong>opatch napply -report</strong> command is
+            executed, review the output of the command and the log files it
+            produces to be aware of any possible issues.</li>
+        <ul>
+        </ul>
+        <li>No changes have been made to your Oracle home even though the
+            command output may say that patches were successfully applied.<strong><br>
+            </strong></li>
+        <ul>
+        </ul>
+    </ul>
+    <p style="margin-left: -14px;">3. Run OPatch to install the patches
+        included in the SPB: </p>
+    a. Navigate to the binary patches directory:<strong><br>
+    <br>
+    &nbsp;&nbsp; WLS_SPB_12.2.1.4.&lt;VERSION&gt;/binary_patches</strong><br>
+    <br>
+    b. Run <strong>opatch napply</strong>:<strong><br>
+    <br>
+    &nbsp; </strong><strong><strong>ORACLE_HOME</strong>\OPatch\opatch
+    napply -oh &lt;ORACLE_HOME&gt; -phBaseFile arm64_patchlist.txt<br>
+    <br>
+</strong>
+    <ul>
+        <li>The arm64_patchlist.txt file is bundled into the SPB and you do
+            not need to provide a path to the file.</li>
+        <li>Once the <strong>opatch napply</strong> command is executed, review
+            the output of the command and the log files it produces to be aware of
+            any possible issues.</li>
+        <li>Changes have been made to your Oracle home if this command is
+            successful.</li>
+    </ul>
+</ol>
+<h2><a name="postinstall"></a>Section 5: Post Installation Steps</h2>
+<ol>
+    <li>Verify SPB Patches in ORACLE_HOME inventory.<br>
+        <br>
+        <strong><strong>ORACLE_HOME</strong>/OPatch/opatch lspatches</strong></li>
+    <p><strong>Note</strong>: Refer to the SPB patch list under <a href="#sysover">Section
+        2</a> to understand the list of expected patches in the lspatches
+        output. For example, the most popular generic installation will have a
+        minimum of the WLS PSU, Coherence and ADR patches. Other components may
+        not be installed, and, in some cases, patching will be skipped.</p></li>
+    <li>Refer to the following document for important post-installation
+        information:<br>
+        <br>
+        Doc ID 2764668.1 for Security Advice and Post-Install Information for
+        Oracle WebLogic Server PSUs<a href="https://support.oracle.com/epmos/faces/DocumentDisplay?id=2764668.1" target="_blank"><br>
+            https://support.oracle.com/epmos/faces/DocumentDisplay?id=2764668.1<br>
+            <br>
+        </a></li>
+    <li>Start all WebLogic Servers.</li>
+</ol>
+<h2><a name="rollback"></a>Section 6: Rollback Steps</h2>
+For a <strong>complete</strong> rollback, use the backups (created before the application of
+SPB) to restore the ORACLE_HOME and CENTRAL INVENTORY.
+<ul>
+    <li>If OPatch was upgraded and you need to roll back to the very
+        beginning, then you must restore from backup.</li>
+    <li>If it is confirmed that the OPatch upgrade was successful, and you
+        only need to roll back the SPB patches, then use the following steps:</li>
+</ul>
+<ol>
+    <li>If you have applied any patches to resolve conflicts since applying
+        the SPB, first ensure these overlay patches are rolled back first.</li>
+    <br>
+
+    <li>Use the following commands to roll back all patches included in the
+        SPB:<br>
+        <br>
+        a. Navigate to the binary patches directory:<strong><br>
+        </strong><br>
+        &nbsp;&nbsp;&nbsp; <strong>WLS_SPB_12.2.1.4.&lt;VERSION&gt;/binary_patches</strong><br>
+        <br>
+        b. Run the <strong>opatch nrollback</strong> command:<br>
+        <br>
+        &nbsp; <strong><strong>ORACLE_HOME</strong>/OPatch/opatch nrollback -oh
+            &lt;ORACLE_HOME&gt; -idFile rollback_patchlist.txt</strong><br>
+        <br>
+        <ul>
+            <li>This command will rollback all patches included with the past and present
+                Stack Patch Bundles. If any patch is not present, OPatch will return the
+                patch is "not present in the Oracle Home".</li><br>
+            <li>OPatch will re-activate any previously superseded patch (e.g., the WLS
+                PSU). Any previously applied overlay patches will not be re-applied. Unless
+                the goal is to apply a newer SPB or PSU, in order to get back to an original
+                state, you must re-apply any overlay patches you previously had applied with
+                the WLS PSU.</li>
+        </ul>
+</ol>
+<strong>IMPORTANT</strong>: Oracle recommends that you do not roll back
+individual patches. Doing so can impact the integrity of the other patches.
+Note that some patches are specific to the SPB only.
+<ul>
+</ul>
+<hr>
+<p>DISCLAIMER:</p>
+<p>This Stack Patch Bundle contains a WebLogic Server Patch Set Update.</p>
+<p>Oracle recommends this Patch Set Update (PSU) for development and
+    production systems in accordance with Doc ID 1306505.1.</p>
+<p>This PSU may conflict with an interim patch(es) that has been applied to
+    customer systems. If the interim patch is included in the PSU, the interim
+    patch does not need to be applied to systems where the PSU is applied. If
+    the interim patch is not included in the PSU, the conflict probably arises
+    because the PSU modifies the same module as the interim patch. In such
+    cases, customers should contact Oracle Support, provide information about
+    all patches applied to the system, and request an overlay patch(es) that
+    will resolve the conflict.</p>
+<p>Copyright 2024, Oracle and/or its affiliates. All rights
+    reserved.</p>
+</body>
+</html>

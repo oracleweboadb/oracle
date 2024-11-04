@@ -10,157 +10,157 @@
 
     - debug: var=out.stdout_lines
 
-#    ## Prepare JDK patch
-#    - name: Unzip JDK patch file
-#      ansible.builtin.unarchive:
-#        src: "{{ upgrade_home }}/java/{{ jdk_patch_zip }}"
-#        dest: "{{ upgrade_home }}/java"
-#        remote_src: yes
-#
-#    - name: "Create directory for JDK 1.8_{{ jdk_patch_number }}"
-#      ansible.builtin.file:
-#        path: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}"
-#        state: directory
-#
-#    - name: Copy JDK tarball to new directory
-#      ansible.builtin.copy:
-#        src: "{{ upgrade_home }}/java/jdk-8u{{ jdk_patch_number }}-linux-x64.tar.gz"
-#        dest: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk-8u{{ jdk_patch_number }}-linux-x64.tar.gz"
-#        remote_src: yes
-#
-#    - name: untar
-#      ansible.builtin.shell: "tar xzf jdk-8u{{ jdk_patch_number }}-linux-x64.tar.gz || echo done"
-#      args:
-#        chdir: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}"
-#        executable: /bin/bash
-#
-#    ## Stop services
-#    - name: Stop Node Manager
+    ## Prepare JDK patch
+    - name: Unzip JDK patch file
+      ansible.builtin.unarchive:
+        src: "{{ upgrade_home }}/java/{{ jdk_patch_zip }}"
+        dest: "{{ upgrade_home }}/java"
+        remote_src: yes
+
+    - name: "Create directory for JDK 1.8_{{ jdk_patch_number }}"
+      ansible.builtin.file:
+        path: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}"
+        state: directory
+
+    - name: Copy JDK tarball to new directory
+      ansible.builtin.copy:
+        src: "{{ upgrade_home }}/java/jdk-8u{{ jdk_patch_number }}-linux-x64.tar.gz"
+        dest: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk-8u{{ jdk_patch_number }}-linux-x64.tar.gz"
+        remote_src: yes
+
+    - name: untar
+      ansible.builtin.shell: "tar xzf jdk-8u{{ jdk_patch_number }}-linux-x64.tar.gz || echo done"
+      args:
+        chdir: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}"
+        executable: /bin/bash
+
+    ## Stop services
+    - name: Stop Node Manager
+      ansible.builtin.shell: |
+        ./stopNodeManager.sh || echo
+      args:
+        chdir: "{{ item }}/bin"
+      loop: "{{ domain_home }}"
+
+    - name: Check if any services are running for domain
+      ansible.builtin.shell: |
+        ps -ef | grep -E 'java|NodeManager'
+      register: service_status
+      ignore_errors: yes
+
+#    - name: Stop running services if found
 #      ansible.builtin.shell: |
-#        ./stopNodeManager.sh || echo
-#      args:
-#        chdir: "{{ item }}/bin"
-#      loop: "{{ domain_home }}"
-#
-#    - name: Check if any services are running for domain
-#      ansible.builtin.shell: |
-#        ps -ef | grep -E 'java|NodeManager'
-#      register: service_status
-#      ignore_errors: yes
-#
-##    - name: Stop running services if found
-##      ansible.builtin.shell: |
-##        ps -ef | grep -E 'java|NodeManager' | awk '{print $2}' | xargs kill -9
-##      when: service_status.stdout != ""
-#
-#    ## Backup jdk
-#    - name: Ansible fact - ansible_date_time
-#      debug:
-#        var: ansible_date_time
-#
-#    ## Delete old backups
-#    - name: Delete old backups
-#      ansible.builtin.shell: |
-#        cd {{ java_home }}/java/
-#        find . -name "{{ inventory_hostname }}*.tar.gz" -maxdepth 1 -type f -delete
-#      ignore_errors: yes
-#
-#    - name: Backup JDK 1.8
-#      ansible.builtin.archive:
-#        path: "{{ java_home }}/java/jdk1.8/"
-#        dest: "{{ java_home }}/java/jdk1.8_{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}_0900.tar.gz"
-#        format: "gz"
-#
-#    ## Patch JDK
-#    - name: Apply Java Patch
-#      block:
-#        - name: Move Old JDK
-#          command: "rm -rf {{ java_home }}/jdk1.8_old"
-#
-#        - name: Move Old JDK
-#          command: "mv {{ java_home }}/jdk1.8 {{ java_home }}/jdk1.8_old"
-#
-#        - name: Copy New JDK
-#          copy:
-#            src: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk1.8.0_{{ jdk_patch_number }}/"
-#            dest: "{{ java_home }}/jdk1.8"
-#            remote_src: yes
-#
-#    - name: Check Java Version
-#      block:
-#        - name: Set JAVA_HOME and PATH
-#          shell: |
-#            export JAVA_HOME={{ java_home }}/jdk1.8
-#            export PATH=$JAVA_HOME/bin:$PATH
-#            java -version
-#          register: java_version
-#
-#        - name: Display Java Version
-#          debug:
-#            msg: "{{ java_version.stdout }}"
-#
-#    # Weblogic Patching tasks
-#
-#    ## Prepare weblogic
-#    - name: Unzip weblogic patch
-#      ansible.builtin.shell: |
-#        cd {{ upgrade_home }}
-#        unzip -o {{ weblogic_patch_zip }} -d /tmp
-#        cp -r /tmp/{{ weblogic_patch_spb_directory }} {{ upgrade_home }}/
-#        rm -rf /tmp/{{ weblogic_patch_spb_directory }}
-#
-#    ## Delete old backups
-#    - name: Delete old backups
-#      ansible.builtin.shell: |
-#        cd {{ item }}
-#        find . -name "{{ inventory_hostname }}*.tar.gz" -maxdepth 1 -type f -delete
-#      ignore_errors: yes
-#      loop: "{{ oracle_home }}"
-#
-#    ## Backup weblogic
-#    - name: Backup identity home
-#      ansible.builtin.archive:
-#        path: "{{ item }}"
-#        dest: "{{ item }}/{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}_0904.tar.gz"
-#        format: "gz"
-#      loop: "{{ oracle_home }}"
-#
-#    ## Patch weblogic
-#    - name: Apply WebLogic PSU Patch
-#      block:
-#        - name: Apply SPB
-#          shell: |
-#            export ORACLE_HOME={{ item }}
-#            export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
-#            {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item }}
-#          loop: "{{ oracle_home }}"
-#
-#      rescue:
-#        - name: Rollback Curent Patch if error caught
-#          shell: |
-#            export ORACLE_HOME={{ item }}
-#            export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
-#            {{ item }}/OPatch/opatch rollback -silent -id {{ patch_id }}
-#          loop: "{{ oracle_home }}"
-#
-#    ## Start services
-#    - name: Start Node Manager
-#      ansible.builtin.shell: |
-#        nohup startNodeManager.sh &
-#      args:
-#        chdir: "{{ item }}/bin"
-#      loop: "{{ domain_home }}"
-#
-#    - name: Wait for Node Manager to Start
-#      shell: |
-#        while ! pgrep -f NodeManager > /dev/null; do sleep 5; done
-#        echo "Node Manager is up"
-#
-#    - name: Start WebLogic Admin Server
-#      command: "nohup {{ item }}/bin/startWebLogic.sh >> {{ item }}/servers/AdminServer/logs/AdminServer.out 2>&1 &"
-#      async: 300
-#      poll: 10
-#      loop: "{{ domain_home }}"
+#        ps -ef | grep -E 'java|NodeManager' | awk '{print $2}' | xargs kill -9
+#      when: service_status.stdout != ""
+
+    ## Backup jdk
+    - name: Ansible fact - ansible_date_time
+      debug:
+        var: ansible_date_time
+
+    ## Delete old backups
+    - name: Delete old backups
+      ansible.builtin.shell: |
+        cd {{ java_home }}/java/
+        find . -name "{{ inventory_hostname }}*.tar.gz" -maxdepth 1 -type f -delete
+      ignore_errors: yes
+
+    - name: Backup JDK 1.8
+      ansible.builtin.archive:
+        path: "{{ java_home }}/java/jdk1.8/"
+        dest: "{{ java_home }}/java/jdk1.8_{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}_0900.tar.gz"
+        format: "gz"
+
+    ## Patch JDK
+    - name: Apply Java Patch
+      block:
+        - name: Move Old JDK
+          command: "rm -rf {{ java_home }}/jdk1.8_old"
+
+        - name: Move Old JDK
+          command: "mv {{ java_home }}/jdk1.8 {{ java_home }}/jdk1.8_old"
+
+        - name: Copy New JDK
+          copy:
+            src: "{{ upgrade_home }}/java/jdk1.8_{{ jdk_patch_number }}/jdk1.8.0_{{ jdk_patch_number }}/"
+            dest: "{{ java_home }}/jdk1.8"
+            remote_src: yes
+
+    - name: Check Java Version
+      block:
+        - name: Set JAVA_HOME and PATH
+          shell: |
+            export JAVA_HOME={{ java_home }}/jdk1.8
+            export PATH=$JAVA_HOME/bin:$PATH
+            java -version
+          register: java_version
+
+        - name: Display Java Version
+          debug:
+            msg: "{{ java_version.stdout }}"
+
+    # Weblogic Patching tasks
+
+    ## Prepare weblogic
+    - name: Unzip weblogic patch
+      ansible.builtin.shell: |
+        cd {{ upgrade_home }}
+        unzip -o {{ weblogic_patch_zip }} -d /tmp
+        cp -r /tmp/{{ weblogic_patch_spb_directory }} {{ upgrade_home }}/
+        rm -rf /tmp/{{ weblogic_patch_spb_directory }}
+
+    ## Delete old backups
+    - name: Delete old backups
+      ansible.builtin.shell: |
+        cd {{ item }}
+        find . -name "{{ inventory_hostname }}*.tar.gz" -maxdepth 1 -type f -delete
+      ignore_errors: yes
+      loop: "{{ oracle_home }}"
+
+    ## Backup weblogic
+    - name: Backup oracle home
+      ansible.builtin.archive:
+        path: "{{ item }}"
+        dest: "{{ item }}/{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}_0904.tar.gz"
+        format: "gz"
+      loop: "{{ oracle_home }}"
+
+    ## Patch weblogic
+    - name: Apply WebLogic PSU Patch
+      block:
+        - name: Apply SPB
+          shell: |
+            export ORACLE_HOME={{ item }}
+            export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
+            {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item }}
+          loop: "{{ oracle_home }}"
+
+      rescue:
+        - name: Rollback Curent Patch if error caught
+          shell: |
+            export ORACLE_HOME={{ item }}
+            export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
+            {{ item }}/OPatch/opatch rollback -silent -id {{ patch_id }}
+          loop: "{{ oracle_home }}"
+
+    ## Start services
+    - name: Start Node Manager
+      ansible.builtin.shell: |
+        nohup startNodeManager.sh &
+      args:
+        chdir: "{{ item }}/bin"
+      loop: "{{ domain_home }}"
+
+    - name: Wait for Node Manager to Start
+      shell: |
+        while ! pgrep -f NodeManager > /dev/null; do sleep 5; done
+        echo "Node Manager is up"
+
+    - name: Start WebLogic Admin Server
+      command: "nohup {{ item }}/bin/startWebLogic.sh >> {{ item }}/servers/AdminServer/logs/AdminServer.out 2>&1 &"
+      async: 300
+      poll: 10
+      loop: "{{ domain_home }}"
 
     - name: Start WebLogic Admin Server
       ansible.builtin.shell: |
