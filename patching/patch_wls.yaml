@@ -109,28 +109,13 @@
         cp -r /tmp/{{ weblogic_patch_spb_directory }} {{ upgrade_home }}/
         rm -rf /tmp/{{ weblogic_patch_spb_directory }}
 
-    ## Delete old backups
-    - name: Delete old backups
-      ansible.builtin.shell: |
-        cd {{ item }}
-        find . -name "{{ inventory_hostname }}*.tar.gz" -maxdepth 1 -type f -delete
-      ignore_errors: yes
-      loop: "{{ oracle_home }}"
-
     ## Backup weblogic
     - name: Backup oracle home
       ansible.builtin.archive:
         path: "{{ item }}"
-        dest: "{{ item }}/{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}_0904.tar.gz"
+        dest: "{{ item }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}.tar.gz"
         format: "gz"
       loop: "{{ oracle_home }}"
-
-    - name: Backup domain home
-      ansible.builtin.archive:
-        path: "{{ item }}"
-        dest: "{{ item }}/{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}.tar.gz"
-        format: "gz"
-      loop: "{{ domain_home }}"
 
     ## Patch weblogic
     - name: Apply WebLogic PSU Patch
