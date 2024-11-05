@@ -125,6 +125,13 @@
         format: "gz"
       loop: "{{ oracle_home }}"
 
+    - name: Backup domain home
+      ansible.builtin.archive:
+        path: "{{ item }}"
+        dest: "{{ item }}/{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}.tar.gz"
+        format: "gz"
+      loop: "{{ domain_home }}"
+
     ## Patch weblogic
     - name: Apply WebLogic PSU Patch
       block:
