@@ -44,14 +44,15 @@
 
     - name: Check if any services are running for domain
       ansible.builtin.shell: |
-        ps -ef | grep -E 'java|weblogic|NodeManager'
+        ps -ef | grep -E 'weblogic|NodeManager'
       register: service_status
       ignore_errors: yes
 
     - name: Stop running services if found
       ansible.builtin.shell: |
-        ps -ef | grep -E 'java|weblogic|NodeManager' | awk '{print $2}' | xargs kill -9
+        ps -ef | grep -E 'weblogic|NodeManager' | awk '{print $2}' | xargs kill -9
       when: service_status.stdout != ""
+      ignore_errors: yes
 
     ## Backup jdk
     - name: Ansible fact - ansible_date_time
