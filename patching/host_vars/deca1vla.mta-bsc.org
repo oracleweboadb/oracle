@@ -2,3 +2,6 @@ oracle_home:
   - "/fmwwec/u01/app/oracle/product/wec_home"
 domain_home:
   - "/fmwwec/u01/app/oracle/config/domains/fmwwec"
+
+
+/fmwwec/u01/app/oracle/product/wec_home/OPatch/opatch napply -silent -skip_duplicate -oh /fmwwec/u01/app/oracle/product/wec_home -phBaseFile linux64_patchlist.txt

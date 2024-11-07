@@ -42,6 +42,13 @@
         chdir: "{{ item }}/bin"
       loop: "{{ domain_home }}"
 
+    - name: Stop Web Logic
+      ansible.builtin.shell: |
+        ./stopWebLogic.sh || echo
+      args:
+        chdir: "{{ item }}/bin"
+      loop: "{{ domain_home }}"
+
     - name: Check if any services are running for domain
       ansible.builtin.shell: |
         ps -ef | grep -E 'weblogic|NodeManager'
@@ -129,21 +136,22 @@
               
               # Rollback patches
               cd {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/binary_patches
-              {{ item }}/OPatch/opatch nrollback -oh {{ item }} -idFile rollback_patchlist.txt
+              {{ item }}/OPatch/opatch nrollback -silent -oh {{ item }} -idFile rollback_patchlist.txt
             
               # Untar backup created
               cd {{ item }}/../
               tar -xvf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
             
               # Remove backup file
-              rm {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz 
+              rm {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz
+              exit 1
             }
             
             export ORACLE_HOME={{ item }}
             export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
             
             cd {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/binary_patches
-            {{ item }}/OPatch/opatch napply -silent -oh {{ item }} -phBaseFile linux64_patchlist.txt || rollback
+            {{ item }}/OPatch/opatch napply -silent -skip_duplicate -oh {{ item }} -phBaseFile linux64_patchlist.txt || rollback
           loop: "{{ oracle_home }}"
 
     ## Start services
