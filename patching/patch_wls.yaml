@@ -127,7 +127,7 @@
               export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
               
               # Rollback patches
-              cd {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}//binary_patches
+              cd {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/binary_patches
               {{ item }}/OPatch/opatch nrollback -oh {{ item }} -idFile rollback_patchlist.txt
             
               # Untar backup created
