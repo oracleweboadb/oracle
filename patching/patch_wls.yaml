@@ -113,26 +113,36 @@
     - name: Backup oracle home
       ansible.builtin.archive:
         path: "{{ item }}"
-        dest: "{{ item }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}.tar.gz"
+        dest: "{{ item }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz"
         format: "gz"
       loop: "{{ oracle_home }}"
 
     ## Patch weblogic
     - name: Apply WebLogic PSU Patch
       block:
-        - name: Apply SPB
+        - name: Apply SPB and rollback if failure
           shell: |
+            rollback(){
+              export ORACLE_HOME={{ item }}
+              export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
+              
+              # Rollback patches
+              cd {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}//binary_patches
+              {{ item }}/OPatch/opatch nrollback -oh {{ item }} -idFile rollback_patchlist.txt
+            
+              # Untar backup created
+              cd {{ item }}/../
+              tar -xvf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
+            
+              # Remove backup file
+              rm {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz 
+            }
+            
             export ORACLE_HOME={{ item }}
             export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
-            {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item }}
-          loop: "{{ oracle_home }}"
-
-      rescue:
-        - name: Rollback Curent Patch if error caught
-          shell: |
-            export ORACLE_HOME={{ item }}
-            export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
-            {{ item }}/OPatch/opatch rollback -silent -id {{ patch_id }}
+            
+            cd {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/binary_patches
+            {{ item }}/OPatch/opatch napply -silent -oh {{ item }} -phBaseFile linux64_patchlist.txt || rollback
           loop: "{{ oracle_home }}"
 
     ## Start services
