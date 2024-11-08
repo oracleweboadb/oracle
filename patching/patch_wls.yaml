@@ -139,7 +139,11 @@
             export ORACLE_HOME={{ item }}
             export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
             
-            {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -silent -phase apply -oracle_home {{ item }} || rollback
+            if {{ item }}/OPatch/opatch -lsinventory | grep -q {{ patch_id }}; then
+              echo "already patched this oracle home"
+            else 
+              {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -silent -phase apply -oracle_home {{ item }} || rollback
+            fi
           loop: "{{ oracle_home }}"
           ignore_errors: yes
 
