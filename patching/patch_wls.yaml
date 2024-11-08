@@ -41,6 +41,7 @@
       args:
         chdir: "{{ item }}/bin"
       loop: "{{ domain_home }}"
+      ignore_errors: yes
 
     - name: Stop Web Logic
       ansible.builtin.shell: |
@@ -48,17 +49,6 @@
       args:
         chdir: "{{ item }}/bin"
       loop: "{{ domain_home }}"
-
-    - name: Check if any services are running for domain
-      ansible.builtin.shell: |
-        ps -ef | grep -E 'weblogic|NodeManager'
-      register: service_status
-      ignore_errors: yes
-
-    - name: Stop running services if found
-      ansible.builtin.shell: |
-        ps -ef | grep -E 'weblogic|NodeManager' | awk '{print $2}' | xargs kill -9
-      when: service_status.stdout != ""
       ignore_errors: yes
 
     ## Backup jdk
@@ -133,26 +123,23 @@
             rollback(){
               export ORACLE_HOME={{ item }}
               export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
-              
-              # Rollback patches
-              cd {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/binary_patches
-              {{ item }}/OPatch/opatch nrollback -silent -oh {{ item }} -idFile rollback_patchlist.txt
-            
+                          
               # Untar backup created
               cd {{ item }}/../
               tar -xvf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
             
               # Remove backup file
               rm {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz
+            
               exit 1
             }
-            
+                        
             export ORACLE_HOME={{ item }}
             export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
             
-            cd {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/binary_patches
-            {{ item }}/OPatch/opatch napply -silent -skip_duplicate -oh {{ item }} -phBaseFile linux64_patchlist.txt || rollback
+            {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item }} || rollback
           loop: "{{ oracle_home }}"
+          ignore_errors: yes
 
     ## Start services
     - name: Start Node Manager
@@ -177,7 +164,5 @@
       ansible.builtin.shell: |
         cd {{ item }}/bin
         nohup ./startWebLogic.sh >> {{ item }}/servers/AdminServer/logs/AdminServer.out 2>&1 &
-        while ! grep -q 'Server startup complete' {{ domain_home }}/servers/AdminServer/logs/AdminServer.out; do sleep 5; done
-        echo "Admin Server is up"
       loop: "{{ domain_home }}"
 

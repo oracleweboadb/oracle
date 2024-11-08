@@ -6,7 +6,10 @@ jdk_patch_zip: "p36734925_180421_Linux-x86-64.zip"
 jdk_patch_number: "421"
 
 weblogic_patch_directory: "WEBLOGIC_PSU_JUL_2024"
-weblogic_patch_spb_directory: "WLS_SPB_12.2.1.4.240710"
+weblogic_patch_spb_directory: "WLS_SPB_12.2.1.4.241008"
 weblogic_patch_zip: "p36822778_122140_Generic.zip"
 
-patch_id: "31182726"
+patch_id: "35965629"
+
+
+fmwwec/u01/app/oracle/product/wec_home/OPatch/opatch
