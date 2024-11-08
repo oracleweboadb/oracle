@@ -102,6 +102,7 @@
     ## Prepare weblogic
     - name: Unzip weblogic patch
       ansible.builtin.shell: |
+        rm -rf {{ weblogic_patch_spb_directory }}
         cd {{ upgrade_home }}
         unzip -o {{ weblogic_patch_zip }} -d /tmp
         cp -r /tmp/{{ weblogic_patch_spb_directory }} {{ upgrade_home }}/
