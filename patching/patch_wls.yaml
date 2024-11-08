@@ -118,35 +118,33 @@
 
     ## Patch weblogic
     - name: Apply WebLogic PSU Patch
-      block:
-        - name: Apply SPB and rollback if failure
-          shell: |
-            rollback(){
-              export ORACLE_HOME={{ item }}
-              export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
-                          
-              # Untar backup created
-              cd {{ item }}/../
-              tar -xf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
-            
-              # Remove backup file
-              rm {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz
-              
-              echo "Backup is rolled back and backup is deleted afterwards" >&2
-              echo "Failed to patch the weblogic server. Please check that there is enough disk space, memory (Heap), and check logs!" >&2
-              exit 1
-            }
-                        
-            export ORACLE_HOME={{ item }}
-            export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
-            
-            if {{ item }}/OPatch/opatch -lsinventory | grep -q {{ patch_id }}; then
-              echo "already patched this oracle home"
-            else 
-              {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item }} || rollback
-            fi
-          loop: "{{ oracle_home }}"
-          ignore_errors: yes
+      shell: |
+        rollback(){
+          export ORACLE_HOME={{ item }}
+          export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
+                      
+          # Untar backup created
+          cd {{ item }}/../
+          tar -xf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
+        
+          # Remove backup file
+          rm {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz
+          
+          echo "Backup is rolled back and backup is deleted afterwards" >&2
+          echo "Failed to patch the weblogic server. Please check that there is enough disk space, memory (Heap), and check logs!" >&2
+          exit 1
+        }
+                    
+        export ORACLE_HOME={{ item }}
+        export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
+        
+        if {{ item }}/OPatch/opatch -lsinventory | grep -q {{ patch_id }}; then
+          echo "already patched this oracle home"
+        else 
+          {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item }} || rollback
+        fi
+      loop: "{{ oracle_home }}"
+      ignore_errors: yes
 
     ## Start services
     - name: Start Node Manager
