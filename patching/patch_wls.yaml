@@ -126,7 +126,7 @@
                           
               # Untar backup created
               cd {{ item }}/../
-              tar -xvf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
+              tar -xf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
             
               # Remove backup file
               rm {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz
