@@ -104,9 +104,6 @@
         version: {{ weblogic_patch_spb_directory | replace('WLS_SPB_','') }}
       shell: |
         rollback(){
-          export ORACLE_HOME={{ item.oracle }}
-          export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
-                      
           # Recover oracle home
           cd {{ item.oracle }}/../
           tar -xf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
