@@ -39,16 +39,16 @@
       ansible.builtin.shell: |
         ./stopNodeManager.sh || echo
       args:
-        chdir: "{{ item }}/bin"
-      loop: "{{ domain_home }}"
+        chdir: "{{ item.domain }}/bin"
+      loop: "{{ items }}"
       ignore_errors: yes
 
     - name: Stop Web Logic
       ansible.builtin.shell: |
         ./stopWebLogic.sh || echo
       args:
-        chdir: "{{ item }}/bin"
-      loop: "{{ domain_home }}"
+        chdir: "{{ item.domain }}/bin"
+      loop: "{{ items }}"
       ignore_errors: yes
 
     ## Backup jdk
@@ -107,42 +107,71 @@
         rm -rf /tmp/{{ weblogic_patch_spb_directory }} || echo "already deleted"
         unzip -o {{ weblogic_patch_zip }} -d /tmp
 
-    ## Backup weblogic
+    ## Backup oracle home
     - name: Backup oracle home
       ansible.builtin.archive:
-        path: "{{ item }}"
-        dest: "{{ item }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz"
+        path: "{{ item.oracle }}"
+        dest: "{{ item.oracle }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz"
         format: "gz"
-      loop: "{{ oracle_home }}"
+      loop: "{{ homes }}"
+
+    ## Backup oracle inventory
+    - name: Backup central inventory
+      ansible.builtin.archive:
+        path: "/u01/app/oraInventory"
+        dest: "/u01/app/{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz"
+        format: "gz"
+
+    ## Backup domain home
+    - name: Backup domain home
+      ansible.builtin.archive:
+        path: "{{ item.domain }}"
+        dest: "{{ item.domain }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz"
+        format: "gz"
+      loop: "{{ homes }}"
 
     ## Patch weblogic
     - name: Apply WebLogic PSU Patch
+      variables:
+        version: {{ weblogic_patch_spb_directory | replace('WLS_SPB_','') }}
       shell: |
         rollback(){
-          export ORACLE_HOME={{ item }}
+          export ORACLE_HOME={{ item.oracle }}
           export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
                       
-          # Untar backup created
-          cd {{ item }}/../
+          # Recover oracle home
+          cd {{ item.oracle }}/../
           tar -xf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
-        
-          # Remove backup file
+          rm {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz
+          
+          # Recover domain home
+          cd {{ item.domain }}/../
+          tar -xf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
           rm {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz
           
           echo "Backup is rolled back and backup is deleted afterwards" >&2
           echo "Failed to patch the weblogic server. Please check that there is enough disk space, memory (Heap), and check logs!" >&2
+        
           exit 1
         }
                     
-        export ORACLE_HOME={{ item }}
+        export ORACLE_HOME={{ item.oracle }}
         export OPATCH_JRE_MEMORY_OPTIONS='-Xmx5172m'
-        
-        if {{ item }}/OPatch/opatch -lsinventory | grep -q {{ patch_id }}; then
+                
+        if {{ item.oracle }}/OPatch/opatch lsinventory | grep -q {{ patch_id }}; then
           echo "already patched this oracle home"
         else 
-          /tmp/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item }} || rollback
+          {{ item.oracle }}/OPatch/opatch rollback -id 23335292 || echo "not exists"
+          
+          mkdir /tmp/opatch
+          unzip /tmp/{{ weblogic_patch_spb_directory }}/tools/opatch/generic/*.zip -d /tmp/opatch
+          java -jar /tmp/opatch/6880880/opatch_generic.jar -silent oracle_home={{ item.oracle }} -
+          
+          {{ item.oracle }}/OPatch/opatch version
+        
+          /tmp/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item.oracle }} || rollback
         fi
-      loop: "{{ oracle_home }}"
+      loop: "{{ homes }}"
       ignore_errors: yes
 
     ## Start services
@@ -150,8 +179,8 @@
       ansible.builtin.shell: |
         nohup startNodeManager.sh &
       args:
-        chdir: "{{ item }}/bin"
-      loop: "{{ domain_home }}"
+        chdir: "{{ item.domain }}/bin"
+      loop: "{{ homes }}"
 
     - name: Wait for Node Manager to Start
       shell: |
@@ -159,14 +188,14 @@
         echo "Node Manager is up"
 
     - name: Start WebLogic Admin Server
-      command: "nohup {{ item }}/bin/startWebLogic.sh >> {{ item }}/servers/AdminServer/logs/AdminServer.out 2>&1 &"
+      command: "nohup {{ item.domain }}/bin/startWebLogic.sh >> {{ item.domain }}/servers/AdminServer/logs/AdminServer.out 2>&1 &"
       async: 300
       poll: 10
-      loop: "{{ domain_home }}"
+      loop: "{{ homes }}"
 
     - name: Start WebLogic Admin Server
       ansible.builtin.shell: |
-        cd {{ item }}/bin
-        nohup ./startWebLogic.sh >> {{ item }}/servers/AdminServer/logs/AdminServer.out 2>&1 &
-      loop: "{{ domain_home }}"
+        cd {{ item.domain }}/bin
+        nohup ./startWebLogic.sh >> {{ item.domain }}/servers/AdminServer/logs/AdminServer.out 2>&1 &
+      loop: "{{ homes }}"
 
