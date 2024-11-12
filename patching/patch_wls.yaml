@@ -98,40 +98,8 @@
             msg: "{{ java_version.stdout }}"
 
     # Weblogic Patching tasks
-
-    ## Prepare weblogic
-    - name: Unzip weblogic patch
-      ansible.builtin.shell: |
-        rm -rf {{ weblogic_patch_spb_directory }}
-        cd {{ upgrade_home }}
-        rm -rf /tmp/{{ weblogic_patch_spb_directory }} || echo "already deleted"
-        unzip -o {{ weblogic_patch_zip }} -d /tmp
-
-    ## Backup oracle home
-    - name: Backup oracle home
-      ansible.builtin.archive:
-        path: "{{ item.oracle }}"
-        dest: "{{ item.oracle }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz"
-        format: "gz"
-      loop: "{{ homes }}"
-
-    ## Backup oracle inventory
-    - name: Backup central inventory
-      ansible.builtin.archive:
-        path: "/u01/app/oraInventory"
-        dest: "/u01/app/{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz"
-        format: "gz"
-
-    ## Backup domain home
-    - name: Backup domain home
-      ansible.builtin.archive:
-        path: "{{ item.domain }}"
-        dest: "{{ item.domain }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz"
-        format: "gz"
-      loop: "{{ homes }}"
-
-    ## Patch weblogic
-    - name: Apply WebLogic PSU Patch
+     ## Patch weblogic
+    - name: Backup oracle,domain,inventory and Apply WebLogic PSU Patch
       variables:
         version: {{ weblogic_patch_spb_directory | replace('WLS_SPB_','') }}
       shell: |
@@ -166,6 +134,10 @@
         if {{ item.oracle }}/OPatch/opatch lsinventory | grep -q {{ patch_id }}; then
           echo "already patched this oracle home"
         else 
+          tar -cvf {{ item.oracle }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz {{ item.oracle }}
+          tar -cvf /u01/app/{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz /u01/app/oraInventory
+          tar -cvf {{ item.domain }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz {{ item.domain }}
+        
           /tmp/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item.oracle }} || rollback
         fi
       loop: "{{ homes }}"
