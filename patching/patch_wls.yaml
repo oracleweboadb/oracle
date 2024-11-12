@@ -148,7 +148,12 @@
           cd {{ item.domain }}/../
           tar -xf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
           rm {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz
-          
+        
+          # Recover central inventory
+          cd /u01/app/oraInventory
+          tar -xf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
+          rm {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz --force-local
+        
           echo "Backup is rolled back and backup is deleted afterwards" >&2
           echo "Failed to patch the weblogic server. Please check that there is enough disk space, memory (Heap), and check logs!" >&2
         
