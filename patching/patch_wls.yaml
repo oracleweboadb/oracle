@@ -104,9 +104,8 @@
       ansible.builtin.shell: |
         rm -rf {{ weblogic_patch_spb_directory }}
         cd {{ upgrade_home }}
+        rm -rf /tmp/{{ weblogic_patch_spb_directory }} || echo "already deleted"
         unzip -o {{ weblogic_patch_zip }} -d /tmp
-        cp -r /tmp/{{ weblogic_patch_spb_directory }} {{ upgrade_home }}/
-        rm -rf /tmp/{{ weblogic_patch_spb_directory }}
 
     ## Backup weblogic
     - name: Backup oracle home
@@ -141,7 +140,7 @@
         if {{ item }}/OPatch/opatch -lsinventory | grep -q {{ patch_id }}; then
           echo "already patched this oracle home"
         else 
-          {{ upgrade_home }}/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item }} || rollback
+          /tmp/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item }} || rollback
         fi
       loop: "{{ oracle_home }}"
       ignore_errors: yes
