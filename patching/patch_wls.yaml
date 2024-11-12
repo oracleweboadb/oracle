@@ -100,8 +100,6 @@
     # Weblogic Patching tasks
      ## Patch weblogic
     - name: Backup oracle,domain,inventory and Apply WebLogic PSU Patch
-      variables:
-        version: {{ weblogic_patch_spb_directory | replace('WLS_SPB_','') }}
       shell: |
         rollback(){
           # Recover oracle home
