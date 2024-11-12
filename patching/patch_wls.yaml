@@ -161,14 +161,6 @@
         if {{ item.oracle }}/OPatch/opatch lsinventory | grep -q {{ patch_id }}; then
           echo "already patched this oracle home"
         else 
-          {{ item.oracle }}/OPatch/opatch rollback -id 23335292 || echo "not exists"
-          
-          mkdir /tmp/opatch
-          unzip /tmp/{{ weblogic_patch_spb_directory }}/tools/opatch/generic/*.zip -d /tmp/opatch
-          java -jar /tmp/opatch/6880880/opatch_generic.jar -silent oracle_home={{ item.oracle }} -
-          
-          {{ item.oracle }}/OPatch/opatch version
-        
           /tmp/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item.oracle }} || rollback
         fi
       loop: "{{ homes }}"
