@@ -40,7 +40,7 @@
         ./stopNodeManager.sh || echo
       args:
         chdir: "{{ item.domain }}/bin"
-      loop: "{{ items }}"
+      loop: "{{ homes }}"
       ignore_errors: yes
 
     - name: Stop Web Logic
@@ -48,7 +48,7 @@
         ./stopWebLogic.sh || echo
       args:
         chdir: "{{ item.domain }}/bin"
-      loop: "{{ items }}"
+      loop: "{{ homes }}"
       ignore_errors: yes
 
     ## Backup jdk
