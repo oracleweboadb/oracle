@@ -129,9 +129,14 @@
         if {{ item.oracle }}/OPatch/opatch lsinventory | grep -q {{ patch_id }}; then
           echo "already patched this oracle home"
         else 
-          tar -cvf {{ item.oracle }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz {{ item.oracle }}
-          tar -cvf /u01/app/{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz /u01/app/oraInventory
-          tar -cvf {{ item.domain }}/../{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz {{ item.domain }}
+          cd {{ item.oracle }}/../
+          tar -cf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz {{ item.oracle | basename }}
+          
+          cd /u01/app/
+          tar -cf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz oraInventory
+          
+          cd {{ item.domain }}/../
+          tar -cf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz {{ item.domain | basename }}
         
           /tmp/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item.oracle }} || rollback
         fi
