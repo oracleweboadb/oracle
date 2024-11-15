@@ -138,6 +138,8 @@
           cd {{ item.domain }}/../
           tar -cf {{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':','-') }}.tar.gz {{ item.domain | basename }}
         
+          /tmp/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase precheck -oracle_home {{ item.oracle }} || rollback
+        
           /tmp/{{ weblogic_patch_spb_directory }}/tools/spbat/generic/SPBAT/spbat.sh -phase apply -oracle_home {{ item.oracle }} || rollback
         fi
       loop: "{{ homes }}"
